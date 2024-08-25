@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 # parent directory set
 parent_dir = os.path.dirname(os.getcwd())
-ETH_data = pd.read_csv("{parent_dir}\\raw_data\\ETH-USD_price_data.csv".format(parent_dir=parent_dir))
+ETH_data = pd.read_csv("{parent_dir}\\raw_data\\ETH_data\\ETH-USD_price_data.csv".format(parent_dir=parent_dir))
 ETH_data['Date'] = pd.to_datetime(ETH_data['Date'])
 
 # start and end dates of the dataset
@@ -48,7 +48,10 @@ def extract_gnews_headlines(year, iter_dates_list):
         for keyword in keywords:
             data.extend(google_news.get_news(keyword))
     data_df = pd.json_normalize(data)
-    data_df.to_csv("{parent_dir}\\raw_data\\Google_News_Headlines_data\\google_news_headlines_data_{year}.csv".format(parent_dir=parent_dir,year=year))
+    output_dir = f"{parent_dir}\\raw_data\\Google_News_Headlines_data"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    data_df.to_csv("{output_dir}\\google_news_headlines_data_{year}.csv".format(output_dir=output_dir,year=year))
 
 # split dates by year
 iter_dates_list = split_dates_by_year(date_tuples)

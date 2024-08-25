@@ -108,5 +108,9 @@ for coin_dict in progress_bar(coin_dict_list[:4]):
 
   clear_output()
 
-  file_path = "{parent_dir}\\raw_data\\{coin}_data\\bitinfocharts\\{coin_name}.csv".format(parent_dir=parent_dir,coin=str(coin_dict['coin']).upper(),coin_name=str(coin_dict['full_name']))
+  output_dir = "{parent_dir}\\raw_data\\{coin}_data\\bitinfocharts".format(parent_dir=parent_dir,coin=str(coin_dict['coin']).upper())
+  if not os.path.exists(output_dir):
+      os.makedirs(output_dir)
+
+  file_path = "{output_dir}\\{coin}.csv".format(output_dir=output_dir,coin=str(coin_dict['coin']).upper())
   coin_df.to_csv(file_path)
