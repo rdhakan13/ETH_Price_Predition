@@ -13,12 +13,14 @@ coins = ['BTC','ETH','LTC']
 parent_dir = os.path.dirname(os.getcwd())
 
 def parse_strlist(sl):
+    """Parse string list"""
     clean = re.sub("[\[\],\s]","",sl)
     splitted = re.split("[\'\"]",clean)
     values_only = [s for s in splitted if s != '']
     return values_only
 
 def get_bitinfochart_graph_values(url, var_name):
+  """Get Bitinfochart graph values"""
   sleep(random.uniform(0, 1.0))
   response = requests.get(url)
   soup = BeautifulSoup(response.text, 'html.parser')
@@ -44,6 +46,7 @@ def get_bitinfochart_graph_values(url, var_name):
   return df
 
 def merge_dfs(df_list):
+  """Merge dataframes"""
   df_merged = None
   for i in range(len(df_list)-1):
     if i == 0:
@@ -66,6 +69,8 @@ url = 'https://bitinfocharts.com'
 response = requests.get(url)
 soup = BeautifulSoup(response.text, 'html.parser')
 
+coin_dict_list = []
+
 for span in soup.find_all('span'):
   if 's_coins' in str(span.get('class')):
     name = span.get('title').lower()
@@ -73,7 +78,6 @@ for span in soup.find_all('span'):
     if coin.upper() in coins:
         coin_dict_list.append({'full_name': name,'coin': coin})
 
-# %%
 for coin_dict in coin_dict_list:
   coin_dict['scrape_details'] = []
   for chart_dict in chart_dict_list:
