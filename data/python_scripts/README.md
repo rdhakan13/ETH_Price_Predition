@@ -26,7 +26,7 @@ The code in `google_news_api.py` can be ammended to bulk download Google news he
 
 ### Blockchain Data
 
-Blockchain data is acquired from 3 separate sources, to be able to choose the most complete data source, are patch any incomplete data points.
+Blockchain data is acquired from 3 separate source to be able to choose the most complete data source and patch any incomplete data points.
 
 #### bitinfocharts.com
 
