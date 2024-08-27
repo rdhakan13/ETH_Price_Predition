@@ -20,7 +20,7 @@ pip install gnews
 
 The code in `google_news_api.py` can be ammended to bulk download Google news headlines for any set of keywords for any specified start and end dates. 
 
-<div style="color: red; border: 1px solid red; padding: 10px;">
+<div style="color: red;">
   <strong>Warning:</strong> google_news_api.py may produce duplicate headlines for keywords of the same topic.
 </div>
 
