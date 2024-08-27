@@ -36,7 +36,7 @@ By running `bitinfocharts_api.py`, all available blockchain data (Transaction Co
 
 #### OKLINK Chainhub
 
-The blockchain data acquired for the three coins through [bitinfocharts.com](bitinfocharts.com) is summarised in Table 2.
+The blockchain data acquired for the three coins through [OKLINK Chainhub](oklink.com) is summarised in Table 2. The data was downloaded as a CSV file straight from the graphs displayed on the website. 
 
 **Table 1: Blockchain Data Summary**
 
@@ -60,7 +60,9 @@ The blockchain data acquired for the three coins through [bitinfocharts.com](bit
 
 #### Etherscan
 
-Only Ethereum data was provided on Etherscan and as such the blockchain data that was acquired was: No. of Total Addresses, Mean Transaction Fees, Mean Gas Price, Block Count Rewards, Mean Difficulty, Block Reward, Mean Block Size, Mean Block Time, No. of Active Addresses, No. of Issued Contracts, No. of Verified Contracts, Total Supply, Mean Gas Limit, Gas Used, Mean Hash Rate, Total Uncle Count.
+Only Ethereum data was provided on [Etherscan](https://etherscan.io/) and as such the blockchain data that was acquired was: No. of Total Addresses, Mean Transaction Fees, Mean Gas Price, Block Count Rewards, Mean Difficulty, Block Reward, Mean Block Size, Mean Block Time, No. of Active Addresses, No. of Issued Contracts, No. of Verified Contracts, Total Supply, Mean Gas Limit, Gas Used, Mean Hash Rate, Total Uncle Count.
+
+The data was for each of the above listed features was downloaded as a CSV straight from the graphs provided. 
 
 ## Cleaned Data
 
