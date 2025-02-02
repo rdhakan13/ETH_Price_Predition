@@ -31,6 +31,12 @@ The `Makefile` includes several targets for managing the Conda environment. Use 
    make create-env
    ```
 
+**List packages in Conda environment**:
+   This target list packages in the Conda environment from the `environment.yml` file:
+   ```
+   make list-packages
+   ```
+
 **Update an existing Conda environment**:
    This target updates the Conda environment based on changes in the `environment.yml` file. Update the dependencies as needed with python packages and respective versions:
    ```
