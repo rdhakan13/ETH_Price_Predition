@@ -6,15 +6,14 @@ from src.data.yahoo_finance_api import yahoo_finance_api
 from src.data.google_news_api import google_news_api
 
 tickers = ['BTC-USD','ETH-USD','LTC-USD']
-# keywords = ['cryptocurrency','blockchain','bitcoin','ethereum','litecoin']
-keywords = []
+keywords = ['cryptocurrency','blockchain','bitcoin','ethereum','litecoin']
 root_dir = get_root_directory()
 
 if __name__ == "__main__":
 
-    for ticker in tickers:
-        yf = yahoo_finance_api(ticker)
-        yf.get_yf_data()
+    # for ticker in tickers:
+    #     yf = yahoo_finance_api(ticker)
+    #     yf.get_yf_data()
 
     # gn = google_news_api()
 
@@ -25,7 +24,8 @@ if __name__ == "__main__":
     #     raise e
     
     # try:
-    #     data["Date"] = pd.to_datetime(data["Date"])
+    #     date_format = "%d/%m/%Y" 
+    #     data["Date"] = pd.to_datetime(data["Date"], format=date_format)
     # except KeyError as e:
     #     logging.error("Column not found")
     #     raise e
@@ -36,7 +36,5 @@ if __name__ == "__main__":
 
     # dates_list = split_dates_by_year(date_tuples)
 
-    # print (dates_list)
-
     # for index, year in enumerate(dates_list):
-    #     gn.get_gnews_headlines(year, keywords, dates_list[index])    
+    #     gn.get_gnews_headlines(year[0][0], keywords, dates_list[index]) 
