@@ -1,4 +1,6 @@
 from pathlib import Path
+import pandas as pd
+import os
 import logging
 
 def get_root_directory() -> str:
@@ -17,7 +19,6 @@ def get_root_directory() -> str:
         current_path = current_path.parent
 
     return current_path
-
 
 def split_dates_by_year(date_tuples:tuple=None) -> list:
     """
