@@ -1,5 +1,5 @@
 import pandas as pd
-from src.utils import get_root_directory
+from src.utils.utils import get_root_directory
 from src.data.yahoo_finance import YahooFinance
 from src.data.oklink import OkLink
 from src.data.bitinfocharts import BitInfoCharts

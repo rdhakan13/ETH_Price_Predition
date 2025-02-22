@@ -1,6 +1,6 @@
 import logging
 import pandas as pd
-from src.utils import get_root_directory, split_dates_by_year
+from src.utils.utils import get_root_directory, split_dates_by_year
 from src.data.yahoo_finance import YahooFinance
 from src.data.bitinfocharts import BitInfoCharts
 from src.data.google_news import GoogleNews
