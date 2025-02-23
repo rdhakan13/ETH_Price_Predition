@@ -48,7 +48,7 @@ class BitInfoCharts:
                 ]
 
     @staticmethod
-    def _parse_strlist(sl):
+    def _parse_strlist(sl:str)->list:
         """
         Parses a string list into a list of strings.
 
@@ -66,7 +66,7 @@ class BitInfoCharts:
 
         return values_only
 
-    def _get_bitinfochart_graph_values(self, url, var_name):
+    def _get_bitinfochart_graph_values(self, url:str, var_name:str)->pd.DataFrame:
         """
         Extracts graph values from the Bitinfocharts website for a given URL and variable name.
 
@@ -108,7 +108,7 @@ class BitInfoCharts:
         return df
 
     @staticmethod
-    def _merge_dfs(df_list):
+    def _merge_dfs(df_list:list)->pd.DataFrame:
         """
         Merges a list of DataFrames on the 'date' column.
 
@@ -127,7 +127,7 @@ class BitInfoCharts:
 
         return df_merged
     
-    def get_raw_data(self):
+    def get_raw_data(self)->None:
         """
         Downloads raw data from Bitinfocharts for the specified ticker.
 
@@ -186,7 +186,7 @@ class BitInfoCharts:
 
         logger.info(f"Data downloaded successfully for {self.ticker}.")
       
-    def save_raw_data(self):
+    def save_raw_data(self)->None:
         """
         Saves the raw data to a CSV file in the raw data directory.
 
@@ -203,7 +203,7 @@ class BitInfoCharts:
 
         logger.info(f"Data saved to {self.raw_dir}.")
 
-    def process_raw_data(self, data_yf:pd.DataFrame=None, date_range:pd.date_range=None):
+    def process_raw_data(self, data_yf:pd.DataFrame=None, date_range:pd.date_range=None)->None:
         """
         Processes raw data from Bitinfocharts and merges it with Yahoo Finance data.
 
@@ -230,7 +230,7 @@ class BitInfoCharts:
 
         logger.info(f"Data processed successfully for {self.ticker[:3]} from Bitinfocharts.")
 
-    def save_processed_data(self):
+    def save_processed_data(self)->None:
         """
         Saves the processed data to a CSV file in the processed data directory.
 

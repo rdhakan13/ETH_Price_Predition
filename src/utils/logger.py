@@ -1,15 +1,14 @@
 import logging
 import logging.config
-import os
 from datetime import datetime
-from typing import Any, Optional
+from src.utils.utils import get_root_directory
 
 format_file: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-format_console: str = "%(asctime)s - %(log_color)s%(levelname)s%(reset)s - %(message)s"
+format_console: str = "%(asctime)s - %(name)s - %(log_color)s%(levelname)s%(reset)s - %(message)s"
 
 date_format: str = "%Y-%m-%d %H:%M:%S"
 
-filename = f"logs/log_{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}.log"
+filename = f"{get_root_directory()}\\logs\\log_{datetime.now().strftime('%Y-%m-%d')}.log"
 
 debug_color:str = "cyan"
 info_color:str = "green"
@@ -17,7 +16,7 @@ warning_color:str = "yellow"
 error_color:str = "red"
 critical_color:str = "bold_red"
 
-def log_config_for_level(log_level:str)->dict(str, Any):
+def log_config_for_level(log_level:str)->dict:
     return {
         "version": 1,
         "disable_existing_loggers": False,
@@ -49,19 +48,18 @@ def log_config_for_level(log_level:str)->dict(str, Any):
             },
             "console": {
                 "class": "logging.StreamHandler",
-                "formatter": "console"
+                "formatter": "console",
+                "stream": "ext://sys.stdout"
             }
         },
         "root": {
-            "": {
-                "handlers": ["file", "console"],
-                "level": log_level
+            "handlers": ["file", "console"],
+            "level": log_level
             }
         }
-    }
    
 
-def setup_logger(log_level:str)->None:
+def get_logger(log_level:str, name:SyntaxError)->logging.Logger:
     log_config = log_config_for_level(log_level)
     logging.config.dictConfig(log_config)
-    logger = logging.getLogger()
+    return logging.getLogger(name)

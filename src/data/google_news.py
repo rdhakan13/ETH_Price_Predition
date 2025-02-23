@@ -5,6 +5,8 @@ from tqdm import tqdm
 from gnews import GNews
 from datetime import datetime, timedelta
 
+logger = logging.getLogger(__name__)
+
 class GoogleNews:
 
     def __init__(self, root_dir:str=None):
@@ -23,7 +25,7 @@ class GoogleNews:
         self.final_data = None
         self.year = None
 
-    def get_raw_data(self, year, keywords:list=None, dates_list:list=None):
+    def get_raw_data(self, year, keywords:list=None, dates_list:list=None)->None:
         """
         Extracts Google News headlines for the specified year and keywords.
 
@@ -51,7 +53,7 @@ class GoogleNews:
         if not dates_list or dates_list is None or not isinstance(dates_list, list):
             raise ValueError("Dates list must be a list of tuples")
 
-        logging.info(f"Downloading Google News headlines for {self.year}.")
+        logger.info(f"Downloading Google News headlines for {self.year}.")
 
         for i in tqdm(range(len(dates_list))):
 
@@ -68,9 +70,9 @@ class GoogleNews:
 
         self.raw_data = pd.json_normalize(data)
 
-        logging.info("Data downloaded successfully for {self.year}.")
+        logger.info("Data downloaded successfully for {self.year}.")
         
-    def save_raw_data(self):
+    def save_raw_data(self)->None:
         """
         Saves the raw data to a CSV file in the raw data directory.
 
@@ -86,9 +88,9 @@ class GoogleNews:
 
         self.raw_data.to_csv(f"{self.raw_dir}\\google_news_headlines_data_{self.year}.csv")
 
-        logging.info(f"Data saved to {self.raw_dir}.")
+        logger.info(f"Data saved to {self.raw_dir}.")
 
-    def process_raw_data(self):
+    def process_raw_data(self)->None:
         """
         Processes raw Google News headline files and combines them into a single DataFrame.
 
@@ -100,7 +102,7 @@ class GoogleNews:
             None
         """
 
-        logging.info("Processing Google News Headlines raw data.")
+        logger.info("Processing Google News Headlines raw data.")
 
         self.processed_data = pd.DataFrame(columns = ['Date','News Headline','Publisher'])
 
@@ -118,9 +120,9 @@ class GoogleNews:
 
         self.processed_data = self.processed_data.drop_duplicates(subset='News Headline', keep='first')
 
-        logging.info("Data processed successfully.")
+        logger.info("Data processed successfully.")
 
-    def save_processed_data(self):
+    def save_processed_data(self)->None:
         """
         Saves the processed data to a CSV file in the processed data directory.
 
@@ -136,4 +138,4 @@ class GoogleNews:
 
         self.processed_data.to_csv(f"{self.processed_dir}\\google_news_headlines_data.csv", index=False)
 
-        logging.info(f"Data saved to {self.processed_dir}.")
+        logger.info(f"Data saved to {self.processed_dir}.")
