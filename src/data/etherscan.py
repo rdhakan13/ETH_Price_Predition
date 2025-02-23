@@ -2,6 +2,8 @@ import os
 import logging
 import pandas as pd
 
+logger = logging.getLogger(__name__)
+
 class EtherScan:
     def __init__(self, ticker:str=None, root_dir:str=None):
         """
@@ -39,7 +41,7 @@ class EtherScan:
         Returns:
             None
         """
-        logging.info(f"Processing raw data from etherscan.")
+        logger.info(f"Processing raw data from etherscan.")
 
         for file in os.listdir(self.raw_dir):
             column_name = ' '.join(file.split('-')[1:])[:-4]
@@ -67,7 +69,7 @@ class EtherScan:
 
             self.processed_data = data_yf.merge(data_etherscan, on='Date', how='outer')
 
-        logging.info(f"Data processed successfully for etherscan.")
+        logger.info(f"Data processed successfully for etherscan.")
 
     def save_processed_data(self):
         """
@@ -84,4 +86,4 @@ class EtherScan:
 
         self.processed_data.to_csv(f"{self.processsed_dir}\\{self.ticker[:3]}_etherscan.csv")
 
-        logging.info(f"Data saved to {self.processsed_dir}.")
+        logger.info(f"Data saved to {self.processsed_dir}.")

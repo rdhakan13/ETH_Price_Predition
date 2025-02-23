@@ -7,7 +7,7 @@ from src.data.google_news import GoogleNews
 
 tickers = ['BTC-USD','ETH-USD','LTC-USD']
 keywords = ['cryptocurrency','blockchain','bitcoin','ethereum','litecoin']
-root_dir = get_root_directory()
+root_dir = str(get_root_directory())+"\\temp"
 
 if __name__ == "__main__":
 

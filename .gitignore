@@ -3,3 +3,5 @@ __pycache__/
 **/*.ipynb_out/
 data/raw/
 data/processed/
+logs/
+temp/*

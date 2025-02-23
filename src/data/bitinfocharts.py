@@ -9,6 +9,8 @@ from fastcore.all import *
 from bs4 import BeautifulSoup
 from fastprogress import progress_bar
 
+logger = logging.getLogger(__name__)
+
 class BitInfoCharts:
    
     def __init__(self, ticker, root_dir:str=None):
@@ -141,7 +143,7 @@ class BitInfoCharts:
 
         coin_dict_list = []
 
-        logging.info(f"Downloading Bitinfocharts data for {self.ticker}.")
+        logger.info(f"Downloading Bitinfocharts data for {self.ticker}.")
 
         for span in soup.find_all('span'):
           if 's_coins' in str(span.get('class')):
@@ -182,7 +184,7 @@ class BitInfoCharts:
 
           coin_merged_df_list.append(self.raw_data)
 
-        logging.info(f"Data downloaded successfully for {self.ticker}.")
+        logger.info(f"Data downloaded successfully for {self.ticker}.")
       
     def save_raw_data(self):
         """
@@ -199,7 +201,7 @@ class BitInfoCharts:
 
         self.raw_data.to_csv(f"{self.raw_dir}\\{self.ticker[:3]}.csv")
 
-        logging.info(f"Data saved to {self.raw_dir}.")
+        logger.info(f"Data saved to {self.raw_dir}.")
 
     def process_raw_data(self, data_yf:pd.DataFrame=None, date_range:pd.date_range=None):
         """
@@ -216,7 +218,7 @@ class BitInfoCharts:
         Returns:
             None
         """
-        logging.info(f"Processing raw data from {self.ticker[:3]} for Bitinfocharts.")
+        logger.info(f"Processing raw data from {self.ticker[:3]} for Bitinfocharts.")
 
         data_bic = pd.read_csv(f"{self.raw_dir}\\{self.ticker[:3]}.csv")
         data_bic['date'] = pd.to_datetime(data_bic['date'])
@@ -226,7 +228,7 @@ class BitInfoCharts:
         data_bic.drop(columns=['Unnamed: 0','block_size_y','av_transaction_size','full_name','coin'], inplace=True)
         self.processed_data = data_yf.merge(data_bic, on='Date', how='outer')
 
-        logging.info(f"Data processed successfully for {self.ticker[:3]} from Bitinfocharts.")
+        logger.info(f"Data processed successfully for {self.ticker[:3]} from Bitinfocharts.")
 
     def save_processed_data(self):
         """
@@ -243,4 +245,4 @@ class BitInfoCharts:
 
         self.processed_data.to_csv(f"{self.processed_dir}\\{self.ticker[:3]}_bitinfocharts.csv", index=False)
 
-        logging.info(f"Data saved successfully to {self.processed_dir}.")
+        logger.info(f"Data saved successfully to {self.processed_dir}.")
