@@ -3,6 +3,8 @@ import logging
 import pandas as pd
 import yfinance as yf
 
+logger = logging.getLogger(__name__)
+
 class YahooFinance:
 
     def __init__(self, ticker:str=None, root_dir:str=None):
@@ -26,7 +28,7 @@ class YahooFinance:
         self.raw_data = None
         self.processed_data = None
 
-    def get_raw_data(self, period:str='max', interval:str='1d'):
+    def get_raw_data(self, period:str='max', interval:str='1d')->None:
         """
         Downloads historical data for the given ticker symbol from Yahoo Finance and saves it to the raw data directory.
 
@@ -45,13 +47,13 @@ class YahooFinance:
         if self.root_dir is None or self.root_dir == "" or not isinstance(self.root_dir, str):
             raise ValueError("Root directory must be a non-empty string")
 
-        logging.info(f"Downloading Yahoo Finance data for {self.ticker}")
+        logger.info(f"Downloading Yahoo Finance data for {self.ticker}")
 
         self.raw_data = yf.download(tickers=self.ticker, period=period, interval=interval)
 
-        logging.info(f"Data downloaded successfully for {self.ticker}.")
+        logger.info(f"Data downloaded successfully for {self.ticker}.")
 
-    def save_raw_data(self):
+    def save_raw_data(self)->None:
         """
         Saves the raw data to a CSV file in the raw data directory.
 
@@ -66,9 +68,9 @@ class YahooFinance:
 
         self.raw_data.to_csv(f"{self.raw_dir}\\{self.ticker}_price_data.csv")
 
-        logging.info(f"Data saved to {self.raw_dir}")
+        logger.info(f"Data saved to {self.raw_dir}")
 
-    def _process_raw_data(self, date_range:pd.date_range=None):
+    def _process_raw_data(self, date_range:pd.date_range=None)->pd.DataFrame:
         """
         Processes the raw data and reindexes it to match the provided date range.
 
@@ -87,7 +89,7 @@ class YahooFinance:
         self.processed_data.rename(columns={'index': 'Date'}, inplace=True)
         return self.processed_data
     
-    def get_processed_data(self, date_range:pd.date_range=None):
+    def get_processed_data(self, date_range:pd.date_range=None)->pd.DataFrame:
         """
         Processes the raw data and returns the processed data.
 
@@ -101,10 +103,10 @@ class YahooFinance:
             pd.DataFrame: The processed data.
         """
 
-        logging.info(f"Processing raw data for {self.ticker} from Yahoo Finance.")
+        logger.info(f"Processing raw data for {self.ticker} from Yahoo Finance.")
 
         self.processed_data = self._process_raw_data(date_range)
 
-        logging.info(f"Data processed successfully for {self.ticker} from Yahoo Finance.")
+        logger.info(f"Data processed successfully for {self.ticker} from Yahoo Finance.")
 
         return self.processed_data

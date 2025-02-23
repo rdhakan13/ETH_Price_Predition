@@ -1,15 +1,19 @@
-import logging
+import time
 import pandas as pd
-from src.utils import get_root_directory, split_dates_by_year
+from src.utils.utils import get_root_directory, split_dates_by_year
+from src.utils.logger import get_logger
 from src.data.yahoo_finance import YahooFinance
 from src.data.bitinfocharts import BitInfoCharts
 from src.data.google_news import GoogleNews
 
 tickers = ['BTC-USD','ETH-USD','LTC-USD']
 keywords = ['cryptocurrency','blockchain','bitcoin','ethereum','litecoin']
-root_dir = get_root_directory()
+root_dir = str(get_root_directory())+"\\temp"
+logger = get_logger("INFO", __name__)
 
 if __name__ == "__main__":
+
+    start_time = time.time()
 
     for ticker in tickers:
         yf = YahooFinance(ticker, root_dir)
@@ -22,14 +26,14 @@ if __name__ == "__main__":
     try:
         data = pd.read_csv(f"{root_dir}\\data\\raw\\ETH_data\\ETH-USD_price_data.csv")
     except FileNotFoundError as e:
-        logging.error("File not found")
+        logger.error("File not found")
         raise e
     
     try:
         date_format = "%d/%m/%Y" 
         data["Date"] = pd.to_datetime(data["Date"], format=date_format)
     except KeyError as e:
-        logging.error("Column not found")
+        logger.error("Column not found")
         raise e
 
     all_dates = sorted(data["Date"].tolist())
@@ -42,3 +46,11 @@ if __name__ == "__main__":
         gn = GoogleNews(root_dir)
         gn.get_raw_data(year[0][0], keywords, dates_list[index])
         gn.save_raw_data()
+
+    end_time = time.time()
+    total_runtime = end_time - start_time
+    logger.info(f"TOTAL RUNTIME: {total_runtime}s")
+    
+    
+        
+

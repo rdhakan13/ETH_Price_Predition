@@ -1,5 +1,6 @@
 import pandas as pd
-from src.utils import get_root_directory
+from src.utils.utils import get_root_directory
+from src.utils.logger import get_logger
 from src.data.yahoo_finance import YahooFinance
 from src.data.oklink import OkLink
 from src.data.bitinfocharts import BitInfoCharts
@@ -8,7 +9,8 @@ from src.data.google_news import GoogleNews
 
 tickers = ['BTC-USD','ETH-USD','LTC-USD']
 sources = ['oklink','bitinfocharts','etherscan']
-root_dir = get_root_directory()
+root_dir = str(get_root_directory())+"\\temp"
+logger = get_logger("INFO", __name__)
 
 if __name__ == "__main__":
 

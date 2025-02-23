@@ -2,6 +2,8 @@ import os
 import pandas as pd
 import logging
 
+logger = logging.getLogger(__name__)
+
 class OkLink:
     def __init__(self, root_dir:str=None, ticker:str=None):
         """
@@ -24,7 +26,7 @@ class OkLink:
         self.processed_dir = f"{root_dir}\\data\\processed\\{ticker}_data"
         self.processed_data = None
 
-    def process_raw_data(self, data_yf:pd.DataFrame=None, date_range:pd.date_range=None):
+    def process_raw_data(self, data_yf:pd.DataFrame=None, date_range:pd.date_range=None)->None:
         """
         Processes raw data files from OkLink and merges them with Yahoo Finance data.
 
@@ -45,7 +47,7 @@ class OkLink:
         if date_range is None:
             raise ValueError("date_range must be a pd.date_range object")
 
-        logging.info(f"Processing raw data from {self.ticker} for OkLink")
+        logger.info(f"Processing raw data from {self.ticker} for OkLink")
 
         for file in os.listdir(self.raw_dir):
             filepath = self.raw_dir + "\\" + file
@@ -57,9 +59,9 @@ class OkLink:
             data_oklink = data_yf.merge(data_oklink, on='Date', how='outer')
 
         self.processed_data = data_oklink
-        logging.info(f"Data processed successfully for {self.ticker} from OkLink")
+        logger.info(f"Data processed successfully for {self.ticker} from OkLink")
 
-    def save_processed_data(self):
+    def save_processed_data(self)->None:
         """
         Saves the processed data to a CSV file in the processed data directory.
 
@@ -74,4 +76,4 @@ class OkLink:
 
         self.processed_data.to_csv(f"{self.processed_dir}\\{self.ticker}_oklink.csv", index=False)
 
-        logging.info(f"Data saved successfully to {self.processed_dir}")
+        logger.info(f"Data saved successfully to {self.processed_dir}")

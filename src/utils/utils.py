@@ -1,7 +1,7 @@
 from pathlib import Path
-import pandas as pd
-import os
 import logging
+
+logger = logging.getLogger(__name__)
 
 def get_root_directory() -> str:
     """
@@ -33,7 +33,7 @@ def split_dates_by_year(date_tuples:tuple=None) -> list:
 
     year_dict = {}
 
-    logging.info("Splitting dates by year...")
+    logger.info("Splitting dates by year...")
 
     try:
         for date_tuple in date_tuples:
@@ -42,7 +42,7 @@ def split_dates_by_year(date_tuples:tuple=None) -> list:
                 year_dict[year] = []
             year_dict[year].append(date_tuple)
     except TypeError as e:
-        logging.error("Date tuples not found")
+        logger.error("Date tuples not found")
         raise e
 
     return list(year_dict.values())

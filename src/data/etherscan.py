@@ -2,6 +2,8 @@ import os
 import logging
 import pandas as pd
 
+logger = logging.getLogger(__name__)
+
 class EtherScan:
     def __init__(self, ticker:str=None, root_dir:str=None):
         """
@@ -24,7 +26,7 @@ class EtherScan:
         self.processsed_dir = f"{self.root_dir}\\data\\processed\\ETH_data"
         self.processed_data = None
     
-    def process_raw_data(self, data_yf:pd.DataFrame=None,date_range:pd.date_range=None):
+    def process_raw_data(self, data_yf:pd.DataFrame=None,date_range:pd.date_range=None)->None:
         """
         Processes raw data files from Etherscan and merges them with Yahoo Finance data.
 
@@ -39,7 +41,7 @@ class EtherScan:
         Returns:
             None
         """
-        logging.info(f"Processing raw data from etherscan.")
+        logger.info(f"Processing raw data from etherscan.")
 
         for file in os.listdir(self.raw_dir):
             column_name = ' '.join(file.split('-')[1:])[:-4]
@@ -67,9 +69,9 @@ class EtherScan:
 
             self.processed_data = data_yf.merge(data_etherscan, on='Date', how='outer')
 
-        logging.info(f"Data processed successfully for etherscan.")
+        logger.info(f"Data processed successfully for etherscan.")
 
-    def save_processed_data(self):
+    def save_processed_data(self)->None:
         """
         Saves the processed data to a CSV file in the processed data directory.
 
@@ -84,4 +86,4 @@ class EtherScan:
 
         self.processed_data.to_csv(f"{self.processsed_dir}\\{self.ticker[:3]}_etherscan.csv")
 
-        logging.info(f"Data saved to {self.processsed_dir}.")
+        logger.info(f"Data saved to {self.processsed_dir}.")
