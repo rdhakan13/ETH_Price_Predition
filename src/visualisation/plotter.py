@@ -47,7 +47,7 @@ class Plotter:
         self.filepath = f"{self.root_dir}\\reports\\figures\\bar_charts"
         kwargs = self._handle_none_graph_kwargs(kwargs)
         if kwargs.get("stacked") is True:
-            df.plot(kind='bar',x=x, y=y, ax=self.ax, **kwargs)
+            df.plot(kind='bar', ax=self.ax, **kwargs)
             plt.xlabel(x.title())
             plt.ylabel(y.title())
             if kwargs.get("bar_label") is True:
@@ -105,7 +105,7 @@ class Plotter:
         kwargs = self._handle_none_graph_kwargs(kwargs)
         sns.violinplot(data=df, inner='quartile', x=x, y=y, ax=self.ax, **kwargs)
         if stripplot is True:
-            sns.stripplot(data=df, jitter=jitter, dodge=True, marker='o', alpha=0.5, color='k', ax=self.ax)
+            sns.stripplot(data=df, x=x, y=y, jitter=jitter, dodge=True, marker='o', alpha=0.5, color='red', ax=self.ax)
         if self.title is not None:
             plt.title(self.title.title())
         plt.xlabel(x.title())
@@ -195,6 +195,9 @@ class Plotter:
     def _handle_none_graph_kwargs(self, kwargs:dict)->dict:
         """
         Handle the None values in the graph kwargs.
+
+        Parameters:
+        kwargs (dict): The keyword arguments for the plot.
         """
         if kwargs.get("title") is not None:
             self.title = kwargs.get("title").title()
