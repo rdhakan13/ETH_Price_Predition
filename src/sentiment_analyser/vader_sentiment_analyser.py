@@ -21,19 +21,12 @@ class VaderSentimentAnalyser(SentimentAnalyser):
         
         return self.df
     
-    def determine_sentiment(self, compound_score:int)->str:
-        """
-        Determine sentiment category based on compound score.
-        
-        Parameters:
-        compound_score (float): The compound score from VADER.
-        
-        Returns:
-        str: The sentiment category.
-        """
-        if compound_score >= 0.05:
+    def determine_sentiment(self, input_var:float)->int:
+        if not isinstance(input_var, float):
+            raise ValueError("Input must be a float")
+        if input_var >= 0.05:
             return 1
-        elif compound_score <= -0.05:
-            return 0
-        else:
+        elif input_var <= -0.05:
             return -1
+        else:
+            return 0

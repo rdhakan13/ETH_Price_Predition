@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from typing import Any
 import pandas as pd
 
 class SentimentAnalyser:
@@ -18,5 +19,18 @@ class SentimentAnalyser:
         
         Returns:
         pd.DataFrame: The original dataframe with the sentiment score and sentiment category.
+        """
+        pass
+
+    @abstractmethod
+    def determine_sentiment(self, input_var:Any)->int:
+        """
+        Determine sentiment category based on given inputs.
+
+        Parameters:
+        input (Any): The input to determine the sentiment category.
+        
+        Returns:
+        int: The sentiment category.
         """
         pass
