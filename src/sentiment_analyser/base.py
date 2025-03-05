@@ -15,10 +15,10 @@ class SentimentAnalyser:
         Analyze the sentiment of a given headline.
         
         Parameters:
-        column_name (str): The name of the column containing the text data.
+            column_name (str): The name of the column containing the text data.
         
         Returns:
-        pd.DataFrame: The original dataframe with the sentiment score and sentiment category.
+            pd.DataFrame: The original dataframe with the sentiment score and sentiment category.
         """
         pass
 
@@ -28,9 +28,9 @@ class SentimentAnalyser:
         Determine sentiment category based on given inputs.
 
         Parameters:
-        input (Any): The input to determine the sentiment category.
+            input (Any): The input to determine the sentiment category.
         
         Returns:
-        int: The sentiment category.
+            int: The sentiment category.
         """
         pass

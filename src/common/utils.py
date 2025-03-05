@@ -24,7 +24,7 @@ def split_dates_by_year(date_tuples:tuple=None) -> list:
     """
     Splits a list of date tuples into a list of lists, each containing dates from the same year.
 
-    Args:
+    Parameters:
         date_tuples (list): A list of tuples containing dates (year, month, day).
 
     Returns:

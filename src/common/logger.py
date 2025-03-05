@@ -17,6 +17,15 @@ error_color:str = "red"
 critical_color:str = "bold_red"
 
 def log_config_for_level(log_level:str)->dict:
+    """
+    Get log configuration for the log level.
+
+    Parameters:
+        log_level (str): Log level.
+
+    Returns:
+        dict: Log configuration.
+    """
     return {
         "version": 1,
         "disable_existing_loggers": False,
@@ -59,7 +68,17 @@ def log_config_for_level(log_level:str)->dict:
         }
    
 
-def get_logger(log_level:str, name:SyntaxError)->logging.Logger:
+def get_logger(log_level:str, name:str)->logging.Logger:
+    """
+    Get logger object.
+    
+    Parameters:
+        log_level (str): Log level.
+        name (str): Name of the logger.
+    
+    Returns:
+        logging.Logger: Logger object.
+    """
     log_config = log_config_for_level(log_level)
     logging.config.dictConfig(log_config)
     return logging.getLogger(name)

@@ -43,4 +43,7 @@ class BertSentimentAnalyser(SentimentAnalyser):
             raise ValueError(f"Unknown sentiment label: {input_var}")
     
     def _model_name(self)->str:
+        """
+        Get the model name.
+        """
         return str(self.model_name.split("/")[-1].upper())

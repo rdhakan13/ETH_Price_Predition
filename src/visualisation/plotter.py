@@ -14,7 +14,7 @@ class Plotter:
         Initialize the Plotter with the parent directory.
 
         Parameters:
-        root_dir (str): The root directory where results will be saved.
+            root_dir (str): The root directory where results will be saved.
         """
         self.root_dir = root_dir
         self.title = None
@@ -22,26 +22,32 @@ class Plotter:
         self.fig = None
         self.ax = None
 
-    def configure_style(self, style:str="whitegrid", palette:str="deep"):
+    def configure_style(self, style:str="whitegrid", palette:str="deep")->None:
         """
         Configure the style and palette of the plots.
 
         Parameters:
-        style (str, optional): The style of the plot. Default is "whitegrid".
-        palette (str, optional): The color palette of the plot. Default is "deep".
+            style (str, optional): The style of the plot. Default is "whitegrid".
+            palette (str, optional): The color palette of the plot. Default is "deep".
+        
+        Returns:
+            None
         """
         sns.set(style=style, palette=palette)
 
-    def plot_barchart(self, df:pd.DataFrame=None, x:str=None, y:str=None, figsize:tuple=(10,6), **kwargs):
+    def plot_barchart(self, df:pd.DataFrame=None, x:str=None, y:str=None, figsize:tuple=(10,6), **kwargs)->None:
         """
         Generate a bar chart for the given DataFrame.
 
         Parameters:
-        df (pd.DataFrame, optional): DataFrame containing the data to plot.
-        x (str, optional): Column name for the x-axis. Default is None.
-        y (str, optional): Column name for the y-axis. Default is None.
-        figsize (tuple, optional): The size of the figure. Default is (10, 6).
-        kwargs (dict, optional): Additional keyword arguments for the plot.
+            df (pd.DataFrame, optional): DataFrame containing the data to plot.
+            x (str, optional): Column name for the x-axis. Default is None.
+            y (str, optional): Column name for the y-axis. Default is None.
+            figsize (tuple, optional): The size of the figure. Default is (10, 6).
+            kwargs (dict, optional): Additional keyword arguments for the plot.
+        
+        Returns:
+            None
         """
         self.fig, self.ax = plt.subplots(figsize=figsize)
         self.filepath = f"{self.root_dir}\\reports\\figures\\bar_charts"
@@ -62,15 +68,18 @@ class Plotter:
             plt.title(self.title.title())
         plt.show()
 
-    def plot_correlation_matrix(self, df:pd.DataFrame=None, method:str="spearmen", figsize:tuple=(10,8), **kwargs):
+    def plot_correlation_matrix(self, df:pd.DataFrame=None, method:str="spearmen", figsize:tuple=(10,8), **kwargs)->None:
         """
         Generate a correlation matrix heatmap for the given DataFrame.
 
         Parameters:
-        df (pd.DataFrame, optional): DataFrame containing the data to plot.
-        method (str, optional): The method to compute correlation ('pearson', 'kendall', 'spearman'). Default is "spearmen".
-        figsize (tuple, optional): The size of the figure. Default is (10, 8).
-        **kwargs (dict, optional): Additional keyword arguments for the plot.
+            df (pd.DataFrame, optional): DataFrame containing the data to plot.
+            method (str, optional): The method to compute correlation ('pearson', 'kendall', 'spearman'). Default is "spearmen".
+            figsize (tuple, optional): The size of the figure. Default is (10, 8).
+            **kwargs (dict, optional): Additional keyword arguments for the plot.
+
+        Returns:
+            None
         """
         corr_df = df.apply(pd.to_numeric, errors="coerce").corr(method=method)
         self.fig, self.ax = plt.subplots(figsize=figsize)
@@ -87,18 +96,21 @@ class Plotter:
             plt.title(self.title.title())
         plt.show()
 
-    def plot_violin_plot(self, df: pd.DataFrame, x:str=None, y:str=None, figsize:tuple=(10,8), stripplot:bool = False, jitter:float = 0.1, **kwargs):
+    def plot_violin_plot(self, df: pd.DataFrame, x:str=None, y:str=None, figsize:tuple=(10,8), stripplot:bool = False, jitter:float = 0.1, **kwargs)->None:
         """
         Generate a violin plot with optional scatter overlay.
 
         Parameters:
-        df (pd.DataFrame): DataFrame containing the data to plot.
-        x (str, optional): Column name for the x-axis. Default is None.
-        y (str, optional): Column name for the y-axis. Default is None.
-        figsize (tuple, optional): The size of the figure. Default is (10, 8).
-        stripplot (bool, optional): Whether to overlay a stripplot. Default is False.
-        jitter (float, optional): Amount of jitter to apply to the stripplot. Default is 0.1.
-        **kwargs (dict, optional): Additional keyword arguments for the plot.
+            df (pd.DataFrame): DataFrame containing the data to plot.
+            x (str, optional): Column name for the x-axis. Default is None.
+            y (str, optional): Column name for the y-axis. Default is None.
+            figsize (tuple, optional): The size of the figure. Default is (10, 8).
+            stripplot (bool, optional): Whether to overlay a stripplot. Default is False.
+            jitter (float, optional): Amount of jitter to apply to the stripplot. Default is 0.1.
+            **kwargs (dict, optional): Additional keyword arguments for the plot.
+        
+        Returns:
+            None
         """
         self.fig, self.ax = plt.subplots(figsize=figsize)
         self.filepath = f"{self.root_dir}\\reports\\figures\\violin_plots"
@@ -112,16 +124,19 @@ class Plotter:
         plt.ylabel(y.title())
         plt.show()
 
-    def plot_boxplot(self, df: pd.DataFrame, x:str=None, y:str=None, figsize:tuple=(10,8),**kwargs):
+    def plot_boxplot(self, df: pd.DataFrame, x:str=None, y:str=None, figsize:tuple=(10,8),**kwargs)->None:
         """
         Generate boxplots for the given DataFrame.
 
         Parameters:
-        df (pd.DataFrame): DataFrame containing the data to plot.
-        x (str, optional): Column name for the x-axis. Default is None.
-        y (str, optional): Column name for the y-axis. Default is None.
-        figsize (tuple, optional): The size of the figure. Default is (10, 8).
-        **kwargs (dict, optional): Additional keyword arguments for the plot.
+            df (pd.DataFrame): DataFrame containing the data to plot.
+            x (str, optional): Column name for the x-axis. Default is None.
+            y (str, optional): Column name for the y-axis. Default is None.
+            figsize (tuple, optional): The size of the figure. Default is (10, 8).
+            **kwargs (dict, optional): Additional keyword arguments for the plot.
+
+        Returns:
+            None
         """
         self.fig, self.ax = plt.subplots(figsize=figsize)
         self.filepath = f"{self.root_dir}\\reports\\figures\\boxplots"
@@ -135,16 +150,19 @@ class Plotter:
             plt.legend(title=kwargs.get("hue"))
         plt.show()
 
-    def plot_scatterplot(self, df: pd.DataFrame, x:str=None, y:str=None, figsize:tuple=(10,8), **kwargs):
+    def plot_scatterplot(self, df: pd.DataFrame, x:str=None, y:str=None, figsize:tuple=(10,8), **kwargs)->None:
         """
         Generate a scatter plot for the given DataFrame.
 
         Parameters:
-        df (pd.DataFrame): DataFrame containing the data to plot.
-        x (str, optional): Column name for the x-axis. Default is None.
-        y (str, optional): Column name for the y-axis. Default is None.
-        figsize (tuple, optional): The size of the figure. Default is (10, 8).
-        **kwargs (dict, optional): Additional keyword arguments for the plot.
+            df (pd.DataFrame): DataFrame containing the data to plot.
+            x (str, optional): Column name for the x-axis. Default is None.
+            y (str, optional): Column name for the y-axis. Default is None.
+            figsize (tuple, optional): The size of the figure. Default is (10, 8).
+            **kwargs (dict, optional): Additional keyword arguments for the plot.
+
+        Returns:
+            None
         """
         self.fig, self.ax = plt.subplots(figsize=figsize)
         self.filepath = f"{self.root_dir}\\reports\\figures\\scatter_plots"
@@ -156,16 +174,19 @@ class Plotter:
         plt.ylabel(y.title())
         plt.show()
     
-    def plot_lineplot(self, df: pd.DataFrame, x:str=None, y:str=None, figsize:tuple=(10,8), **kwargs):
+    def plot_lineplot(self, df: pd.DataFrame, x:str=None, y:str=None, figsize:tuple=(10,8), **kwargs)->None:
         """
         Generate a line plot for the given DataFrame.
 
         Parameters:
-        df (pd.DataFrame): DataFrame containing the data to plot.
-        x (str, optional): Column name for the x-axis. Default is None.
-        y (str, optional): Column name for the y-axis. Default is None.
-        figsize (tuple, optional): The size of the figure. Default is (10, 8).
-        **kwargs (dict, optional): Additional keyword arguments for the plot.
+            df (pd.DataFrame): DataFrame containing the data to plot.
+            x (str, optional): Column name for the x-axis. Default is None.
+            y (str, optional): Column name for the y-axis. Default is None.
+            figsize (tuple, optional): The size of the figure. Default is (10, 8).
+            **kwargs (dict, optional): Additional keyword arguments for the plot.
+        
+        Returns:
+            None
         """
         self.fig, self.ax = plt.subplots(figsize=figsize)
         self.filepath = f"{self.root_dir}\\reports\\figures\\line_plots"
@@ -177,14 +198,17 @@ class Plotter:
         plt.ylabel(y.title())
         plt.show()
 
-    def save_graph(self, format:str = "jpg", dpi:int=400, filepath:str=None):
+    def save_graph(self, format:str = "jpg", dpi:int=400, filepath:str=None)->None:
         """
         Save the current graph to a file.
 
         Parameters:
-        format (str, optional): The format to save the file in. Default is "pdf".
-        dpi (int, optional): The resolution of the saved file. Default is 300.
-        filepath (str, optional): Filepath to save the graph.
+            format (str, optional): The format to save the file in. Default is "pdf".
+            dpi (int, optional): The resolution of the saved file. Default is 300.
+            filepath (str, optional): Filepath to save the graph.
+
+        Returns:
+            None
         """
         if filepath is not None:
             self.filepath=filepath
@@ -197,7 +221,10 @@ class Plotter:
         Handle the None values in the graph kwargs.
 
         Parameters:
-        kwargs (dict): The keyword arguments for the plot.
+            kwargs (dict): The keyword arguments for the plot.
+
+        Returns:
+            dict: The updated keyword arguments.
         """
         if kwargs.get("title") is not None:
             self.title = kwargs.get("title").title()
