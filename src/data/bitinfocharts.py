@@ -17,7 +17,7 @@ class BitInfoCharts:
         """
         Initializes the BitInfoCharts class for downloading and processing data from Bitinfocharts.
 
-        Args:
+        Parameters:
             ticker (str): The ticker symbol for the cryptocurrency (e.g., 'BTC', 'ETH').
             root_dir (str): The root directory of the project.
 
@@ -52,7 +52,7 @@ class BitInfoCharts:
         """
         Parses a string list into a list of strings.
 
-        Args:
+        Parameters:
             StrList (str): The string list to parse.
 
         Returns:
@@ -73,7 +73,7 @@ class BitInfoCharts:
         This method sends a GET request to the specified URL, parses the HTML response to extract
         the JavaScript data containing the graph values, and processes the data into a pandas DataFrame.
 
-        Args:
+        Parameters:
             url (str): The URL of the Bitinfocharts page to scrape.
             var_name (str): The variable name to use for the DataFrame column.
 
@@ -112,7 +112,7 @@ class BitInfoCharts:
         """
         Merges a list of DataFrames on the 'date' column.
 
-        Args:
+        Parameters:
             df_list (list): A list of DataFrames to merge.
 
         Returns:
@@ -211,7 +211,7 @@ class BitInfoCharts:
         reindexes the data to match the provided date range, renames columns, and merges
         the processed data with the Yahoo Finance data.
 
-        Args:
+        Parameters:
             data_yf (pd.DataFrame): The Yahoo Finance data to merge with.
             date_range (pd.date_range): The date range to reindex the data.
 

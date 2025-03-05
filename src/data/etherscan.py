@@ -9,7 +9,7 @@ class EtherScan:
         """
         Initializes the EtherScan class for cleaning and processing data from Etherscan.
 
-        Args:
+        Parameters:
             ticker (str): The ticker symbol for the cryptocurrency (e.g., 'ETH').
             root_dir (str): The root directory of the project.
 
@@ -34,7 +34,7 @@ class EtherScan:
         relevant columns, converts date formats, reindexes the data to match the provided date range,
         and merges the processed data with the Yahoo Finance data.
 
-        Args:
+        Parameters:
             data_yf (pd.DataFrame): The Yahoo Finance data to merge with.
             date_range (pd.date_range): The date range to reindex the data.
 

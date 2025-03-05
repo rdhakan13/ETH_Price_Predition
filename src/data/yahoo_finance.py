@@ -11,7 +11,7 @@ class YahooFinance:
         """
         Initializes the YahooFinance class with the given ticker symbol.
 
-        Args:
+        Parameters:
             ticker (str): The ticker symbol for which to download data.
             root_dir (str): The root directory of the project.
 
@@ -32,7 +32,7 @@ class YahooFinance:
         """
         Downloads historical data for the given ticker symbol from Yahoo Finance and saves it to the raw data directory.
 
-        Args:
+        Parameters:
             period (str): The period for which to download data (default: 'max').
                           Valid periods are '1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', and 'max'.
             interval (str): The interval for the data (default: '1d').
@@ -77,7 +77,7 @@ class YahooFinance:
         This method reads the raw data CSV file, converts the 'Date' column to datetime,
         reindexes the data to match the provided date range, and returns the processed data.
 
-        Args:
+        Parameters:
             date_range (pd.date_range): The date range to reindex the data.
 
         Returns:
@@ -96,7 +96,7 @@ class YahooFinance:
         This method processes the raw data by reindexing it to match the provided date range
         and returns the processed data as a pandas DataFrame.
 
-        Args:
+        Parameters:
             date_range (pd.date_range): The date range for which to process the data.
 
         Returns:

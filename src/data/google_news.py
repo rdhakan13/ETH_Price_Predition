@@ -13,7 +13,7 @@ class GoogleNews:
         """
         Initializes the GoogleNews class.
 
-        Args:
+        Parameters:
             root_dir (str): The root directory of the project.
         """
         self.root_dir = str(root_dir)
@@ -29,7 +29,7 @@ class GoogleNews:
         """
         Extracts Google News headlines for the specified year and keywords.
 
-        Args:
+        Parameters:
             year (int): The year for which to extract headlines.
             keywords (list): A list of keywords to search for.
             dates_list (list): A list of date tuples (year, month, day) to search within.
