@@ -19,3 +19,4 @@ if __name__ == "__main__":
     CBA = BertSentimentAnalyser(processed_gn, model_name="ElKulako/cryptobert")
     processed_gn = CBA.analyse_sentiment("News Headline")
     processed_gn.to_csv(f"{root_dir}\\data\\final\\sentiment_analysis.csv", index=False)
+    logger.info(f"Sentiment analysis saved to {root_dir}\\data\\final\\")

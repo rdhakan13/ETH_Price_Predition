@@ -25,7 +25,6 @@ class BertSentimentAnalyser(SentimentAnalyser):
         results = self.df[column_name].astype(str).swifter.apply(self.analyzer)
         self.df[f'D_{self._model_name()}_ConScore'] = results.swifter.apply(lambda x: x[0]['score'])
         self.df[f'D_{self._model_name()}_Sent'] = results.swifter.apply(lambda x: self.determine_sentiment(x[0]['label']))
-        self.df[f'D_{self._model_name()}_Score'] = self.df[f'D_{self._model_name()}_ConScore']*self.df[f'D_{self._model_name()}_Sent']
         end_time = time.time()
         logging.info("Sentiment analysis complete")
         logger.info(f"Time taken: {end_time - start_time}")
