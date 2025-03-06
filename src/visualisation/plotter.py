@@ -56,6 +56,8 @@ class Plotter:
             df.plot(kind='bar', ax=self.ax, **kwargs)
             plt.xlabel(x.title())
             plt.ylabel(y.title())
+            if kwargs.get("legend") is not None:
+                plt.legend(title=kwargs.get("legend"))
             if kwargs.get("bar_label") is True:
                 for c in self.ax.containers:
                     labels = [int(v.get_height()) if v.get_height() > 0 else '' for v in c]
