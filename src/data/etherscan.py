@@ -1,6 +1,7 @@
 import os
 import logging
 import pandas as pd
+from src.common.utils import make_directory
 
 logger = logging.getLogger(__name__)
 
@@ -81,8 +82,7 @@ class EtherScan:
         Returns:
             None
         """
-        if not os.path.exists(self.raw_dir):
-            os.makedirs(self.raw_dir)
+        make_directory(self.processsed_dir)
 
         self.processed_data.to_csv(f"{self.processsed_dir}\\{self.ticker[:3]}_etherscan.csv")
 

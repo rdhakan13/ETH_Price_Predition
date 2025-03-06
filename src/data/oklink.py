@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import logging
+from src.common.utils import make_directory
 
 logger = logging.getLogger(__name__)
 
@@ -71,8 +72,7 @@ class OkLink:
         Returns:
             None
         """
-        if not os.path.exists(self.processed_dir):
-            os.makedirs(self.processed_dir)
+        make_directory(self.processed_dir)
 
         self.processed_data.to_csv(f"{self.processed_dir}\\{self.ticker}_oklink.csv", index=False)
 

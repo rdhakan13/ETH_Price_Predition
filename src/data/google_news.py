@@ -4,6 +4,7 @@ import pandas as pd
 from tqdm import tqdm
 from gnews import GNews
 from datetime import datetime, timedelta
+from src.common.utils import make_directory
 
 logger = logging.getLogger(__name__)
 
@@ -82,9 +83,7 @@ class GoogleNews:
         Returns:
             None
         """
-
-        if not os.path.exists(self.raw_dir):
-            os.makedirs(self.raw_dir)
+        make_directory(self.raw_dir)
 
         self.raw_data.to_csv(f"{self.raw_dir}\\google_news_headlines_data_{self.year}.csv")
 
@@ -132,9 +131,7 @@ class GoogleNews:
         Returns:
             None
         """
-
-        if not os.path.exists(self.processed_dir):
-            os.makedirs(self.processed_dir)
+        make_directory(self.processed_dir)
 
         self.processed_data.to_csv(f"{self.processed_dir}\\google_news_headlines_data.csv", index=False)
 

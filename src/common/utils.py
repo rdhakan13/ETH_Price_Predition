@@ -1,5 +1,6 @@
 from pathlib import Path
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,19 @@ def get_root_directory() -> str:
         current_path = current_path.parent
 
     return current_path
+
+def make_directory(directory:str) -> None:
+    """
+    Creates a directory if it does not exist.
+
+    Parameters:
+        directory (str): The directory to be created.
+
+    Returns:
+        None
+    """
+    if not os.path.exists(directory):
+            os.makedirs(directory)
 
 def split_dates_by_year(date_tuples:tuple=None) -> list:
     """

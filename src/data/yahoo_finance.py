@@ -2,6 +2,7 @@ import os
 import logging
 import pandas as pd
 import yfinance as yf
+from src.common.utils import make_directory
 
 logger = logging.getLogger(__name__)
 
@@ -63,8 +64,7 @@ class YahooFinance:
         Returns:
             None
         """
-        if not os.path.exists(self.raw_dir):
-            os.makedirs(self.raw_dir)
+        make_directory(self.raw_dir)
 
         self.raw_data.to_csv(f"{self.raw_dir}\\{self.ticker}_price_data.csv")
 
