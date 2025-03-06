@@ -1,9 +1,13 @@
 YML_FILE = environment.yml
 ENV_NAME = STD_DS_LIB
 
-.PHONY: create-env list-packages update-env remove-env
+.PHONY: export-env create-env list-packages update-env remove-env
 
 .ONESHELL:
+
+exp-env:
+	@echo Exporting conda environment...
+	conda env export > $(YML_FILE)
 
 create-env:
 	@echo Creating conda environment
