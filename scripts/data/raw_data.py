@@ -6,13 +6,12 @@ from src.data.yahoo_finance import YahooFinance
 from src.data.bitinfocharts import BitInfoCharts
 from src.data.google_news import GoogleNews
 
-tickers = ['BTC-USD','ETH-USD','LTC-USD']
-keywords = ['cryptocurrency','blockchain','bitcoin','ethereum','litecoin']
-root_dir = str(get_root_directory())+"\\temp"
 logger = get_logger("INFO", __name__)
+tickers = ["BTC-USD", "ETH-USD", "LTC-USD"]
+keywords = ["cryptocurrency", "blockchain", "bitcoin", "ethereum", "litecoin"]
+root_dir = str(get_root_directory()) + "\\temp"
 
 if __name__ == "__main__":
-
     start_time = time.time()
 
     for ticker in tickers:
@@ -28,9 +27,9 @@ if __name__ == "__main__":
     except FileNotFoundError as e:
         logger.error("File not found")
         raise e
-    
+
     try:
-        date_format = "%d/%m/%Y" 
+        date_format = "%d/%m/%Y"
         data["Date"] = pd.to_datetime(data["Date"], format=date_format)
     except KeyError as e:
         logger.error("Column not found")
@@ -38,7 +37,7 @@ if __name__ == "__main__":
 
     all_dates = sorted(data["Date"].tolist())
 
-    date_tuples = [(date.year,date.month,date.day) for date in all_dates]
+    date_tuples = [(date.year, date.month, date.day) for date in all_dates]
 
     dates_list = split_dates_by_year(date_tuples)
 
@@ -50,7 +49,3 @@ if __name__ == "__main__":
     end_time = time.time()
     total_runtime = end_time - start_time
     logger.info(f"TOTAL RUNTIME: {total_runtime}s")
-    
-    
-        
-
