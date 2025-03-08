@@ -1,5 +1,11 @@
+LOG_DIR = ./logs
+TEMP_DIR = ./temp
+LINT_SRC = ./src/
+LINT_SCRIPTS = ./scripts/
+TYPE_CHECK_DIR = ./src/common/
 YML_FILE = environment.yml
 ENV_NAME = STD_DS_LIB
+EC2_SETUP_SCRIPT = ./scripts/setup.sh
 
 .PHONY: export-env create-env list-packages update-env remove-env
 
@@ -24,3 +30,24 @@ update-env:
 remove-env:
 	@echo Removing conda environment...
 	conda env remove -n $(ENV_NAME) 
+
+onetime-setup-ec2:
+	@echo Setting up EC2 instance...
+	bash $(EC2_SETUP_SCRIPT)
+	@echo Done!
+
+clean:
+	@echo Cleaning up...
+	rm -rf $(LOG_DIR) $(TEMP_DIR)
+	@echo Done!
+
+lint-format: 
+	@echo Linting...
+	ruff format $(LINT_SRC)
+	ruff format $(LINT_SCRIPTS)
+	@echo Done!
+
+type-check:
+	@echo Type checking...
+	mypy $(TYPE_CHECK_DIR)
+	@echo Done!
