@@ -2,7 +2,7 @@ import os
 import re
 import random
 import logging
-import requests 
+import requests
 import pandas as pd
 from time import sleep
 from fastcore.all import *
@@ -12,9 +12,9 @@ from src.common.utils import make_directory
 
 logger = logging.getLogger(__name__)
 
+
 class BitInfoCharts:
-   
-    def __init__(self, ticker, root_dir:str=None):
+    def __init__(self, ticker, root_dir: str = None):
         """
         Initializes the BitInfoCharts class for downloading and processing data from Bitinfocharts.
 
@@ -34,22 +34,46 @@ class BitInfoCharts:
         """
         self.ticker = ticker
         self.root_dir = str(root_dir)
-        self.raw_dir = f"{self.root_dir}\\data\\raw\\{self.ticker[:3]}_data\\bitinfocharts"
+        self.raw_dir = (
+            f"{self.root_dir}\\data\\raw\\{self.ticker[:3]}_data\\bitinfocharts"
+        )
         self.raw_data = None
         self.processed_dir = f"{self.root_dir}\\data\\processed\\{self.ticker[:3]}_data"
         self.processed_data = None
-        self.url = 'https://bitinfocharts.com'
-        self.chart_dict_list = [{'url': 'https://bitinfocharts.com/comparison/bitcoin-transactions.html', 'name': 'transactions'},
-                {'url': 'https://bitinfocharts.com/comparison/size-btc.html', 'name': 'block_size'},
-                {'url': 'https://bitinfocharts.com/comparison/bitcoin-difficulty.html', 'name': 'difficulty'},
-                {'url': 'https://bitinfocharts.com/comparison/bitcoin-hashrate.html', 'name': 'hashrate'},
-                {'url': 'https://bitinfocharts.com/comparison/bitcoin-transactionfees.html', 'name': 'av_transaction_size'},
-                {'url': 'https://bitinfocharts.com/comparison/bitcoin-size.html', 'name': 'block_size'},
-                {'url': 'https://bitinfocharts.com/comparison/bitcoin-activeaddresses.html', 'name': 'active_addresses'},
-                ]
+        self.url = "https://bitinfocharts.com"
+        self.chart_dict_list = [
+            {
+                "url": "https://bitinfocharts.com/comparison/bitcoin-transactions.html",
+                "name": "transactions",
+            },
+            {
+                "url": "https://bitinfocharts.com/comparison/size-btc.html",
+                "name": "block_size",
+            },
+            {
+                "url": "https://bitinfocharts.com/comparison/bitcoin-difficulty.html",
+                "name": "difficulty",
+            },
+            {
+                "url": "https://bitinfocharts.com/comparison/bitcoin-hashrate.html",
+                "name": "hashrate",
+            },
+            {
+                "url": "https://bitinfocharts.com/comparison/bitcoin-transactionfees.html",
+                "name": "av_transaction_size",
+            },
+            {
+                "url": "https://bitinfocharts.com/comparison/bitcoin-size.html",
+                "name": "block_size",
+            },
+            {
+                "url": "https://bitinfocharts.com/comparison/bitcoin-activeaddresses.html",
+                "name": "active_addresses",
+            },
+        ]
 
     @staticmethod
-    def _parse_strlist(sl:str)->list:
+    def _parse_strlist(sl: str) -> list:
         """
         Parses a string list into a list of strings.
 
@@ -59,15 +83,15 @@ class BitInfoCharts:
         Returns:
             list: A list of strings.
         """
-        clean = re.sub("[\[\],\s]","",sl)
+        clean = re.sub("[\[\],\s]", "", sl)
 
-        splitted = re.split("[\'\"]",clean)
+        splitted = re.split("['\"]", clean)
 
-        values_only = [s for s in splitted if s != '']
+        values_only = [s for s in splitted if s != ""]
 
         return values_only
 
-    def _get_bitinfochart_graph_values(self, url:str, var_name:str)->pd.DataFrame:
+    def _get_bitinfochart_graph_values(self, url: str, var_name: str) -> pd.DataFrame:
         """
         Extracts graph values from the Bitinfocharts website for a given URL and variable name.
 
@@ -86,15 +110,15 @@ class BitInfoCharts:
 
         response = requests.get(url)
 
-        soup = BeautifulSoup(response.text, 'html.parser')
+        soup = BeautifulSoup(response.text, "html.parser")
 
-        scripts = soup.find_all('script')
+        scripts = soup.find_all("script")
         for script in scripts:
             if 'd = new Dygraph(document.getElementById("container")' in script.text:
                 StrList = script.text
-                StrList = '[[' + StrList.split('[[')[-1]
-                StrList = StrList.split(']]')[0] +']]'
-                StrList = StrList.replace("new Date(", '').replace(')','')
+                StrList = "[[" + StrList.split("[[")[-1]
+                StrList = StrList.split("]]")[0] + "]]"
+                StrList = StrList.replace("new Date(", "").replace(")", "")
                 dataList = self._parse_strlist(StrList)
 
         date = []
@@ -105,11 +129,11 @@ class BitInfoCharts:
             else:
                 value.append(each)
 
-        df = pd.DataFrame(list(zip(date, value)), columns=["date",var_name])
+        df = pd.DataFrame(list(zip(date, value)), columns=["date", var_name])
         return df
 
     @staticmethod
-    def _merge_dfs(df_list:list)->pd.DataFrame:
+    def _merge_dfs(df_list: list) -> pd.DataFrame:
         """
         Merges a list of DataFrames on the 'date' column.
 
@@ -120,15 +144,15 @@ class BitInfoCharts:
             DataFrame: A merged DataFrame.
         """
         df_merged = None
-        for i in range(len(df_list)-1):
-          if i == 0:
-            df_merged = df_list[i].merge(df_list[i+1], on='date', how='outer')
-          else:
-            df_merged = df_merged.merge(df_list[i+1], on='date', how='outer')
+        for i in range(len(df_list) - 1):
+            if i == 0:
+                df_merged = df_list[i].merge(df_list[i + 1], on="date", how="outer")
+            else:
+                df_merged = df_merged.merge(df_list[i + 1], on="date", how="outer")
 
         return df_merged
-    
-    def get_raw_data(self)->None:
+
+    def get_raw_data(self) -> None:
         """
         Downloads raw data from Bitinfocharts for the specified ticker.
 
@@ -140,54 +164,58 @@ class BitInfoCharts:
             None
         """
         response = requests.get(self.url)
-        soup = BeautifulSoup(response.text, 'html.parser')
+        soup = BeautifulSoup(response.text, "html.parser")
 
         coin_dict_list = []
 
         logger.info(f"Downloading Bitinfocharts data for {self.ticker}.")
 
-        for span in soup.find_all('span'):
-          if 's_coins' in str(span.get('class')):
-            name = span.get('title').lower()
-            coin = span.get('data-coin')
-            if coin.upper() in [self.ticker[:3]]:
-                coin_dict_list.append({'full_name': name,'coin': coin})
+        for span in soup.find_all("span"):
+            if "s_coins" in str(span.get("class")):
+                name = span.get("title").lower()
+                coin = span.get("data-coin")
+                if coin.upper() in [self.ticker[:3]]:
+                    coin_dict_list.append({"full_name": name, "coin": coin})
 
         for coin_dict in coin_dict_list:
-          coin_dict['scrape_details'] = []
-          for chart_dict in self.chart_dict_list:
-            temp_dict = chart_dict.copy()
-            url = temp_dict['url']
-            url = url.replace('bitcoin', coin_dict['full_name'])
-            url = url.replace('btc', coin_dict['coin'])
-            url = url.replace(' ', '%20')
-            temp_dict['url'] = url
-            coin_dict['scrape_details'].append(temp_dict)
+            coin_dict["scrape_details"] = []
+            for chart_dict in self.chart_dict_list:
+                temp_dict = chart_dict.copy()
+                url = temp_dict["url"]
+                url = url.replace("bitcoin", coin_dict["full_name"])
+                url = url.replace("btc", coin_dict["coin"])
+                url = url.replace(" ", "%20")
+                temp_dict["url"] = url
+                coin_dict["scrape_details"].append(temp_dict)
 
         coin_merged_df_list = []
 
         for coin_dict in progress_bar(coin_dict_list[:4]):
-          print(f"Processing - {coin_dict['full_name']}")
-          coin_df_list = []
-          for page in progress_bar(coin_dict['scrape_details']):
-            try:
-              coin_df_list.append(self._get_bitinfochart_graph_values(url=page['url'], var_name=page['name']))
-            except Exception as e:
-              empty_df = pd.DataFrame()
-              empty_df['full_name'] = coin_dict['full_name']
-              empty_df['coin'] = coin_dict['coin']
-              coin_df_list.append(pd.DataFrame)
-              print(f"Error with {coin_dict['full_name']}: {e}")
+            print(f"Processing - {coin_dict['full_name']}")
+            coin_df_list = []
+            for page in progress_bar(coin_dict["scrape_details"]):
+                try:
+                    coin_df_list.append(
+                        self._get_bitinfochart_graph_values(
+                            url=page["url"], var_name=page["name"]
+                        )
+                    )
+                except Exception as e:
+                    empty_df = pd.DataFrame()
+                    empty_df["full_name"] = coin_dict["full_name"]
+                    empty_df["coin"] = coin_dict["coin"]
+                    coin_df_list.append(pd.DataFrame)
+                    print(f"Error with {coin_dict['full_name']}: {e}")
 
-          self.raw_data = self._merge_dfs(coin_df_list)
-          self.raw_data['full_name'] = coin_dict['full_name']
-          self.raw_data['coin'] = coin_dict['coin']
+            self.raw_data = self._merge_dfs(coin_df_list)
+            self.raw_data["full_name"] = coin_dict["full_name"]
+            self.raw_data["coin"] = coin_dict["coin"]
 
-          coin_merged_df_list.append(self.raw_data)
+            coin_merged_df_list.append(self.raw_data)
 
         logger.info(f"Data downloaded successfully for {self.ticker}.")
-      
-    def save_raw_data(self)->None:
+
+    def save_raw_data(self) -> None:
         """
         Saves the raw data to a CSV file in the raw data directory.
 
@@ -203,7 +231,9 @@ class BitInfoCharts:
 
         logger.info(f"Data saved to {self.raw_dir}.")
 
-    def process_raw_data(self, data_yf:pd.DataFrame=None, date_range:pd.date_range=None)->None:
+    def process_raw_data(
+        self, data_yf: pd.DataFrame = None, date_range: pd.date_range = None
+    ) -> None:
         """
         Processes raw data from Bitinfocharts and merges it with Yahoo Finance data.
 
@@ -221,16 +251,36 @@ class BitInfoCharts:
         logger.info(f"Processing raw data from {self.ticker[:3]} for Bitinfocharts.")
 
         data_bic = pd.read_csv(f"{self.raw_dir}\\{self.ticker[:3]}.csv")
-        data_bic['date'] = pd.to_datetime(data_bic['date'])
-        data_bic = data_bic.set_index('date').reindex(date_range).reset_index()
-        data_bic.rename(columns={'index': 'Date','transactions':'Transactions','block_size_x':'Block Size','difficulty':'Difficulty',
-                            'hashrate':'Hashrate','active_addresses':'Active Addressses'}, inplace=True)
-        data_bic.drop(columns=['Unnamed: 0','block_size_y','av_transaction_size','full_name','coin'], inplace=True)
-        self.processed_data = data_yf.merge(data_bic, on='Date', how='outer')
+        data_bic["date"] = pd.to_datetime(data_bic["date"])
+        data_bic = data_bic.set_index("date").reindex(date_range).reset_index()
+        data_bic.rename(
+            columns={
+                "index": "Date",
+                "transactions": "Transactions",
+                "block_size_x": "Block Size",
+                "difficulty": "Difficulty",
+                "hashrate": "Hashrate",
+                "active_addresses": "Active Addressses",
+            },
+            inplace=True,
+        )
+        data_bic.drop(
+            columns=[
+                "Unnamed: 0",
+                "block_size_y",
+                "av_transaction_size",
+                "full_name",
+                "coin",
+            ],
+            inplace=True,
+        )
+        self.processed_data = data_yf.merge(data_bic, on="Date", how="outer")
 
-        logger.info(f"Data processed successfully for {self.ticker[:3]} from Bitinfocharts.")
+        logger.info(
+            f"Data processed successfully for {self.ticker[:3]} from Bitinfocharts."
+        )
 
-    def save_processed_data(self)->None:
+    def save_processed_data(self) -> None:
         """
         Saves the processed data to a CSV file in the processed data directory.
 
@@ -242,6 +292,8 @@ class BitInfoCharts:
         """
         make_directory(self.processed_dir)
 
-        self.processed_data.to_csv(f"{self.processed_dir}\\{self.ticker[:3]}_bitinfocharts.csv", index=False)
+        self.processed_data.to_csv(
+            f"{self.processed_dir}\\{self.ticker[:3]}_bitinfocharts.csv", index=False
+        )
 
         logger.info(f"Data saved successfully to {self.processed_dir}.")

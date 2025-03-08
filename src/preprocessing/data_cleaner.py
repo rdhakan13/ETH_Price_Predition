@@ -4,8 +4,26 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
+
 class DataCleaner:
-    def __init__(self, root_dir:str, ticker:str, source:list):
+    def __init__(self, root_dir: str, ticker: str, source: list):
+        """
+        Initialize the data cleaner.
+
+        Parameters:
+            root_dir (str): Root directory of the project.
+            ticker (str): Ticker of the cryptocurrency.
+            source (list): List of sources of the data.
+
+        Attributes:
+            root_dir (str): Root directory of the project.
+            ticker (str): Ticker of the cryptocurrency.
+            source (list): List of sources of the data.
+            etherscan (pd.DataFrame): Data from Etherscan.
+            oklink (pd.DataFrame): Data from OkLink.
+            bitinfocharts (pd.DataFrame): Data from BitInfoCharts.
+            cleaned_data (pd.DataFrame): Cleaned data.
+        """
         self.root_dir = root_dir
         self.ticker = ticker
         self.source = source
@@ -14,29 +32,35 @@ class DataCleaner:
         self.bitinfocharts = None
         self.cleaned_data = None
 
-    def read_data(self)->None:
+    def read_data(self) -> None:
         """
         Read data from processed folder.
-        
+
         Returns:
             None
         """
         logger.info("Reading data")
         if "oklink" in self.source:
             try:
-                self.oklink = pd.read_csv(f"{self.root_dir}\\data\\processed\\{self.ticker[:3]}_data\\{self.ticker[:3]}_oklink.csv")
+                self.oklink = pd.read_csv(
+                    f"{self.root_dir}\\data\\processed\\{self.ticker[:3]}_data\\{self.ticker[:3]}_oklink.csv"
+                )
             except FileNotFoundError as e:
                 logger.error("File not found")
                 raise e
         if "bitinfocharts" in self.source:
             try:
-                self.bitinfocharts = pd.read_csv(f"{self.root_dir}\\data\\processed\\{self.ticker[:3]}_data\\{self.ticker[:3]}_bitinfocharts.csv")
+                self.bitinfocharts = pd.read_csv(
+                    f"{self.root_dir}\\data\\processed\\{self.ticker[:3]}_data\\{self.ticker[:3]}_bitinfocharts.csv"
+                )
             except FileNotFoundError as e:
                 logger.error("File not found")
                 raise e
-        if self.ticker[:3]=="ETH" and "etherscan" in self.source:
+        if self.ticker[:3] == "ETH" and "etherscan" in self.source:
             try:
-                self.etherscan = pd.read_csv(f"{self.root_dir}\\data\\processed\\{self.ticker[:3]}_data\\{self.ticker[:3]}_etherscan.csv")
+                self.etherscan = pd.read_csv(
+                    f"{self.root_dir}\\data\\processed\\{self.ticker[:3]}_data\\{self.ticker[:3]}_etherscan.csv"
+                )
             except FileNotFoundError as e:
                 logger.error("File not found")
                 raise e
@@ -44,11 +68,11 @@ class DataCleaner:
             logger.info("No data read.")
         else:
             logger.info("Data read successfully")
-    
-    def identify_nan(self)->None:
+
+    def identify_nan(self) -> None:
         """
         Identify NaN values in the data.
-        
+
         Returns:
             None
         """
@@ -64,21 +88,21 @@ class DataCleaner:
             self.bitinfocharts.replace(0, np.nan, inplace=True)
         logger.info("NaN values identified")
 
-    def interpolate_clean_data(self, method:str)->None:
+    def interpolate_clean_data(self, method: str) -> None:
         """
         Interpolate NaN values in the data.
-        
+
         Parameters:
             method (str): Method to use for interpolation.
-        
+
         Returns:
             None
         """
-        logger.info("Interpolating NaN values using method: "+method)
+        logger.info("Interpolating NaN values using method: " + method)
         if self.cleaned_data is not None:
             if method == "time":
-                self.cleaned_data['Date'] = pd.to_datetime(self.cleaned_data['Date'])
-                self.cleaned_data = self.cleaned_data.set_index('Date')
+                self.cleaned_data["Date"] = pd.to_datetime(self.cleaned_data["Date"])
+                self.cleaned_data = self.cleaned_data.set_index("Date")
             try:
                 self.cleaned_data.interpolate(method=method, inplace=True)
                 logger.info("NaN values interpolated")
@@ -88,44 +112,46 @@ class DataCleaner:
         else:
             logger.error("No data to interpolate")
 
-    def drop_columns(self, source:str, columns:list)->None:
+    def drop_columns(self, source: str, columns: list) -> None:
         """
         Drop columns from the data.
-        
+
         Parameters:
             source (str): Source of the data.
             columns (list): Columns to drop.
-        
+
         Returns:
             None
         """
         logger.info("Dropping columns")
         if source not in ["etherscan", "oklink", "bitinfocharts"]:
             raise ValueError("Invalid source")
-        if source=="etherscan":
+        if source == "etherscan":
             columns_to_drop = [col for col in columns if col in self.etherscan.columns]
             try:
                 self.etherscan.drop(columns=columns_to_drop, inplace=True)
             except KeyError as e:
                 logger.error("Column not found")
                 raise e
-        if source=="oklink":
+        if source == "oklink":
             try:
                 columns_to_drop = [col for col in columns if col in self.oklink.columns]
                 self.oklink.drop(columns=columns_to_drop, inplace=True)
             except KeyError as e:
                 logger.error("Column not found")
                 raise e
-        if source=="bitinfocharts":
+        if source == "bitinfocharts":
             try:
-                columns_to_drop = [col for col in columns if col in self.bitinfocharts.columns]
+                columns_to_drop = [
+                    col for col in columns if col in self.bitinfocharts.columns
+                ]
                 self.bitinfocharts.drop(columns=columns, inplace=True)
             except KeyError as e:
                 logger.error("Column not found")
                 raise e
         logger.info("Columns dropped")
 
-    def standardise_columns(self, source:str, column_mapping:dict)->None:
+    def standardise_columns(self, source: str, column_mapping: dict) -> None:
         """
         Standardise columns in the data.
 
@@ -137,17 +163,17 @@ class DataCleaner:
             None
         """
         logger.info("Standardising columns")
-        if source=="etherscan":
+        if source == "etherscan":
             self.etherscan.rename(columns=column_mapping, inplace=True)
-        elif source=="oklink":
+        elif source == "oklink":
             self.oklink.rename(columns=column_mapping, inplace=True)
-        elif source=="bitinfocharts":
+        elif source == "bitinfocharts":
             self.bitinfocharts.rename(columns=column_mapping, inplace=True)
         else:
             logger.error("Invalid source")
         logger.info("Columns standardised")
-    
-    def merge_sources(self, on:str="Date")->None:
+
+    def merge_sources(self, on: str = "Date") -> None:
         """
         Merge data from different sources.
 
@@ -158,30 +184,34 @@ class DataCleaner:
             None
         """
         for i, source in enumerate(self.source):
-            if i==0:
+            if i == 0:
                 if source == "etherscan":
                     self.cleaned_data = self.etherscan
-                elif source=="oklink":
+                elif source == "oklink":
                     self.cleaned_data = self.oklink
-                elif source=="bitinfocharts":
+                elif source == "bitinfocharts":
                     self.cleaned_data = self.bitinfocharts
                 else:
                     logger.error("Invalid source")
             else:
                 if source == "etherscan":
-                    self.cleaned_data = pd.merge(self.cleaned_data, self.etherscan, on=on)
-                elif source=="oklink":
+                    self.cleaned_data = pd.merge(
+                        self.cleaned_data, self.etherscan, on=on
+                    )
+                elif source == "oklink":
                     self.cleaned_data = pd.merge(self.cleaned_data, self.oklink, on=on)
-                elif source=="bitinfocharts":
-                    self.cleaned_data = pd.merge(self.cleaned_data, self.bitinfocharts, on=on)
+                elif source == "bitinfocharts":
+                    self.cleaned_data = pd.merge(
+                        self.cleaned_data, self.bitinfocharts, on=on
+                    )
                 else:
                     logger.error("Invalid source")
         logger.info("Data merged")
 
-    def get_clean_data(self)->pd.DataFrame:
+    def get_clean_data(self) -> pd.DataFrame:
         """
         Get the cleaned data.
-        
+
         Returns:
             pd.DataFrame: The cleaned data.
         """

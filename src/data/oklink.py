@@ -5,8 +5,9 @@ from src.common.utils import make_directory
 
 logger = logging.getLogger(__name__)
 
+
 class OkLink:
-    def __init__(self, root_dir:str=None, ticker:str=None):
+    def __init__(self, root_dir: str = None, ticker: str = None):
         """
         Initializes the OkLink class for processing data from OkLink.
 
@@ -27,7 +28,9 @@ class OkLink:
         self.processed_dir = f"{root_dir}\\data\\processed\\{ticker}_data"
         self.processed_data = None
 
-    def process_raw_data(self, data_yf:pd.DataFrame=None, date_range:pd.date_range=None)->None:
+    def process_raw_data(
+        self, data_yf: pd.DataFrame = None, date_range: pd.date_range = None
+    ) -> None:
         """
         Processes raw data files from OkLink and merges them with Yahoo Finance data.
 
@@ -44,7 +47,7 @@ class OkLink:
         """
         if data_yf is None or not isinstance(data_yf, pd.DataFrame):
             raise ValueError("data_yf must be a DataFrame")
-        
+
         if date_range is None:
             raise ValueError("date_range must be a pd.date_range object")
 
@@ -53,16 +56,18 @@ class OkLink:
         for file in os.listdir(self.raw_dir):
             filepath = self.raw_dir + "\\" + file
             data_oklink = pd.read_csv(filepath)
-            data_oklink['Time'] = pd.to_datetime(data_oklink['Time'])
-            data_oklink = data_oklink.set_index('Time').reindex(date_range).reset_index()
-            data_oklink.rename(columns={'index': 'Date'}, inplace=True)
-            data_oklink = data_oklink.iloc[:,:2]
-            data_oklink = data_yf.merge(data_oklink, on='Date', how='outer')
+            data_oklink["Time"] = pd.to_datetime(data_oklink["Time"])
+            data_oklink = (
+                data_oklink.set_index("Time").reindex(date_range).reset_index()
+            )
+            data_oklink.rename(columns={"index": "Date"}, inplace=True)
+            data_oklink = data_oklink.iloc[:, :2]
+            data_oklink = data_yf.merge(data_oklink, on="Date", how="outer")
 
         self.processed_data = data_oklink
         logger.info(f"Data processed successfully for {self.ticker} from OkLink")
 
-    def save_processed_data(self)->None:
+    def save_processed_data(self) -> None:
         """
         Saves the processed data to a CSV file in the processed data directory.
 
@@ -74,6 +79,8 @@ class OkLink:
         """
         make_directory(self.processed_dir)
 
-        self.processed_data.to_csv(f"{self.processed_dir}\\{self.ticker}_oklink.csv", index=False)
+        self.processed_data.to_csv(
+            f"{self.processed_dir}\\{self.ticker}_oklink.csv", index=False
+        )
 
         logger.info(f"Data saved successfully to {self.processed_dir}")

@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 logger = logging.getLogger(__name__)
 
-class Plotter:
 
+class Plotter:
     def __init__(self, root_dir):
         """
         Initialize the Plotter with the parent directory.
@@ -29,20 +29,27 @@ class Plotter:
         self.fig = None
         self.ax = None
 
-    def configure_style(self, style:str="whitegrid", palette:str="deep")->None:
+    def configure_style(self, style: str = "whitegrid", palette: str = "deep") -> None:
         """
         Configure the style and palette of the plots.
 
         Parameters:
             style (str, optional): The style of the plot. Default is "whitegrid".
             palette (str, optional): The color palette of the plot. Default is "deep".
-        
+
         Returns:
             None
         """
         sns.set(style=style, palette=palette)
 
-    def plot_barchart(self, df:pd.DataFrame=None, x:str=None, y:str=None, figsize:tuple=(10,6), **kwargs)->None:
+    def plot_barchart(
+        self,
+        df: pd.DataFrame = None,
+        x: str = None,
+        y: str = None,
+        figsize: tuple = (10, 6),
+        **kwargs,
+    ) -> None:
         """
         Generate a bar chart for the given DataFrame.
 
@@ -52,7 +59,7 @@ class Plotter:
             y (str, optional): Column name for the y-axis. Default is None.
             figsize (tuple, optional): The size of the figure. Default is (10, 6).
             kwargs (dict, optional): Additional keyword arguments for the plot.
-        
+
         Returns:
             None
         """
@@ -60,24 +67,38 @@ class Plotter:
         self.filepath = f"{self.root_dir}\\reports\\figures\\bar_charts"
         kwargs = self._handle_none_graph_kwargs(kwargs)
         if kwargs.get("stacked") is True:
-            df.plot(kind='bar', ax=self.ax, **kwargs)
+            df.plot(kind="bar", ax=self.ax, **kwargs)
             plt.xlabel(x.title())
             plt.ylabel(y.title())
             if kwargs.get("legend") is not None:
                 plt.legend(title=kwargs.get("legend"))
             if kwargs.get("bar_label") is True:
                 for c in self.ax.containers:
-                    labels = [int(v.get_height()) if v.get_height() > 0 else '' for v in c]
-                    self.ax.bar_label(c, labels=labels, label_type='center', fontweight="bold", color="black")
+                    labels = [
+                        int(v.get_height()) if v.get_height() > 0 else "" for v in c
+                    ]
+                    self.ax.bar_label(
+                        c,
+                        labels=labels,
+                        label_type="center",
+                        fontweight="bold",
+                        color="black",
+                    )
         else:
-            df.plot(kind='bar',x=x, y=y, ax=self.ax, **kwargs)
+            df.plot(kind="bar", x=x, y=y, ax=self.ax, **kwargs)
             plt.xlabel(x.title())
             plt.ylabel(y.title())
         if self.title is not None:
             plt.title(self.title.title())
         plt.show()
 
-    def plot_correlation_matrix(self, df:pd.DataFrame=None, method:str="spearmen", figsize:tuple=(10,8), **kwargs)->None:
+    def plot_correlation_matrix(
+        self,
+        df: pd.DataFrame = None,
+        method: str = "spearmen",
+        figsize: tuple = (10, 8),
+        **kwargs,
+    ) -> None:
         """
         Generate a correlation matrix heatmap for the given DataFrame.
 
@@ -100,12 +121,23 @@ class Plotter:
             kwargs.pop("mask")
             kwargs.pop("threshold")
             kwargs = kwargs | {"mask": mask_df}
-        sns.heatmap(corr_df, annot=True, cmap='coolwarm', center=0, **kwargs, ax=self.ax)
+        sns.heatmap(
+            corr_df, annot=True, cmap="coolwarm", center=0, **kwargs, ax=self.ax
+        )
         if self.title is not None:
             plt.title(self.title.title())
         plt.show()
 
-    def plot_violin_plot(self, df: pd.DataFrame, x:str=None, y:str=None, figsize:tuple=(10,8), stripplot:bool = False, jitter:float = 0.1, **kwargs)->None:
+    def plot_violin_plot(
+        self,
+        df: pd.DataFrame,
+        x: str = None,
+        y: str = None,
+        figsize: tuple = (10, 8),
+        stripplot: bool = False,
+        jitter: float = 0.1,
+        **kwargs,
+    ) -> None:
         """
         Generate a violin plot with optional scatter overlay.
 
@@ -117,23 +149,40 @@ class Plotter:
             stripplot (bool, optional): Whether to overlay a stripplot. Default is False.
             jitter (float, optional): Amount of jitter to apply to the stripplot. Default is 0.1.
             **kwargs (dict, optional): Additional keyword arguments for the plot.
-        
+
         Returns:
             None
         """
         self.fig, self.ax = plt.subplots(figsize=figsize)
         self.filepath = f"{self.root_dir}\\reports\\figures\\violin_plots"
         kwargs = self._handle_none_graph_kwargs(kwargs)
-        sns.violinplot(data=df, inner='quartile', x=x, y=y, ax=self.ax, **kwargs)
+        sns.violinplot(data=df, inner="quartile", x=x, y=y, ax=self.ax, **kwargs)
         if stripplot is True:
-            sns.stripplot(data=df, x=x, y=y, jitter=jitter, dodge=True, marker='o', alpha=0.5, color='red', ax=self.ax)
+            sns.stripplot(
+                data=df,
+                x=x,
+                y=y,
+                jitter=jitter,
+                dodge=True,
+                marker="o",
+                alpha=0.5,
+                color="red",
+                ax=self.ax,
+            )
         if self.title is not None:
             plt.title(self.title.title())
         plt.xlabel(x.title())
         plt.ylabel(y.title())
         plt.show()
 
-    def plot_boxplot(self, df: pd.DataFrame, x:str=None, y:str=None, figsize:tuple=(10,8),**kwargs)->None:
+    def plot_boxplot(
+        self,
+        df: pd.DataFrame,
+        x: str = None,
+        y: str = None,
+        figsize: tuple = (10, 8),
+        **kwargs,
+    ) -> None:
         """
         Generate boxplots for the given DataFrame.
 
@@ -159,7 +208,14 @@ class Plotter:
             plt.legend(title=kwargs.get("hue"))
         plt.show()
 
-    def plot_scatterplot(self, df: pd.DataFrame, x:str=None, y:str=None, figsize:tuple=(10,8), **kwargs)->None:
+    def plot_scatterplot(
+        self,
+        df: pd.DataFrame,
+        x: str = None,
+        y: str = None,
+        figsize: tuple = (10, 8),
+        **kwargs,
+    ) -> None:
         """
         Generate a scatter plot for the given DataFrame.
 
@@ -182,8 +238,15 @@ class Plotter:
         plt.xlabel(x.title())
         plt.ylabel(y.title())
         plt.show()
-    
-    def plot_lineplot(self, df: pd.DataFrame, x:str=None, y:str=None, figsize:tuple=(10,8), **kwargs)->None:
+
+    def plot_lineplot(
+        self,
+        df: pd.DataFrame,
+        x: str = None,
+        y: str = None,
+        figsize: tuple = (10, 8),
+        **kwargs,
+    ) -> None:
         """
         Generate a line plot for the given DataFrame.
 
@@ -193,7 +256,7 @@ class Plotter:
             y (str, optional): Column name for the y-axis. Default is None.
             figsize (tuple, optional): The size of the figure. Default is (10, 8).
             **kwargs (dict, optional): Additional keyword arguments for the plot.
-        
+
         Returns:
             None
         """
@@ -207,7 +270,9 @@ class Plotter:
         plt.ylabel(y.title())
         plt.show()
 
-    def save_graph(self, format:str = "jpg", dpi:int=400, filepath:str=None)->None:
+    def save_graph(
+        self, format: str = "jpg", dpi: int = 400, filepath: str = None
+    ) -> None:
         """
         Save the current graph to a file.
 
@@ -220,12 +285,14 @@ class Plotter:
             None
         """
         if filepath is not None:
-            self.filepath=filepath
+            self.filepath = filepath
         if not os.path.exists(self.filepath):
             os.makedirs(self.filepath)
-        self.fig.savefig(f"{self.filepath}\\{self.title}.{format}", format=format, dpi=dpi)
+        self.fig.savefig(
+            f"{self.filepath}\\{self.title}.{format}", format=format, dpi=dpi
+        )
 
-    def _handle_none_graph_kwargs(self, kwargs:dict)->dict:
+    def _handle_none_graph_kwargs(self, kwargs: dict) -> dict:
         """
         Handle the None values in the graph kwargs.
 
@@ -240,10 +307,9 @@ class Plotter:
             kwargs.pop("title")
         else:
             self.title = None
-        
+
         if kwargs.get("filepath") is not None:
             self.filepath = kwargs.get("filepath")
             kwargs.pop("filepath")
 
         return kwargs
-        

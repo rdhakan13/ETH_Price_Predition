@@ -4,7 +4,8 @@ import os
 
 logger = logging.getLogger(__name__)
 
-def get_root_directory() -> str:
+
+def get_root_directory() -> Path:
     """
     Returns the root directory of the project by searching for the .git directory.
 
@@ -15,13 +16,14 @@ def get_root_directory() -> str:
     current_path = Path(__file__).resolve()
 
     while current_path != current_path.parent:
-        if (current_path / '.git').exists():
+        if (current_path / ".git").exists():
             break
         current_path = current_path.parent
 
     return current_path
 
-def make_directory(directory:str) -> None:
+
+def make_directory(directory: str) -> None:
     """
     Creates a directory if it does not exist.
 
@@ -32,9 +34,10 @@ def make_directory(directory:str) -> None:
         None
     """
     if not os.path.exists(directory):
-            os.makedirs(directory)
+        os.makedirs(directory)
 
-def split_dates_by_year(date_tuples:tuple=None) -> list:
+
+def split_dates_by_year(date_tuples: tuple) -> list:
     """
     Splits a list of date tuples into a list of lists, each containing dates from the same year.
 
