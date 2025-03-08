@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.micro
+
+  AmiId:
+    Description: AMI ID for the instance
+    Type: String
+
+  KeyName:
+    Description: Name of an existing EC2 Key Pair
+    Type: AWS::EC2::KeyPair::KeyName
+
+  SecurityGroupId:
+    Description: Security Group ID
+    Type: AWS::EC2::SecurityGroup::Id
+
+  VolumeSize:
+    Description: Size of the EBS volume in GB
+    Type: Number
+    Default: 20
+
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref AmiId
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+        - !Ref SecurityGroupId
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: !Ref VolumeSize
+            DeleteOnTermination: true
+      IamInstanceProfile: !Ref InstanceProfile
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          yum update -y
+          echo "Hello, World!" > /var/www/html/index.html
+      Tags:
+        - Key: Name
+          Value: MyEC2Instance
+
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref InstanceRole
+
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ["ec2.amazonaws.com"]
+            Action: ["sts:AssumeRole"]
+      Policies:
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: ["s3:*"]
+                Resource: "*"
+
+Outputs:
+  InstanceId:
+    Description: The Instance ID of the newly created EC2 instance
+    Value: !Ref MyEC2Instance
