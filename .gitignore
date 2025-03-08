@@ -5,3 +5,5 @@ data/raw/
 data/processed/
 logs/
 temp/*
+.ruff_cache/
+.mypy_cache/
