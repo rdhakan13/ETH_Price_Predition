@@ -38,16 +38,29 @@ onetime-setup-ec2:
 
 clean:
 	@echo Cleaning up...
-	rm -rf $(LOG_DIR) $(TEMP_DIR)
+	ruff clean
+	rmdir /s /q .mypy_cache
+	rmdir /s /q $(LOG_DIR)
+	rmdir /s /q $(TEMP_DIR)
 	@echo Done!
 
-lint-format: 
-	@echo Linting...
+lint: 
+	@echo Linting and fixing...
+	ruff check $(LINT_SRC)
 	ruff format $(LINT_SRC)
+	ruff check $(LINT_SCRIPTS)
+	ruff format $(LINT_SCRIPTS)
+	@echo Done!
+
+lint-fix: 
+	@echo Linting and fixing...
+	ruff check $(LINT_SRC) --fix --ignore F401
+	ruff format $(LINT_SRC)
+	ruff check $(LINT_SCRIPTS) --fix --ignore F401
 	ruff format $(LINT_SCRIPTS)
 	@echo Done!
 
 type-check:
 	@echo Type checking...
-	mypy $(TYPE_CHECK_DIR)
+	mypy --no-cache-dir $(TYPE_CHECK_DIR)
 	@echo Done!
