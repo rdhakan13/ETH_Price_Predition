@@ -1,8 +1,7 @@
 LOG_DIR = ./logs
 TEMP_DIR = ./temp
-LINT_SRC = ./src/
-LINT_SCRIPTS = ./scripts/
-TYPE_CHECK_DIR = ./src/
+SRC = ./src/
+SCRIPTS = ./scripts/
 YML_FILE = environment.yml
 ENV_NAME = STD_DS_LIB
 EC2_SETUP_SCRIPT = ./scripts/setup.sh
@@ -45,22 +44,23 @@ clean:
 	@echo Done!
 
 lint: 
-	@echo Linting and fixing...
-	ruff check $(LINT_SRC)
-	ruff format $(LINT_SRC)
-	ruff check $(LINT_SCRIPTS)
-	ruff format $(LINT_SCRIPTS)
+	@echo Lint formatting src...
+	ruff format $(SRC)
+	@echo Lint formatting scripts...
+	ruff check $(SCRIPTS)
+	ruff format $(SCRIPTS)
 	@echo Done!
 
 lint-fix: 
-	@echo Linting and fixing...
-	ruff check $(LINT_SRC) --fix --ignore F401
-	ruff format $(LINT_SRC)
-	ruff check $(LINT_SCRIPTS) --fix --ignore F401
-	ruff format $(LINT_SCRIPTS)
+	@echo Lint formatting and fixing s...
+	ruff check $(SRC) --fix --ignore F401
+	ruff format $(SRC)
+	@echo Lint formatting and fixing scripts...
+	ruff check $(SCRIPTS) --fix --ignore F401
+	ruff format $(SCRIPTS)
 	@echo Done!
 
 type-check:
 	@echo Type checking...
-	mypy --no-cache-dir $(TYPE_CHECK_DIR)
+	mypy --no-cache-dir $(SRC)
 	@echo Done!
