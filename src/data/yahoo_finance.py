@@ -29,7 +29,7 @@ class YahooFinance:
         self.raw_data = None
         self.processed_data = None
 
-    def get_raw_data(self, period: str = "max", interval: str = "1d") -> None:
+    def get_raw_data(self, period: str = "max", interval: str = "1d"):
         """
         Downloads historical data for the given ticker symbol from Yahoo Finance and saves it to the raw data directory.
 
@@ -60,7 +60,7 @@ class YahooFinance:
 
         logger.info(f"Data downloaded successfully for {self.ticker}.")
 
-    def save_raw_data(self) -> None:
+    def save_raw_data(self):
         """
         Saves the raw data to a CSV file in the raw data directory.
 

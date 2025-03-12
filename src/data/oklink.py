@@ -29,8 +29,7 @@ class OkLink:
         self.processed_data = None
 
     def process_raw_data(
-        self, data_yf: pd.DataFrame = None, date_range: pd.date_range = None
-    ) -> None:
+        self, data_yf: pd.DataFrame = None, date_range: pd.date_range = None):
         """
         Processes raw data files from OkLink and merges them with Yahoo Finance data.
 
@@ -67,7 +66,7 @@ class OkLink:
         self.processed_data = data_oklink
         logger.info(f"Data processed successfully for {self.ticker} from OkLink")
 
-    def save_processed_data(self) -> None:
+    def save_processed_data(self):
         """
         Saves the processed data to a CSV file in the processed data directory.
 

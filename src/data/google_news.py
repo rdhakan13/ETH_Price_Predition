@@ -39,8 +39,7 @@ class GoogleNews:
         self.year = None
 
     def get_raw_data(
-        self, year, keywords: list = None, dates_list: list = None
-    ) -> None:
+        self, year, keywords: list = None, dates_list: list = None):
         """
         Extracts Google News headlines for the specified year and keywords.
 
@@ -96,7 +95,7 @@ class GoogleNews:
 
         logger.info("Data downloaded successfully for {self.year}.")
 
-    def save_raw_data(self) -> None:
+    def save_raw_data(self):
         """
         Saves the raw data to a CSV file in the raw data directory.
 
@@ -114,7 +113,7 @@ class GoogleNews:
 
         logger.info(f"Data saved to {self.raw_dir}.")
 
-    def process_raw_data(self) -> None:
+    def process_raw_data(self):
         """
         Processes raw Google News headline files and combines them into a single DataFrame.
 
@@ -167,7 +166,7 @@ class GoogleNews:
 
         logger.info("Data processed successfully.")
 
-    def save_processed_data(self) -> None:
+    def save_processed_data(self):
         """
         Saves the processed data to a CSV file in the processed data directory.
 

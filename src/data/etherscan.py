@@ -29,8 +29,7 @@ class EtherScan:
         self.processed_data = None
 
     def process_raw_data(
-        self, data_yf: pd.DataFrame = None, date_range: pd.date_range = None
-    ) -> None:
+        self, data_yf: pd.DataFrame = None, date_range: pd.date_range = None):
         """
         Processes raw data files from Etherscan and merges them with Yahoo Finance data.
 
@@ -83,7 +82,7 @@ class EtherScan:
 
         logger.info(f"Data processed successfully for etherscan.")
 
-    def save_processed_data(self) -> None:
+    def save_processed_data(self):
         """
         Saves the processed data to a CSV file in the processed data directory.
 

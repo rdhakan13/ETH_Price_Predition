@@ -152,7 +152,7 @@ class BitInfoCharts:
 
         return df_merged
 
-    def get_raw_data(self) -> None:
+    def get_raw_data(self):
         """
         Downloads raw data from Bitinfocharts for the specified ticker.
 
@@ -215,7 +215,7 @@ class BitInfoCharts:
 
         logger.info(f"Data downloaded successfully for {self.ticker}.")
 
-    def save_raw_data(self) -> None:
+    def save_raw_data(self):
         """
         Saves the raw data to a CSV file in the raw data directory.
 
@@ -232,8 +232,7 @@ class BitInfoCharts:
         logger.info(f"Data saved to {self.raw_dir}.")
 
     def process_raw_data(
-        self, data_yf: pd.DataFrame = None, date_range: pd.date_range = None
-    ) -> None:
+        self, data_yf: pd.DataFrame = None, date_range: pd.date_range = None):
         """
         Processes raw data from Bitinfocharts and merges it with Yahoo Finance data.
 
@@ -280,7 +279,7 @@ class BitInfoCharts:
             f"Data processed successfully for {self.ticker[:3]} from Bitinfocharts."
         )
 
-    def save_processed_data(self) -> None:
+    def save_processed_data(self):
         """
         Saves the processed data to a CSV file in the processed data directory.
 
