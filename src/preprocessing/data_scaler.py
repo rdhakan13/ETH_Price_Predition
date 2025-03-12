@@ -8,21 +8,21 @@ logger = logging.getLogger(__name__)
 
 
 class DataScaler:
-    def __init__(self, scaling_methods: dict, target_columns: list):
+    def __init__(self, scaling_methods: dict, columns: list):
         """
         Initialize the data scaler with target columns and scaling methods.
 
         Parameters:
             scaling_methods(dict): Dictionary of target columns and scaling methods.
-            target_columns(list): List of target columns to scale.
+            columns(list): List of target columns to scale.
 
         Attributes:
-            target_columns(list): List of target columns to scale.
+            columns(list): List of target columns to scale.
             scaling_methods(dict): Dictionary of target columns and scaling methods.
             scalers(dict): Dictionary to hold scalers for each target column.
             minmax_scalers(dict): Store Min-Max scalers for final step.
         """
-        self.target_columns = target_columns
+        self.columns = columns
         self.scaling_methods = scaling_methods
         self.scalers = {}  # Dictionary to hold scalers for each target column
         self.minmax_scalers = {}  # Store Min-Max scalers for final step
@@ -37,7 +37,7 @@ class DataScaler:
         Returns:
             None
         """
-        for col in self.target_columns:
+        for col in self.columns:
             if col not in df.columns:
                 continue  # Skip missing columns
             method = self.scaling_methods.get(col, None)

@@ -10,7 +10,7 @@ from src.data.google_news import GoogleNews
 logger = get_logger("INFO", __name__)
 tickers = ["BTC-USD", "ETH-USD", "LTC-USD"]
 sources = ["oklink", "bitinfocharts", "etherscan"]
-root_dir = str(get_root_directory()) + "\\temp"
+root_dir = str(get_root_directory())
 
 if __name__ == "__main__":
     ETH_data = pd.read_csv(f"{root_dir}\\data\\raw\\ETH_data\\ETH-USD_price_data.csv")
