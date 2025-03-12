@@ -4,6 +4,7 @@ __pycache__/
 data/raw/
 data/processed/
 logs/
-temp/*
+temp/
 .ruff_cache/
 .mypy_cache/
+.pytest_cache/
