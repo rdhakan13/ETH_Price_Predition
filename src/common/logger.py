@@ -1,7 +1,7 @@
 import logging
 import logging.config
 from datetime import datetime
-from src.common.utils import get_root_directory
+from src.common.utils import get_root_directory, make_directory
 
 format_file: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 format_console: str = (
@@ -9,6 +9,8 @@ format_console: str = (
 )
 
 date_format: str = "%Y-%m-%d %H:%M:%S"
+
+make_directory(f"{get_root_directory()}\\logs")
 
 filename = (
     f"{get_root_directory()}\\logs\\log_{datetime.now().strftime('%Y-%m-%d')}.log"

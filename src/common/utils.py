@@ -1,10 +1,13 @@
 from pathlib import Path
 import logging
 import os
+import yaml
+from box import ConfigBox
+from ensure import ensure_annotations
 
 logger = logging.getLogger(__name__)
 
-
+@ensure_annotations
 def get_root_directory() -> Path:
     """
     Returns the root directory of the project by searching for the .git directory.
@@ -22,8 +25,8 @@ def get_root_directory() -> Path:
 
     return current_path
 
-
-def make_directory(directory: str) -> None:
+@ensure_annotations
+def make_directory(directory: str):
     """
     Creates a directory if it does not exist.
 
@@ -34,9 +37,9 @@ def make_directory(directory: str) -> None:
         None
     """
     if not os.path.exists(directory):
-        os.makedirs(directory)
+        os.makedirs(directory, exist_ok=True)
 
-
+@ensure_annotations
 def split_dates_by_year(date_tuples: tuple) -> list:
     """
     Splits a list of date tuples into a list of lists, each containing dates from the same year.
@@ -63,3 +66,24 @@ def split_dates_by_year(date_tuples: tuple) -> list:
         raise e
 
     return list(year_dict.values())
+
+# @ensure_annotations
+def read_yaml(path_to_yaml: str) -> ConfigBox:
+    """
+    Reads the content of a YAML file.
+
+    Parameters:
+        path_to_yaml (str): The path to the YAML file.
+
+    Returns:
+        dict: The content of the YAML file.
+    """
+
+    try:
+        with open(path_to_yaml, "r") as file:
+            content = yaml.safe_load(file)
+            logging.info(f"File {path_to_yaml} read successfully")
+            return ConfigBox(content)
+    except FileNotFoundError as e:
+        logging.error(f"File {path_to_yaml} not found")
+        raise e
