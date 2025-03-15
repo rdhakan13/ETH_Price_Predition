@@ -1,10 +1,11 @@
+import os
 import pandas as pd
 from src.common.utils import get_root_directory
 from src.common.logger import get_logger
 from src.sentiment_analyser.bert_sentiment_analyser import BertSentimentAnalyser
 from src.sentiment_analyser.vader_sentiment_analyser import VaderSentimentAnalyser
 
-logger = get_logger("INFO", __name__)
+logger = get_logger(os.environ.get("LOG_LEVEL"), __name__)
 root_dir = get_root_directory()
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from src.common.utils import get_root_directory
 from src.common.logger import get_logger
@@ -7,7 +8,7 @@ from src.data.bitinfocharts import BitInfoCharts
 from src.data.etherscan import EtherScan
 from src.data.google_news import GoogleNews
 
-logger = get_logger("INFO", __name__)
+logger = get_logger(os.environ.get("LOG_LEVEL"), __name__)
 tickers = ["BTC-USD", "ETH-USD", "LTC-USD"]
 sources = ["oklink", "bitinfocharts", "etherscan"]
 root_dir = str(get_root_directory())

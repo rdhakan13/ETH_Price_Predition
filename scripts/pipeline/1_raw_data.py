@@ -1,3 +1,4 @@
+import os
 import time
 import pandas as pd
 from src.common.utils import get_root_directory, split_dates_by_year
@@ -6,7 +7,7 @@ from src.data.yahoo_finance import YahooFinance
 from src.data.bitinfocharts import BitInfoCharts
 from src.data.google_news import GoogleNews
 
-logger = get_logger("INFO", __name__)
+logger = get_logger(os.environ.get("LOG_LEVEL"), __name__)
 tickers = ["BTC-USD", "ETH-USD", "LTC-USD"]
 keywords = ["cryptocurrency", "blockchain", "bitcoin", "ethereum", "litecoin"]
 root_dir = str(get_root_directory()) + "\\temp"
