@@ -1,10 +1,13 @@
+SCRIPT_NAME = pipeline/2_processed_data.py
 LOG_DIR = ./logs
-TEMP_DIR = ./temp
+TMP_DIR = ./tmp
 SRC = ./src/
 SCRIPTS = ./scripts/
 YML_FILE = environment.yml
 ENV_NAME = STD_DS_LIB
 EC2_SETUP_SCRIPT = ./scripts/setup.sh
+
+export LOG_LEVEL = INFO
 
 .PHONY: export-env create-env list-packages update-env remove-env
 
@@ -40,7 +43,7 @@ clean:
 	ruff clean
 	rmdir /s /q .mypy_cache
 	rmdir /s /q $(LOG_DIR)
-	rmdir /s /q $(TEMP_DIR)
+	rmdir /s /q $(TMP_DIR)
 	@echo Done!
 
 lint: 
@@ -64,3 +67,11 @@ type-check:
 	@echo Type checking...
 	mypy --no-cache-dir $(SRC)
 	@echo Done!
+
+run-script:
+	@echo Running script...
+	python $(SCRIPTS)$(SCRIPT_NAME)
+	@echo Done!
+
+print-env-variables:
+	@echo $(LOG_LEVEL)
