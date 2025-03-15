@@ -1,5 +1,9 @@
 import torch
 import torch.nn as nn
+from src.models.base import Model
+import logging
+
+logger = logging.getLogger(__name__)
 
 class CNN_GRU_Model(nn.Module):
     def __init__(self, input_channels, img_height, img_width, gru_hidden_size, num_classes):
@@ -46,3 +50,46 @@ class CNN_GRU_Model(nn.Module):
         x = self.fc(x)  # (batch, num_classes)
 
         return x
+
+# class TwoDCNN_GRU(Model):
+    # def __init__(self, input_channels, img_height, img_width, gru_hidden_size, num_classes):
+    #     """
+    #     Initialize the 2D CNN-GRU model.
+
+    #     Parameters:
+    #         input_channels (int): The number of input channels.
+    #         img_height (int): The height of the input image.
+    #         img_width (int): The width of the input image.
+    #         gru_hidden_size (int): The hidden size of the GRU layer.
+    #         num_classes (int): The number of output classes.
+
+    #     Returns:
+    #         None
+    #     """
+    #     model = CNN_GRU_Model(input_channels, img_height, img_width, gru_hidden_size, num_classes)
+    #     super(2DCNN_GRU, self).__init__(model)
+
+    # def fit(self, x_train, y_train):
+    #     """
+    #     Fit the model to the training data.
+
+    #     Parameters:
+    #         x_train (pd.DataFrame): The features of the training data.
+    #         y_train (pd.Series): The target variable of the training data.
+
+    #     Returns:
+    #         None
+    #     """
+    #     pass
+
+    # def predict(self, x_test):
+    #     """
+    #     Make predictions on the test data.
+
+    #     Parameters:
+    #         x_test (pd.DataFrame): The features of the test data.
+
+    #     Returns:
+    #         None
+    #     """
+    #     pass
