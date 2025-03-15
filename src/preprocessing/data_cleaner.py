@@ -32,7 +32,7 @@ class DataCleaner:
         self.bitinfocharts = None
         self.cleaned_data = None
 
-    def read_data(self) -> None:
+    def read_data(self):
         """
         Read data from processed folder.
 
@@ -69,7 +69,7 @@ class DataCleaner:
         else:
             logger.info("Data read successfully")
 
-    def identify_nan(self) -> None:
+    def identify_nan(self):
         """
         Identify NaN values in the data.
 
@@ -88,7 +88,7 @@ class DataCleaner:
             self.bitinfocharts.replace(0, np.nan, inplace=True)
         logger.info("NaN values identified")
 
-    def interpolate_clean_data(self, method: str) -> None:
+    def interpolate_clean_data(self, method: str):
         """
         Interpolate NaN values in the data.
 
@@ -112,7 +112,7 @@ class DataCleaner:
         else:
             logger.error("No data to interpolate")
 
-    def drop_columns(self, source: str, columns: list) -> None:
+    def drop_columns(self, source: str, columns: list):
         """
         Drop columns from the data.
 
@@ -151,7 +151,7 @@ class DataCleaner:
                 raise e
         logger.info("Columns dropped")
 
-    def standardise_columns(self, source: str, column_mapping: dict) -> None:
+    def standardise_columns(self, source: str, column_mapping: dict):
         """
         Standardise columns in the data.
 
@@ -173,7 +173,7 @@ class DataCleaner:
             logger.error("Invalid source")
         logger.info("Columns standardised")
 
-    def merge_sources(self, on: str = "Date") -> None:
+    def merge_sources(self, on: str = "Date"):
         """
         Merge data from different sources.
 

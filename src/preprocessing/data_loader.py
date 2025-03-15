@@ -1,0 +1,122 @@
+from pathlib import Path
+import pandas as pd
+import numpy as np
+import logging
+
+logger = logging.getLogger(__name__)
+
+class DataLoader:
+    def __init__(self, root_dir:Path):
+        """Initialize DataLoader object."""
+        self.root_dir = root_dir    
+        self.ETH = None
+        self.BTC = None
+        self.LTC = None
+        self.final_data = None
+        self.train = None
+        self.test = None
+        self.x_train = None
+        self.x_val = None
+        self.x_test = None
+        self.y_train = None
+        self.y_val = None
+        self.y_test = None
+
+    def load_data(self):
+        """Load dataset from CSV, JSON, or other sources."""
+        logger.info("Loading data...")
+        self.ETH = pd.read_csv(f"{self.root_dir}\\data\\final\\ETH.csv", index_col="Date", parse_dates=True)
+        self.BTC = pd.read_csv(f"{self.root_dir}\\data\\final\\BTC.csv", index_col="Date", parse_dates=True)
+        self.LTC = pd.read_csv(f"{self.root_dir}\\data\\final\\LTC.csv", index_col="Date", parse_dates=True)
+        logger.info("Data loaded successfully.")
+
+    def merge_selected_data(self):
+        """Handle missing values, encode categorical features, normalize data."""
+        pass
+
+    def set_time_range(self, start_date:str, end_date:str):
+        """Set time range for dataset."""
+        self.final_data = self.final_data.loc[start_date:end_date]
+
+    def make_stationary(significance=0.05, max_diffs=5):
+        """
+        Iterates through each column in a DataFrame and differences it until it 
+        becomes stationary based on the Augmented Dickey-Fuller (ADF) test.
+        
+        Parameters:
+        - df: Pandas DataFrame with time series data.
+        - significance: Significance level for the ADF test (default 0.05).
+        - max_diffs: Maximum number of differences to apply (default 5).
+        
+        Returns:
+        - A new DataFrame with differenced values.
+        - A dictionary mapping column names to the number of differences applied.
+        """
+        stationary_df = df.copy()
+        diff_counts = {}  # Store number of differences applied per column
+        
+        for col in df.columns:
+            series = df[col].dropna()  # Drop NaNs before testing
+            diff_count = 0
+            
+            # Perform differencing until stationary or max_diffs reached
+            while diff_count < max_diffs:
+                adf_test = adfuller(series)
+                p_value = adf_test[1]
+                
+                if p_value < significance:
+                    break  # Stop if stationary
+                
+                series = series.diff().dropna()  # Apply differencing
+                diff_count += 1
+            
+            stationary_df[col] = series  # Store transformed series
+            diff_counts[col] = diff_count
+        
+        return stationary_df, diff_counts
+
+    def lag_features(self, lag:int=1, exclude_cols:list):
+        """Create lag features."""
+        columns_to_lag = [col for col in self.final_data.columns if col not in exclude_cols]
+        self.final_data[columns_to_lag] = self.final_data[columns_to_lag].shift(lag)
+        self.final_data.dropna(inplace=True)
+
+    def test_train_split(self, test_size:float=0.2):
+        """
+        Split dataset into training and test sets.
+        
+        Parameters:
+            test_size (float): Proportion of the dataset to include in the test split.
+        
+        Returns:
+        None
+        """
+        if not (0 < test_size < 1):
+            raise ValueError("test_size must be a float between 0 and 1.")
+        test_count = int(len(self.final_data) * test_size)  # Calculate number of test samples
+        self.train = self.final_data[:-test_count]
+        self.test = self.final_data[-test_count:]
+
+    def test_train_val_split(self, cv_method:str="static", test_size:float=0.2, train_size:int=30, val_size:int=1):
+        """Split dataset into training and test sets for cross-validation."""
+        n_samples = len(self.train)
+
+        if cv_method == "rolling":
+            for start in range(n_samples - train_size - val_size + 1):
+                train_idx = np.arange(start, start + train_size)
+                val_idx = np.arange(start + train_size, start + train_size + val_size)
+                yield self.train[train_idx], self.train[val_idx]
+
+        elif cv_method == "expanding":
+            for end in range(train_size, n_samples - val_size + 1):
+                train_idx = np.arange(0, end)
+                val_idx = np.arange(end, end + val_size)
+                yield self.train[train_idx], self.train[val_idx]
+
+        elif cv_method == "static":
+            train_idx = np.arange(0, n_samples - val_size)
+            val_idx = np.arange(n_samples - val_size, n_samples)
+            yield self.train[train_idx], self.train[val_idx]
+
+        else:
+            raise ValueError("cv_method must be 'rolling', 'expanding', or 'static'.")
