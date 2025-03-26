@@ -1,4 +1,5 @@
 import os
+import time
 import pandas as pd
 from src.common.utils import get_root_directory
 from src.common.logger import get_logger
@@ -14,6 +15,9 @@ sources = ["oklink", "bitinfocharts", "etherscan"]
 root_dir = str(get_root_directory())
 
 if __name__ == "__main__":
+
+    start_time = time.time()
+
     ETH_data = pd.read_csv(f"{root_dir}\\data\\raw\\ETH_data\\ETH-USD_price_data.csv")
 
     ETH_data["Date"] = pd.to_datetime(ETH_data["Date"])
@@ -42,5 +46,13 @@ if __name__ == "__main__":
                     es.save_processed_data()
 
     gn = GoogleNews(root_dir=root_dir)
+
     gn.process_raw_data()
+    
     gn.save_processed_data()
+
+    end_time = time.time()
+
+    total_runtime = end_time - start_time
+
+    logger.info(f"TOTAL RUNTIME: {total_runtime}s")

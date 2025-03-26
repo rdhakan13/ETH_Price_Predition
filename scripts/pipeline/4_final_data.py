@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import time
 from src.common.utils import get_root_directory, make_directory
 from src.common.logger import get_logger
 from src.preprocessing.data_cleaner import DataCleaner
@@ -121,22 +122,31 @@ column_mapping = {
     "LTC average computing power of the entire network": "OL_AvgComPwr",
 }
 
+directory = f"{root_dir}\\tmp\\data\\final"
+
 if __name__ == "__main__":
+    start_time = time.time()
+
     for ticker in list(input_data.keys()):
+
         dc = DataCleaner(root_dir, ticker, source=list(input_data[ticker].keys()))
+
         dc.read_data()
+        
         dc.identify_nan()
+
         for source in list(input_data[ticker].keys()):
             dc.drop_columns(source=source, columns=input_data[ticker][source])
             dc.standardise_columns(source=source, column_mapping=column_mapping)
+
         dc.merge_sources()
+
         dc.interpolate_clean_data(method="time")
-        cleaned_data = dc.get_clean_data()
-        cleaned_data = cleaned_data.loc[:"2024-04-01"]
-        cleaned_data["D_AvgPrc"] = cleaned_data[
-            ["YF_Op", "YF_Hi", "YF_Lo", "YF_Cls"]
-        ].mean(axis=1)
-        directory = f"{root_dir}\\data\\final"
-        make_directory(directory)
-        cleaned_data.to_csv(f"{directory}\\{ticker[:3]}.csv")
-        logger.info(f"Data for {ticker[:3]} cleaned and saved to {directory}")
+
+        dc.save_clean_data(directory=directory)
+
+    end_time = time.time()
+
+    total_runtime = end_time - start_time
+
+    logger.info(f"TOTAL RUNTIME: {total_runtime}s")
