@@ -2,6 +2,7 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 import logging
+from src.common.stats import adf_test
 
 logger = logging.getLogger(__name__)
 
@@ -15,12 +16,6 @@ class DataLoader:
         self.final_data = None
         self.train = None
         self.test = None
-        self.x_train = None
-        self.x_val = None
-        self.x_test = None
-        self.y_train = None
-        self.y_val = None
-        self.y_test = None
 
     def load_data(self):
         """Load dataset from CSV, JSON, or other sources."""
@@ -38,45 +33,47 @@ class DataLoader:
         """Set time range for dataset."""
         self.final_data = self.final_data.loc[start_date:end_date]
 
-    def make_stationary(significance=0.05, max_diffs=5):
+    def make_stationary(self, alpha=0.05, max_diffs=5):
         """
         Iterates through each column in a DataFrame and differences it until it 
         becomes stationary based on the Augmented Dickey-Fuller (ADF) test.
         
         Parameters:
-        - df: Pandas DataFrame with time series data.
-        - significance: Significance level for the ADF test (default 0.05).
-        - max_diffs: Maximum number of differences to apply (default 5).
+            alpha: Significance level for the ADF test (default 0.05).
+            max_diffs: Maximum number of differences to apply (default 5).
         
         Returns:
-        - A new DataFrame with differenced values.
-        - A dictionary mapping column names to the number of differences applied.
+            None
         """
-        stationary_df = df.copy()
-        diff_counts = {}  # Store number of differences applied per column
+        diff_counts = {}
         
-        for col in df.columns:
-            series = df[col].dropna()  # Drop NaNs before testing
+        for col in self.final_data.columns:
+            series = self.final_data[col].dropna()
             diff_count = 0
             
-            # Perform differencing until stationary or max_diffs reached
             while diff_count < max_diffs:
-                adf_test = adfuller(series)
-                p_value = adf_test[1]
+                is_stationary, _ = adf_test(series)
                 
-                if p_value < significance:
-                    break  # Stop if stationary
+                if is_stationary:
+                    break
                 
-                series = series.diff().dropna()  # Apply differencing
+                series = series.diff().dropna() 
                 diff_count += 1
             
-            stationary_df[col] = series  # Store transformed series
+            self.final_data[col] = series
             diff_counts[col] = diff_count
-        
-        return stationary_df, diff_counts
 
-    def lag_features(self, lag:int=1, exclude_cols:list):
-        """Create lag features."""
+    def lag_features(self, exclude_cols:list, lag:int=1):
+        """
+        Add lagged features to the dataset.
+
+        Parameters:
+            exclude_cols (list): Columns to exclude from lagging.
+            lag (int): Number of lags to apply.
+
+        Returns:
+            None
+        """
         columns_to_lag = [col for col in self.final_data.columns if col not in exclude_cols]
         self.final_data[columns_to_lag] = self.final_data[columns_to_lag].shift(lag)
         self.final_data.dropna(inplace=True)
@@ -89,15 +86,16 @@ class DataLoader:
             test_size (float): Proportion of the dataset to include in the test split.
         
         Returns:
-        None
+            None
         """
         if not (0 < test_size < 1):
             raise ValueError("test_size must be a float between 0 and 1.")
         test_count = int(len(self.final_data) * test_size)  # Calculate number of test samples
         self.train = self.final_data[:-test_count]
         self.test = self.final_data[-test_count:]
+        return self.train, self.test
 
-    def test_train_val_split(self, cv_method:str="static", test_size:float=0.2, train_size:int=30, val_size:int=1):
+    def train_val_split(self, cv_method:str="static", test_size:float=0.2, train_size:int=30, val_size:int=1):
         """Split dataset into training and test sets for cross-validation."""
         n_samples = len(self.train)
 

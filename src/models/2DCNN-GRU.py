@@ -1,3 +1,5 @@
+import random 
+import numpy as np
 import torch
 import torch.nn as nn
 from src.models.base import Model
@@ -6,9 +8,14 @@ import logging
 logger = logging.getLogger(__name__)
 
 class CNN_GRU_Model(nn.Module):
-    def __init__(self, input_channels, img_height, img_width, gru_hidden_size, num_classes):
+    def __init__(self, input_channels, img_height, img_width, gru_hidden_size, num_classes, random_state=42):
         super(CNN_GRU_Model, self).__init__()
-
+        random.seed(random_state)
+        np.random.seed(random_state)
+        torch.manual_seed(random_state)
+        torch.cuda.manual_seed_all(random_state)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
         # 2D Convolutional Layer
         self.conv2d = nn.Conv2d(in_channels=input_channels, out_channels=32, kernel_size=3, padding=1)
         self.relu = nn.ReLU()

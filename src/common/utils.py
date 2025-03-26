@@ -67,7 +67,7 @@ def split_dates_by_year(date_tuples: tuple) -> list:
 
     return list(year_dict.values())
 
-# @ensure_annotations
+@ensure_annotations
 def read_yaml(path_to_yaml: str) -> ConfigBox:
     """
     Reads the content of a YAML file.

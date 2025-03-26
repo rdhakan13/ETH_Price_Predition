@@ -14,7 +14,7 @@ class Model:
         """
         self.params = params
         self.y_pred = None
-        self.tbl_args = tbl_args = {"headers": "keys", "tablefmt": "simple", "floatfmt": ".2f"}
+        self.tbl_args = {"headers": "keys", "tablefmt": "simple", "floatfmt": ".2f"}
 
     @abstractmethod
     def fit(self, x_train: pd.DataFrame, y_train:pd.DataFrame):
@@ -31,7 +31,7 @@ class Model:
         pass
 
     @abstractmethod
-    def predict(self, x_test:pd.DataFrame):
+    def predict(self, x_test:pd.DataFrame, x_val:pd.DataFrame):
         """
         Make predictions on the test data.
 
