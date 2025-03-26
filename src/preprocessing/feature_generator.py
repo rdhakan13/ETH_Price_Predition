@@ -1,8 +1,8 @@
 import pandas as pd
-import numpy as np
 import logging
 from src.sentiment_analyser.vader_sentiment_analyser import VaderSentimentAnalyser
 import swifter
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,9 @@ class FeatureGenerator:
         """
         if self.data_tag == "sentiment":
             self._generate_sentinment_features()
-        return self.transformed_data.replace(np.nan, 0, inplace=True)
+        elif self.data_tag == "price":
+            self._generate_price_features()
+        return self.transformed_data
     
     def _generate_sentinment_features(self):
         """
@@ -31,7 +33,7 @@ class FeatureGenerator:
         Returns:
             None
         """
-        VSA = VaderSentimentAnalyser(self.input_data)
+        vsa = VaderSentimentAnalyser(self.input_data)
         for col in self.input_data.columns:
             if "Score" in col:
                 col_prefix = "_".join(col.split("_")[:2])
@@ -54,6 +56,23 @@ class FeatureGenerator:
                     AvgScr_Ex = dropped_neutrals.pivot_table(values=col_score_Ex, index=["Date"], aggfunc="mean")
                 
                 self.transformed_data[col_score_In] = AvgScr_In[col_score_In]
-                self.transformed_data[col_sent_In] = self.transformed_data[col_score_In].swifter.apply(VSA.determine_sentiment)
+                self.transformed_data[col_sent_In] = self.transformed_data[col_score_In].swifter.apply(vsa.determine_sentiment)
                 self.transformed_data[col_score_Ex] = AvgScr_Ex[col_score_Ex]
-                self.transformed_data[col_sent_Ex] = self.transformed_data[col_score_Ex].swifter.apply(VSA.determine_sentiment)
+                self.transformed_data[col_sent_Ex] = self.transformed_data[col_score_Ex].swifter.apply(vsa.determine_sentiment)
+
+    def _generate_price_features(self):
+        """
+        Generate price features based on the input data
+        
+        Returns:
+            None
+        """
+        self.transformed_data = self.input_data
+        prefix = self.transformed_data.columns[0].split("_")[0]
+        columns = [col for col in self.transformed_data.columns if ("YF_Op" in col) or ("YF_Hi" in col) or ("YF_Lo" in col) or ("YF_Cls" in col)] 
+        self.transformed_data[prefix+"_D_AvgPrc"] = self.transformed_data[columns].mean(axis=1)
+        if prefix == "ETH":
+            self.transformed_data['ETH_D_PrcDir'] = np.sign(self.transformed_data['ETH_D_AvgPrc'].diff())
+            self.transformed_data = self.transformed_data[["ETH_D_PrcDir"] + [col for col in self.transformed_data.columns if col not in ["ETH_D_PrcDir"]]]
+        self.transformed_data = self.transformed_data[[prefix+"_D_AvgPrc"] + [col for col in self.transformed_data.columns if col != (prefix+"_D_AvgPrc")]]
+        return self.transformed_data

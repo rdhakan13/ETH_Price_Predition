@@ -1,6 +1,7 @@
 import pandas as pd
 import logging
 import numpy as np
+from src.common.utils import make_directory
 
 logger = logging.getLogger(__name__)
 
@@ -208,11 +209,16 @@ class DataCleaner:
                     logger.error("Invalid source")
         logger.info("Data merged")
 
-    def get_clean_data(self) -> pd.DataFrame:
+    def save_clean_data(self, directory: str):
         """
-        Get the cleaned data.
+        Save cleaned data to a CSV file.
 
         Returns:
-            pd.DataFrame: The cleaned data.
+            None
         """
-        return self.cleaned_data
+        if directory is None:
+            directory = f"{self.root_dir}\\data\\final"
+        make_directory(directory)
+        self.cleaned_data.to_csv(f"{directory}\\{self.ticker[:3]}.csv")
+        logger.info(f"Data for {self.ticker[:3]} cleaned and saved to {directory}")
+        

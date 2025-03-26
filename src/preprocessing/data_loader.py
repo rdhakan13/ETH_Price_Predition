@@ -47,9 +47,9 @@ class DataLoader:
             self.LTC.columns = [f"LTC_{col}" for col in self.LTC.columns]
             self.final_data = self.final_data.merge(self.LTC, how="outer", on="Date")
         if "sentiment_analysis" in selected_data:
-            FG = FeatureGenerator(self.sentiment_analysis, "sentiment")
+            FG = FeatureGenerator(input_data=self.sentiment_analysis, data_tag="sentiment")
             sentiment_features = FG.generate_features()
-            self.final_data = self.final_data.merge(sentiment_features, how="outer", on="Date")
+            self.final_data = self.final_data.merge(sentiment_features.replace(np.nan,0), how="outer", on="Date")
         logger.info("Data merged successfully.")
 
     def set_time_range(self, start_date:str, end_date:str):
@@ -63,12 +63,14 @@ class DataLoader:
         Returns:
             None
         """
+        start_date = pd.to_datetime(start_date)
+        end_date = pd.to_datetime(end_date)
         if start_date > end_date:
             raise ValueError("start_date must be before end_date.")
-        if start_date < self.final_data.index.min() or start_date is None:
+        if start_date is None or start_date < self.final_data.index.min():
             logger.warning("start_date is before the earliest date in the dataset, setting to the earliest date.")
             start_date = self.final_data.index.min()
-        if end_date > self.final_data.index.max() or end_date is None:
+        if end_date is None or end_date > self.final_data.index.max():
             logger.warning("end_date is after the latest date in the dataset, setting to the latest date.")
             end_date = self.final_data.index.max()
         self.final_data = self.final_data.loc[start_date:end_date]
@@ -154,26 +156,26 @@ class DataLoader:
         logger
         return self.train, self.test
 
-    def train_val_split(self, cv_method:str="static", train_size:int=30, val_size:int=):
-        """Split dataset into training and test sets for cross-validation."""
-        n_samples = len(self.train)
+    # def train_val_split(self, cv_method:str="static", train_size:int=30, val_size:int=):
+    #     """Split dataset into training and test sets for cross-validation."""
+    #     n_samples = len(self.train)
 
-        if cv_method == "rolling":
-            for start in range(n_samples - train_size - val_size + 1):
-                train_idx = np.arange(start, start + train_size)
-                val_idx = np.arange(start + train_size, start + train_size + val_size)
-                yield self.train[train_idx], self.train[val_idx]
+    #     if cv_method == "rolling":
+    #         for start in range(n_samples - train_size - val_size + 1):
+    #             train_idx = np.arange(start, start + train_size)
+    #             val_idx = np.arange(start + train_size, start + train_size + val_size)
+    #             yield self.train[train_idx], self.train[val_idx]
 
-        elif cv_method == "expanding":
-            for end in range(train_size, n_samples - val_size + 1):
-                train_idx = np.arange(0, end)
-                val_idx = np.arange(end, end + val_size)
-                yield self.train[train_idx], self.train[val_idx]
+    #     elif cv_method == "expanding":
+    #         for end in range(train_size, n_samples - val_size + 1):
+    #             train_idx = np.arange(0, end)
+    #             val_idx = np.arange(end, end + val_size)
+    #             yield self.train[train_idx], self.train[val_idx]
 
-        elif cv_method == "static":
-            train_idx = np.arange(0, n_samples - val_size)
-            val_idx = np.arange(n_samples - val_size, n_samples)
-            yield self.train[train_idx], self.train[val_idx]
+    #     elif cv_method == "static":
+    #         train_idx = np.arange(0, n_samples - val_size)
+    #         val_idx = np.arange(n_samples - val_size, n_samples)
+    #         yield self.train[train_idx], self.train[val_idx]
 
-        else:
-            raise ValueError("cv_method must be 'rolling', 'expanding', or 'static'.")
+    #     else:
+    #         raise ValueError("cv_method must be 'rolling', 'expanding', or 'static'.")
