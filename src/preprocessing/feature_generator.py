@@ -10,8 +10,12 @@ logger = logging.getLogger(__name__)
 class FeatureGenerator:
     def __init__(self, input_data: pd.DataFrame, data_tag: str):
         self.input_data = input_data
+        if not isinstance(self.input_data, pd.DataFrame):
+            raise ValueError("input_data must be a pandas DataFrame.")
         self.transformed_data = pd.DataFrame()
         self.data_tag = data_tag
+        if data_tag not in ["sentiment", "price"]:
+            raise ValueError("data_tag must be either 'sentiment' or 'price'.")
 
     def generate_features(self)->pd.DataFrame:
         """

@@ -220,5 +220,5 @@ class DataCleaner:
             directory = f"{self.root_dir}\\data\\final"
         make_directory(directory)
         self.cleaned_data.to_csv(f"{directory}\\{self.ticker[:3]}.csv")
-        logger.info(f"Data for {self.ticker[:3]} cleaned and saved to {directory}")
+        
         
