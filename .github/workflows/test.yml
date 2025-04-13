@@ -1,8 +1,5 @@
 name: Run Pytest Unit Tests
 
-env:
-  PYTHONPATH: ${{ github.workspace }}/src
-
 on:
   push:
     branches:
@@ -14,7 +11,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    env:
+      PYTHONPATH: ${{ github.workspace }}/src
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
