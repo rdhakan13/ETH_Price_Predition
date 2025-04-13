@@ -325,4 +325,3 @@ dependencies:
       - yfinance==0.2.40
       - zope-deprecation==5.0
       - zope-interface==6.4.post2
-prefix: C:\Users\rajdh\anaconda3\envs\STD_DS_LIB
