@@ -68,6 +68,7 @@ clean:
 	rmdir /s /q $(LOG_DIR)
 	rmdir /s /q $(TMP_DIR)
 	rmdir /s /q .pytest_cache
+	rmdir /s /q htmlcov
 	@echo Done!
 
 lint-format: 
