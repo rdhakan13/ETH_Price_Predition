@@ -1,7 +1,7 @@
 name: Run Pytest Unit Tests
 
 env:
-  PYTHONPATH: src
+  PYTHONPATH: ${{ github.workspace }}/src
 
 on:
   push:
