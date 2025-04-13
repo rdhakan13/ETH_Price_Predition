@@ -1,5 +1,8 @@
 name: Run Pytest Unit Tests
 
+env:
+  PYTHONPATH: src
+
 on:
   push:
     branches:
