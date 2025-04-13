@@ -16,32 +16,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install make
-        run: sudo apt-get update && sudo apt-get install -y make
-
-      - name: Set up Conda
-        uses: conda-incubator/setup-miniconda@v3
+      - name: Set up Python 3.11.4
+        uses: actions/setup-python@v5
         with:
-          miniconda-version: "latest"
+          python-version: 3.11.4
 
-      - name: Create Conda Environment using Makefile
+      - name: Install make
         run: |
-          make create-env  # Assumes that the Makefile has a 'create-env' target for environment setup
+          sudo apt-get update && sudo apt-get install -y make
 
-      - name: Activate Conda Environment
+      - name: Create .venv environment
         run: |
-          source activate ETH_CUDA  # Activate the environment named 'ETH_CUDA'
+          make init
+          make install
 
       - name: Run pytest with coverage
         run: |
-          pytest --maxfail=1 --disable-warnings -q --cov=my_project --cov-report=term  # Replace `my_project` with the module you want to check coverage for
-
-      - name: Check coverage threshold (>=80%)
-        run: |
-          COVERAGE=$(pytest --maxfail=1 --disable-warnings -q --cov=my_project --cov-report=term-missing | tail -n 10 | grep -oP '(?<=TOTAL\s+)\d+(\.\d+)?(?=%)')
-          if (( $(echo "$COVERAGE < 80" | bc -l) )); then
-            echo "Code coverage is below 80%. Coverage is ${COVERAGE}%"
-            exit 1  # Fail the job if coverage is below 80%
-          else
-            echo "Code coverage is ${COVERAGE}%, which is above the threshold."
-          fi
+          make unit-tests

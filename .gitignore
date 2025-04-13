@@ -9,3 +9,4 @@ data/processed/
 .mypy_cache/
 .pytest_cache/
 .coverage
+.venv/
