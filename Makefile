@@ -20,7 +20,7 @@ activate:
 ifeq ($(OS),Windows_NT)
 	.\.venv\Scripts\activate
 else
-	source .venv/bin/activate
+	. .venv/bin/activate
 endif
 
 init:
