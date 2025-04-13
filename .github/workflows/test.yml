@@ -3,10 +3,10 @@ name: Run Pytest Unit Tests
 on:
   push:
     branches:
-      - '*'  # Triggers on push to any branch
+      - '*'
   pull_request:
     branches:
-      - '*'  # Triggers on pull request targeting any branch
+      - '*'
 
 jobs:
   test:
@@ -19,8 +19,8 @@ jobs:
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v2
         with:
-          conda-version: 'latest'  # You can specify a version if needed
-          python-version: '3.8'    # Python version that matches your environment.yml
+          conda-version: 'py38_4.10.3'
+          python-version: '3.12.4'
 
       - name: Create Conda Environment using Makefile
         run: |
@@ -43,10 +43,3 @@ jobs:
           else
             echo "Code coverage is ${COVERAGE}%, which is above the threshold."
           fi
-
-      # Optional: You can add Codecov upload here if needed later
-      # - name: Upload pytest coverage to Codecov (optional)
-      #   if: success()
-      #   uses: codecov/codecov-action@v2
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
