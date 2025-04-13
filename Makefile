@@ -34,7 +34,7 @@ endif
 	poetry config virtualenvs.create false
 
 install: activate
-	poetry install --only main 
+	poetry install --no-root --only main 
 
 exp-env:
 	@echo Exporting conda environment...
