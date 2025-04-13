@@ -8,3 +8,4 @@ data/processed/
 .ruff_cache/
 .mypy_cache/
 .pytest_cache/
+.coverage
