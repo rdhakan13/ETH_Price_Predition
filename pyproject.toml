@@ -57,3 +57,6 @@ build-backend = "poetry.core.masonry.api"
 pythonpath = ["src"]
 addopts = "-ra -q"
 testpaths = ["tests"]
+
+[tool.coverage.run]
+omit = ["*/__init__.py"]
