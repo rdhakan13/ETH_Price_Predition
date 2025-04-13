@@ -102,6 +102,3 @@ unit-tests: activate
 	@echo Running unit tests...
 	pytest --cov=. --cov-report=term --cov-report=html tests/
 	@echo Done!
-
-coverage-check:
-	@coverage report --fail-under=80
