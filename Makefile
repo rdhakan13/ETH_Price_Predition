@@ -106,4 +106,3 @@ ifeq ($(OS),Windows_NT)
 else
 	.venv/bin/pytest --cov=. --cov-report=term --cov-fail-under=80 tests/
 endif
-	@echo Done!
