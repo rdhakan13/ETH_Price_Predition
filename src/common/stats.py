@@ -1,5 +1,4 @@
 import logging
-from ensure import ensure_annotations
 import pandas as pd
 from statsmodels.tsa.stattools import adfuller, grangercausalitytests
 from arch.unitroot import PhillipsPerron
@@ -10,7 +9,6 @@ class StationarityTests:
     is_stationary: bool
     result: dict
 
-@ensure_annotations
 def adf_test(series: pd.DataFrame, alpha:float=0.05)->StationarityTests:
     """
     Perform Augmented Dickey-Fuller test on a time series.
@@ -37,7 +35,6 @@ def adf_test(series: pd.DataFrame, alpha:float=0.05)->StationarityTests:
     }
     return stationarity_result
 
-@ensure_annotations
 def pp_test(series: pd.DataFrame, alpha:float=0.05)->StationarityTests:
     """
     Perform Phillips-Perron test on a time series.
@@ -65,7 +62,6 @@ def pp_test(series: pd.DataFrame, alpha:float=0.05)->StationarityTests:
     }
     return stationarity_result
 
-@ensure_annotations
 def grangers_causality_test(df:pd.DataFrame, target_col:str, max_lag:int=5, alpha:float=0.05)->dict:
     """
     Perform Granger's Causality test for each column in a DataFrame against a specified target column.
