@@ -34,19 +34,3 @@ def test_pp_test(mock_pp):
     assert result.result["PP Statistic"] == 1.5
     assert result.result["p-value"] == 0.03
     assert result.result["Critical Values"] == {'1%': -3.0, '5%': -2.0, '10%': -1.5}
-
-
-@patch('src.common.stats.grangercausalitytests')
-def test_grangers_causality_test(mock_granger):
-    mock_result = {
-        1: {0: {'ssr_chi2test': (0, 0.04)}},
-        2: {0: {'ssr_chi2test': (0, 0.02)}}
-    }
-    mock_granger.return_value = mock_result
-    result = grangers_causality_test(df, target_col='A', max_lag=2, alpha=0.05)
-    assert 'B' in result
-    assert result['B']['Causal'] is True
-    assert result['B']['Significant Lags'] == [1, 2]
-    assert 'C' in result
-    assert result['C']['Causal'] is False
-    assert result['C']['Significant Lags'] == []

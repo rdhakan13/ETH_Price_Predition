@@ -101,5 +101,5 @@ print-env-variables:
 
 unit-tests: activate
 	@echo Running unit tests...
-	pytest --cov=. --cov-report=term --cov-report=html tests/
+	pytest --cov=. --cov-report=term --cov-fail-under=80 tests/
 	@echo Done!
