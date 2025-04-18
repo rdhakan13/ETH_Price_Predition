@@ -101,5 +101,9 @@ print-env-variables:
 
 unit-tests: activate
 	@echo Running unit tests...
+ifeq ($(OS),Windows_NT)
 	pytest --cov=. --cov-report=term --cov-fail-under=80 tests/
+else
+	.venv/bin/pytest --cov=. --cov-report=term --cov-fail-under=80 tests/
+endif
 	@echo Done!
