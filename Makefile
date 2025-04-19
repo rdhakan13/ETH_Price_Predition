@@ -61,7 +61,7 @@ onetime-setup-ec2:
 	bash $(EC2_SETUP_SCRIPT)
 	@echo Done!
 
-clean:
+clean: activate
 	@echo Cleaning up...
 	ruff clean
 	if exist .mypy_cache rmdir /s /q .mypy_cache
@@ -73,11 +73,17 @@ clean:
 	@echo Done!
 
 lint-check: activate
+ifeq ($(OS),Windows_NT)
 	@echo Lint checking src...
 	ruff check $(SRC) --ignore F401
 	@echo Lint checking scripts...
 	ruff check $(SCRIPTS) --ignore F401
-	@echo Done!
+else
+	@echo Lint checking src...
+	.venv/bin/ruff check $(SRC) --ignore F401
+	@echo Lint checking scripts...
+	.venv/bin/ruff check $(SCRIPTS) --ignore F401
+endif
 
 lint-format: activate
 	@echo Lint formatting src...
@@ -95,8 +101,11 @@ lint-fix: activate
 
 type-check: activate
 	@echo Type checking...
+ifeq ($(OS),Windows_NT)
 	mypy $(SRC)
-	@echo Done!
+else
+	.venv/bin/mypy $(SRC)
+endif
 
 run-script:
 	@echo Running script...
