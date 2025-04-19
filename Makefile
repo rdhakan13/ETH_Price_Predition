@@ -72,28 +72,28 @@ clean:
 	if exist .coverage del /q .coverage
 	@echo Done!
 
-lint-check:
+lint-check: activate
 	@echo Lint checking src...
 	ruff check $(SRC) --ignore F401
 	@echo Lint checking scripts...
 	ruff check $(SCRIPTS) --ignore F401
 	@echo Done!
 
-lint-format: 
+lint-format: activate
 	@echo Lint formatting src...
 	ruff format $(SRC)
 	@echo Lint formatting scripts...
 	ruff format $(SCRIPTS)
 	@echo Done!
 
-lint-fix: 
+lint-fix: activate
 	@echo Lint formatting and fixing s...
 	ruff check $(SRC) --fix --ignore F401
 	@echo Lint formatting and fixing scripts...
 	ruff check $(SCRIPTS) --fix --ignore F401
 	@echo Done!
 
-type-check:
+type-check: activate
 	@echo Type checking...
 	mypy $(SRC)
 	@echo Done!
