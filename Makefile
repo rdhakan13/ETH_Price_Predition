@@ -38,7 +38,7 @@ install: activate
 
 exp-env:
 	@echo Exporting conda environment...
-	conda env export > $(YML_FILE)
+	conda env export --no-builds > $(YML_FILE)
 
 create-env:
 	@echo Creating conda environment
@@ -64,18 +64,25 @@ onetime-setup-ec2:
 clean:
 	@echo Cleaning up...
 	ruff clean
-	rmdir /s /q .mypy_cache
-	rmdir /s /q $(LOG_DIR)
-	rmdir /s /q $(TMP_DIR)
-	rmdir /s /q .pytest_cache
-	rmdir /s /q htmlcov
+	if exist .mypy_cache rmdir /s /q .mypy_cache
+	if exist $(LOG_DIR) rmdir /s /q $(LOG_DIR)
+	if exist $(TMP_DIR) rmdir /s /q $(TMP_DIR)
+	if exist .pytest_cache rmdir /s /q .pytest_cache
+	if exist htmlcov rmdir /s /q htmlcov
+	if exist .coverage del /q .coverage
+	@echo Done!
+
+lint-check:
+	@echo Lint checking src...
+	ruff check $(SRC) --ignore F401
+	@echo Lint checking scripts...
+	ruff check $(SCRIPTS) --ignore F401
 	@echo Done!
 
 lint-format: 
 	@echo Lint formatting src...
 	ruff format $(SRC)
 	@echo Lint formatting scripts...
-	ruff check $(SCRIPTS)
 	ruff format $(SCRIPTS)
 	@echo Done!
 
@@ -88,7 +95,7 @@ lint-fix:
 
 type-check:
 	@echo Type checking...
-	mypy --no-cache-dir $(SRC)
+	mypy $(SRC)
 	@echo Done!
 
 run-script:
