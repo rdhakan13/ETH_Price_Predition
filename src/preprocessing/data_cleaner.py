@@ -107,7 +107,7 @@ class DataCleaner:
             try:
                 self.cleaned_data.interpolate(method=method, inplace=True)
                 logger.info("NaN values interpolated")
-            except ValueError as e:
+            except NotImplementedError as e:
                 logger.error("Invalid method")
                 raise e
         else:

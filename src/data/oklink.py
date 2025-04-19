@@ -22,7 +22,15 @@ class OkLink:
             processed_dir (str): The directory to save processed data.
             processed_data (DataFrame): The processed data.
         """
+        if ticker is None or ticker == "" or not isinstance(ticker, str):
+            raise ValueError("Ticker symbol must be a non-empty string")
         self.ticker = ticker
+        if (
+            root_dir is None
+            or root_dir == ""
+            or not isinstance(root_dir, str)
+        ):
+            raise ValueError("Root directory must be a non-empty string")
         self.raw_dir = f"{root_dir}\\data\\raw\\{ticker}_data\\oklink"
         self.raw_data = None
         self.processed_dir = f"{root_dir}\\data\\processed\\{ticker}_data"

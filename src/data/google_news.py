@@ -27,6 +27,12 @@ class GoogleNews:
             final_data (DataFrame): The final data.
             year (str): The year for which to extract data.
         """
+        if (
+            root_dir is None
+            or root_dir == ""
+            or not isinstance(root_dir, str)
+        ):
+            raise ValueError("Root self.raw_dir must be a non-empty string")
         self.root_dir = str(root_dir)
         self.raw_dir = f"{self.root_dir}\\data\\raw\\Google_News_Headlines_data"
         self.raw_data = None
@@ -57,13 +63,6 @@ class GoogleNews:
         data = []
 
         self.year = str(year)
-
-        if (
-            self.root_dir is None
-            or self.root_dir == ""
-            or not isinstance(self.root_dir, str)
-        ):
-            raise ValueError("Root self.raw_dir must be a non-empty string")
 
         if not keywords or keywords is None or not isinstance(keywords, list):
             raise ValueError("Keywords must be a list of strings")
