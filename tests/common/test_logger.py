@@ -1,5 +1,6 @@
 import pytest
 import logging
+from datetime import datetime
 from unittest.mock import patch, MagicMock
 from src.common.logger import get_logger, log_config_for_level
 from src.common.utils import get_root_directory
@@ -33,6 +34,6 @@ def test_get_logger(mock_get_logger, mock_dict_config):
 def test_log_file_creation(mock_get_root_directory, mock_make_directory):
     root_directory = get_root_directory()
     with patch("src.common.logger.datetime") as mock_datetime:
-        mock_datetime.now.return_value.strftime.return_value = "2025-04-18"
+        mock_datetime.now.return_value.strftime.return_value = datetime.today().strftime('%Y-%m-%d')
         from src.common.logger import filename
-        assert filename == str(root_directory)+"\\logs\\log_2025-04-18.log"
+        assert filename == str(root_directory)+f"\\logs\\log_{datetime.today().strftime('%Y-%m-%d')}.log"
