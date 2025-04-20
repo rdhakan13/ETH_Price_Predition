@@ -1,0 +1,46 @@
+name: Run Pytest Unit Tests
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}/src
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.11.7
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11.7
+
+      - name: Install make
+        run: |
+          sudo apt-get update && sudo apt-get install -y make
+
+      - name: Create .venv environment
+        run: |
+          make init
+          make install
+
+      - name: Lint check
+        run: |
+          make lint-check
+        continue-on-error: true
+
+      - name: Type check
+        run: |
+          make type-check
+        continue-on-error: true
+
+      - name: Run pytest with coverage
+        run: |
+          make unit-tests

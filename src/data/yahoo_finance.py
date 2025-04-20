@@ -23,7 +23,15 @@ class YahooFinance:
             raw_data (DataFrame): The raw data.
             processed_data (DataFrame): The processed data.
         """
+        if ticker is None or ticker == "" or not isinstance(ticker, str):
+            raise ValueError("Ticker symbol must be a non-empty string")
         self.ticker = ticker
+        if (
+            root_dir is None
+            or root_dir == ""
+            or not isinstance(root_dir, str)
+        ):
+            raise ValueError("Root directory must be a non-empty string")
         self.root_dir = str(root_dir)
         self.raw_dir = f"{self.root_dir}\\data\\raw\\{self.ticker[:3]}_data"
         self.raw_data = None
@@ -42,16 +50,6 @@ class YahooFinance:
         Returns:
             None
         """
-        if self.ticker is None or self.ticker == "" or not isinstance(self.ticker, str):
-            raise ValueError("Ticker symbol must be a non-empty string")
-
-        if (
-            self.root_dir is None
-            or self.root_dir == ""
-            or not isinstance(self.root_dir, str)
-        ):
-            raise ValueError("Root directory must be a non-empty string")
-
         logger.info(f"Downloading Yahoo Finance data for {self.ticker}")
 
         self.raw_data = yf.download(

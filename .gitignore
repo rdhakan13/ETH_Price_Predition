@@ -5,6 +5,10 @@ data/raw/
 data/processed/
 /logs/
 /tmp/
+temp/
 .ruff_cache/
 .mypy_cache/
 .pytest_cache/
+.coverage
+.venv/
+htmlcov/

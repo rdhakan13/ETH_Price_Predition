@@ -40,7 +40,7 @@ def make_directory(directory: str):
         os.makedirs(directory, exist_ok=True)
 
 @ensure_annotations
-def split_dates_by_year(date_tuples: tuple) -> list:
+def split_dates_by_year(date_tuples: list) -> list:
     """
     Splits a list of date tuples into a list of lists, each containing dates from the same year.
 
@@ -57,6 +57,8 @@ def split_dates_by_year(date_tuples: tuple) -> list:
 
     try:
         for date_tuple in date_tuples:
+            if not isinstance(date_tuple, tuple) or len(date_tuple) != 3:
+                raise TypeError("Date tuples must be tuples of the form (year, month, day).")
             year = date_tuple[0]
             if year not in year_dict:
                 year_dict[year] = []

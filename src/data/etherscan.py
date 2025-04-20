@@ -22,6 +22,15 @@ class EtherScan:
             processed_dir (str): The directory to save processed data.
             processed_data (DataFrame): The processed data.
         """
+        if ticker is None or ticker == "" or not isinstance(ticker, str):
+            raise ValueError("Ticker symbol must be a non-empty string")
+        self.ticker = ticker
+        if (
+            root_dir is None
+            or root_dir == ""
+            or not isinstance(root_dir, str)
+        ):
+            raise ValueError("Root directory must be a non-empty string")
         self.ticker = ticker
         self.root_dir = root_dir
         self.raw_dir = f"{self.root_dir}\\data\\raw\\ETH_data\\etherscan\\"
@@ -44,7 +53,13 @@ class EtherScan:
         Returns:
             None
         """
-        logger.info(f"Processing raw data from etherscan.")
+        if data_yf is None or not isinstance(data_yf, pd.DataFrame):
+            raise ValueError("data_yf must be a DataFrame")
+
+        if date_range is None:
+            raise ValueError("date_range must be a pd.date_range object")
+        
+        logger.info("Processing raw data from etherscan.")
 
         for file in os.listdir(self.raw_dir):
             column_name = " ".join(file.split("-")[1:])[:-4]
@@ -80,7 +95,7 @@ class EtherScan:
 
             self.processed_data = data_yf.merge(data_etherscan, on="Date", how="outer")
 
-        logger.info(f"Data processed successfully for etherscan.")
+        logger.info("Data processed successfully for etherscan.")
 
     def save_processed_data(self):
         """
