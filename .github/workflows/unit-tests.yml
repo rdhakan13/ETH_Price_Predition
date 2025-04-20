@@ -5,10 +5,10 @@ on:
     branches:
       - '*'
     paths:
-      - configs/*
-      - src/*
-      - tests/*
-      - .github/*
+      - configs/**
+      - src/**
+      - tests/**
+      - .github/**
       - Makefile
       - requirements.txt
       - pyproject.toml
@@ -17,10 +17,10 @@ on:
     branches:
       - '*'
     paths:
-      - configs/*
-      - src/*
-      - tests/*
-      - .github/*
+      - configs/**
+      - src/**
+      - tests/**
+      - .github/**
       - Makefile
       - requirements.txt
       - pyproject.toml
