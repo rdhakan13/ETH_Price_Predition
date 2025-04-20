@@ -4,9 +4,27 @@ on:
   push:
     branches:
       - '*'
+    paths:
+      - configs/*
+      - src/*
+      - tests/*
+      - .github/*
+      - Makefile
+      - requirements.txt
+      - pyproject.toml
+      - poetry.lock
   pull_request:
     branches:
       - '*'
+    paths:
+      - configs/*
+      - src/*
+      - tests/*
+      - .github/*
+      - Makefile
+      - requirements.txt
+      - pyproject.toml
+      - poetry.lock
 
 jobs:
   unit-tests:
