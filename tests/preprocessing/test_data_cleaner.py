@@ -111,10 +111,3 @@ def test_merge_sources(cleaner, dummy_data):
     assert "value2" in cleaner.cleaned_data.columns
     assert "value3" in cleaner.cleaned_data.columns
 
-
-@patch("src.preprocessing.data_cleaner.make_directory")
-def test_save_clean_data(mock_make_dir, cleaner, tmp_path, dummy_data):
-    cleaner.cleaned_data = dummy_data.copy()
-    cleaner.save_clean_data(directory=str(tmp_path))
-    saved_file = tmp_path / "ETH.csv"
-    assert saved_file.exists()

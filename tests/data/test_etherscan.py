@@ -4,7 +4,6 @@ import pandas as pd
 from unittest import mock
 from datetime import datetime
 from src.data.etherscan import EtherScan
-from pathlib import Path
 
 
 @pytest.fixture
@@ -76,7 +75,7 @@ def test_process_raw_data_all_file_types(mock_read_csv, mock_listdir, etherscan_
         })
     }
     def read_csv_side_effect(filepath):
-        filename = Path(filepath).name
+        filename = os.path.basename(filepath.replace("\\", "/"))
         return mock_dfs[filename]
 
     mock_read_csv.side_effect = read_csv_side_effect
