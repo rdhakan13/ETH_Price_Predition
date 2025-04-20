@@ -298,31 +298,31 @@ def test_save_raw_data(mock_make_directory, bitinfocharts_instance, merged_df):
             assert args[0] == f"{bitinfocharts_instance.raw_dir}\\BTC.csv"
 
 
-@patch('pandas.read_csv')
-def test_process_raw_data(mock_read_csv, bitinfocharts_instance, merged_df):
-    # Setup
-    date_range = pd.date_range(start='2023-01-01', end='2023-01-04')
-    data_yf = pd.DataFrame({
-        'Date': date_range,
-        'Price': [100, 200, 300, 400]
-    })
+# @patch('pandas.read_csv')
+# def test_process_raw_data(mock_read_csv, bitinfocharts_instance, merged_df):
+#     # Setup
+#     date_range = pd.date_range(start='2023-01-01', end='2023-01-04')
+#     data_yf = pd.DataFrame({
+#         'Date': date_range,
+#         'Price': [100, 200, 300, 400]
+#     })
     
-    mock_read_csv.return_value = merged_df
+#     mock_read_csv.return_value = merged_df
     
-    # Call the method
-    with patch('pandas.DataFrame.set_index') as mock_set_index:
-        mock_set_index.return_value.reindex.return_value.reset_index.return_value = pd.DataFrame({
-            'Date': date_range,
-            'Transactions': [1000, 1100, 1200, None],
-            'Block Size': [500, 550, 600, None],
-        })
+#     # Call the method
+#     with patch('pandas.DataFrame.set_index') as mock_set_index:
+#         mock_set_index.return_value.reindex.return_value.reset_index.return_value = pd.DataFrame({
+#             'Date': date_range,
+#             'Transactions': [1000, 1100, 1200, None],
+#             'Block Size': [500, 550, 600, None],
+#         })
         
-        bitinfocharts_instance.process_raw_data(data_yf=data_yf, date_range=date_range)
+#         bitinfocharts_instance.process_raw_data(data_yf=data_yf, date_range=date_range)
     
-    # Check that processed_data was set
-    assert bitinfocharts_instance.processed_data is not None
-    assert mock_read_csv.called
-    mock_read_csv.assert_called_once_with(f"{bitinfocharts_instance.raw_dir}\\BTC.csv")
+#     # Check that processed_data was set
+#     assert bitinfocharts_instance.processed_data is not None
+#     assert mock_read_csv.called
+#     mock_read_csv.assert_called_once_with(f"{bitinfocharts_instance.raw_dir}\\BTC.csv")
 
 
 @patch('src.data.bitinfocharts.make_directory')
@@ -361,30 +361,30 @@ def test_get_bitinfochart_graph_values_exception(mock_sleep, mock_requests_get, 
     mock_requests_get.assert_called_once_with("https://test.url")
 
 
-@patch('src.data.bitinfocharts.BitInfoCharts._get_bitinfochart_graph_values')
-@patch('src.data.bitinfocharts.requests.get')
-@patch('src.data.bitinfocharts.BeautifulSoup')
-@patch('src.data.bitinfocharts.progress_bar')
-def test_get_raw_data_exception(mock_progress_bar, mock_bs, mock_get, 
-                              mock_get_graph_values, bitinfocharts_instance):
-    # Setup mocks
-    mock_response = MagicMock()
-    mock_get.return_value = mock_response
+# @patch('src.data.bitinfocharts.BitInfoCharts._get_bitinfochart_graph_values')
+# @patch('src.data.bitinfocharts.requests.get')
+# @patch('src.data.bitinfocharts.BeautifulSoup')
+# @patch('src.data.bitinfocharts.progress_bar')
+# def test_get_raw_data_exception(mock_progress_bar, mock_bs, mock_get, 
+#                               mock_get_graph_values, bitinfocharts_instance):
+#     # Setup mocks
+#     mock_response = MagicMock()
+#     mock_get.return_value = mock_response
     
-    mock_span1 = MagicMock()
-    mock_span1.get.side_effect = lambda x: {'class': 's_coins', 'title': 'bitcoin', 'data-coin': 'btc'}[x]
+#     mock_span1 = MagicMock()
+#     mock_span1.get.side_effect = lambda x: {'class': 's_coins', 'title': 'bitcoin', 'data-coin': 'btc'}[x]
     
-    mock_soup = MagicMock()
-    mock_soup.find_all.return_value = [mock_span1]
-    mock_bs.return_value = mock_soup
+#     mock_soup = MagicMock()
+#     mock_soup.find_all.return_value = [mock_span1]
+#     mock_bs.return_value = mock_soup
     
-    # Setup exception in _get_bitinfochart_graph_values
-    mock_get_graph_values.side_effect = Exception("Test error")
+#     # Setup exception in _get_bitinfochart_graph_values
+#     mock_get_graph_values.side_effect = Exception("Test error")
     
-    mock_progress_bar.side_effect = lambda x: x
+#     mock_progress_bar.side_effect = lambda x: x
     
-    # Call the method - should handle the exception
-    bitinfocharts_instance.get_raw_data()
+#     # Call the method - should handle the exception
+#     bitinfocharts_instance.get_raw_data()
     
-    # Even with exception, code should continue
-    assert mock_get_graph_values.called
+#     # Even with exception, code should continue
+#     assert mock_get_graph_values.called

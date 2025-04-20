@@ -59,7 +59,7 @@ class EtherScan:
         if date_range is None:
             raise ValueError("date_range must be a pd.date_range object")
         
-        logger.info(f"Processing raw data from etherscan.")
+        logger.info("Processing raw data from etherscan.")
 
         for file in os.listdir(self.raw_dir):
             column_name = " ".join(file.split("-")[1:])[:-4]
@@ -95,7 +95,7 @@ class EtherScan:
 
             self.processed_data = data_yf.merge(data_etherscan, on="Date", how="outer")
 
-        logger.info(f"Data processed successfully for etherscan.")
+        logger.info("Data processed successfully for etherscan.")
 
     def save_processed_data(self):
         """

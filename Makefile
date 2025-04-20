@@ -1,6 +1,6 @@
 SCRIPT_NAME = pipeline/2_processed_data.py
 LOG_DIR = logs
-TMP_DIR = tmp
+TMP_DIR = temp
 PYTEST_CACHE = .pytest_cache
 SRC = ./src/
 SCRIPTS = ./scripts/
@@ -122,3 +122,4 @@ ifeq ($(OS),Windows_NT)
 else
 	.venv/bin/pytest --cov=. --cov-report=term-missing --cov-fail-under=80 tests/
 endif
+

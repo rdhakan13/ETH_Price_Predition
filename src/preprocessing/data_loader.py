@@ -2,7 +2,7 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 import logging
-from src.common.stats import adf_test
+from src.common.stats import adf_test, StationarityTests
 from src.preprocessing.feature_generator import FeatureGenerator
 
 logger = logging.getLogger(__name__)
@@ -38,27 +38,28 @@ class DataLoader:
         self.final_data = price_features.dropna()
         logger.info("Data loaded successfully.")
 
-    def merge_selected_data(self, selected_data:list):
+    def merge_selected_data(self, selected_data:list=None):
         """Handle missing values, encode categorical features, normalize data."""
         logger.info("Merging selected data...")
         if selected_data is None:
             pass
-        if not isinstance(selected_data, list):
-            raise ValueError("selected_data must be a list.") 
-        if "BTC" in selected_data:
-            self.BTC.columns = [f"BTC_{col}" for col in self.BTC.columns]
-            fg = FeatureGenerator(input_data=self.BTC, data_tag="price")
-            price_features = fg.generate_features()
-            self.final_data = self.final_data.merge(price_features, how="outer", on="Date")
-        if "LTC" in selected_data:
-            self.LTC.columns = [f"LTC_{col}" for col in self.LTC.columns]
-            fg = FeatureGenerator(input_data=self.LTC, data_tag="price")
-            price_features = fg.generate_features()
-            self.final_data = self.final_data.merge(price_features, how="outer", on="Date")
-        if "sentiment_analysis" in selected_data:
-            fg = FeatureGenerator(input_data=self.sentiment_analysis, data_tag="sentiment")
-            sentiment_features = fg.generate_features()
-            self.final_data = self.final_data.merge(sentiment_features.replace(np.nan,0), how="outer", on="Date")
+        elif not isinstance(selected_data, list):
+            raise ValueError("selected_data must be a list.")
+        else:
+            if "BTC" in selected_data:
+                self.BTC.columns = [f"BTC_{col}" for col in self.BTC.columns]
+                fg = FeatureGenerator(input_data=self.BTC, data_tag="price")
+                price_features = fg.generate_features()
+                self.final_data = self.final_data.merge(price_features, how="outer", on="Date")
+            if "LTC" in selected_data:
+                self.LTC.columns = [f"LTC_{col}" for col in self.LTC.columns]
+                fg = FeatureGenerator(input_data=self.LTC, data_tag="price")
+                price_features = fg.generate_features()
+                self.final_data = self.final_data.merge(price_features, how="outer", on="Date")
+            if "sentiment_analysis" in selected_data:
+                fg = FeatureGenerator(input_data=self.sentiment_analysis, data_tag="sentiment")
+                sentiment_features = fg.generate_features()
+                self.final_data = self.final_data.merge(sentiment_features.replace(np.nan,0), how="outer", on="Date")
         logger.info("Data merged successfully.")
 
     def set_time_range(self, start_date:str, end_date:str):
@@ -108,9 +109,9 @@ class DataLoader:
             diff_count = 0
             
             while diff_count < max_diffs:
-                is_stationary, _ = adf_test(series)
-                
-                if is_stationary:
+                stationarity_result = adf_test(series)
+
+                if stationarity_result.is_stationary:
                     break
                 
                 series = series.diff().dropna() 
@@ -142,7 +143,7 @@ class DataLoader:
             logger.error("lag must be a positive integer.")
             raise ValueError("lag must be a positive integer.")
 
-    def select_features(self, features:list):
+    def select_features(self, features:list=None):
         """
         Select features to include in the model.
         

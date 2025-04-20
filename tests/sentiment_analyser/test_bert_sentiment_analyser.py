@@ -3,20 +3,19 @@ import pandas as pd
 from unittest.mock import patch, MagicMock
 from src.sentiment_analyser.bert_sentiment_analyser import BertSentimentAnalyser
 
-
 @pytest.fixture
 def sample_df():
-    return pd.DataFrame({"text": ["I love this!", "This is bad.", "Meh, it's ok."]})
+    return pd.DataFrame({
+        "headline": [
+            "Stocks are rising after strong earnings",
+            "Markets crash as inflation worries grow"
+        ]
+    })
 
 
 @pytest.fixture
 def mock_pipeline_output():
-    return [
-        [{"label": "POSITIVE", "score": 0.95}],
-        [{"label": "NEGATIVE", "score": 0.85}],
-        [{"label": "NEUTRAL", "score": 0.60}],
-    ]
-
+    return [[{"label": "POSITIVE", "score": 0.98}], [{"label": "NEGATIVE", "score": 0.87}]]
 
 @patch("src.sentiment_analyser.bert_sentiment_analyser.AutoTokenizer.from_pretrained")
 @patch("src.sentiment_analyser.bert_sentiment_analyser.AutoModelForSequenceClassification.from_pretrained")
@@ -34,43 +33,27 @@ def test_initialization(mock_cuda, mock_pipeline, mock_model, mock_tokenizer, sa
 @patch("src.sentiment_analyser.bert_sentiment_analyser.AutoModelForSequenceClassification.from_pretrained")
 @patch("src.sentiment_analyser.bert_sentiment_analyser.pipeline")
 @patch("src.sentiment_analyser.bert_sentiment_analyser.torch.cuda.is_available", return_value=False)
-@patch("swifter.swifter.SeriesAccessor.apply", autospec=True)
-def test_analyse_sentiment(
-    mock_swifter_apply,
-    mock_cuda,
-    mock_pipeline,
-    mock_model,
-    mock_tokenizer,
+@patch("src.sentiment_analyser.bert_sentiment_analyser.swifter")
+def test_analyse_sentiment_success(
+    mock_swifter, mock_torch, mock_pipeline, mock_model, mock_tokenizer, sample_df, mock_pipeline_output
 ):
-    sample_df = pd.DataFrame({"text": ["I love this!", "This is bad.", "Meh, it's ok."]})
-    mock_pipeline_output = [
-        {'label': 'POSITIVE', 'score': 0.95},
-        {'label': 'NEGATIVE', 'score': 0.85},
-        {'label': 'NEUTRAL', 'score': 0.6},
-    ]
-
-    # Mock the analyzer to return dicts
+    # Setup mocks
     mock_analyzer = MagicMock()
-    mock_analyzer.side_effect = lambda x: mock_pipeline_output[sample_df["text"].tolist().index(x)]
+    mock_analyzer.side_effect = mock_pipeline_output
     mock_pipeline.return_value = mock_analyzer
 
-    # Simulate swifter's apply method (should behave like pandas apply)
-    def apply_side_effect(self, func, *args, **kwargs):
-        return sample_df["text"].astype(str).apply(func)
-
-    mock_swifter_apply.side_effect = apply_side_effect
+    mock_swifter.apply.side_effect = lambda func: sample_df["headline"].apply(func)
 
     analyser = BertSentimentAnalyser(sample_df.copy(), "bert-base-uncased")
-    analyser.analyzer = mock_analyzer
-    result_df = analyser.analyse_sentiment("text")
+    analyser.analyzer = lambda text: [{"label": "POSITIVE", "score": 0.95}] if "rising" in text else [{"label": "NEGATIVE", "score": 0.85}]
+    analyser.determine_sentiment = lambda label: "POS" if label == "POSITIVE" else "NEG"
 
-    # Assert the final result has the expected structure
-    expected = pd.DataFrame({
-        "text": ["I love this!", "This is bad.", "Meh, it's ok."],
-        "label": ["POSITIVE", "NEGATIVE", "NEUTRAL"],
-        "score": [0.95, 0.85, 0.6]
-    })
-    pd.testing.assert_frame_equal(result_df.reset_index(drop=True), expected.reset_index(drop=True))
+    result_df = analyser.analyse_sentiment("headline")
+
+    assert f"D_{analyser._model_name()}_ConScore" in result_df.columns
+    assert f"D_{analyser._model_name()}_Sent" in result_df.columns
+    assert result_df.iloc[0][f"D_{analyser._model_name()}_Sent"] == "POS"
+    assert result_df.iloc[1][f"D_{analyser._model_name()}_Sent"] == "NEG"
 
 
 

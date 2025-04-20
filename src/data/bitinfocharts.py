@@ -5,7 +5,6 @@ import logging
 import requests
 import pandas as pd
 from time import sleep
-from fastcore.all import *
 from bs4 import BeautifulSoup
 from fastprogress import progress_bar
 from src.common.utils import make_directory

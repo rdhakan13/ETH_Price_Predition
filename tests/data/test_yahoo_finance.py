@@ -33,7 +33,7 @@ def test_constructor_valid_inputs():
 def test_get_raw_data_downloads(mock_download, instance):
     df = pd.DataFrame({"Open": [1], "Close": [2]})
     mock_download.return_value = df
-    instance.get_raw_data(period="max", interval="1h")
+    instance.get_raw_data(period="5d", interval="1h")
     mock_download.assert_called_once_with(tickers=VALID_TICKER, period="5d", interval="1h")
     pd.testing.assert_frame_equal(instance.raw_data, df)
 
