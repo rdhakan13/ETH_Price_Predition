@@ -2,6 +2,7 @@ import logging
 import pandas as pd
 from statsmodels.tsa.stattools import adfuller, grangercausalitytests
 from arch.unitroot import PhillipsPerron
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +63,7 @@ def pp_test(series: pd.DataFrame, alpha:float=0.05)->StationarityTests:
     }
     return stationarity_result
 
-def grangers_causality_test(df:pd.DataFrame, target_col:str, max_lag:int=5, alpha:float=0.05)->dict:
+def grangers_causality_test(df:pd.DataFrame, target_col:str, max_lag:int=5, alpha:float=0.05)->dict[str,Any]:
     """
     Perform Granger's Causality test for each column in a DataFrame against a specified target column.
     

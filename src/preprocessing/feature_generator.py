@@ -30,7 +30,7 @@ class FeatureGenerator:
             self._generate_price_features()
         return self.transformed_data
     
-    def _generate_sentinment_features(self):
+    def _generate_sentinment_features(self)-> None:
         """
         Generate sentiment features based on the input data
         
@@ -64,7 +64,7 @@ class FeatureGenerator:
                 self.transformed_data[col_score_Ex] = AvgScr_Ex[col_score_Ex]
                 self.transformed_data[col_sent_Ex] = self.transformed_data[col_score_Ex].swifter.apply(vsa.determine_sentiment)
 
-    def _generate_price_features(self):
+    def _generate_price_features(self)-> None:
         """
         Generate price features based on the input data
         

@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class EtherScan:
-    def __init__(self, ticker: str = None, root_dir: str = None):
+    def __init__(self, ticker: str, root_dir: str):
         """
         Initializes the EtherScan class for cleaning and processing data from Etherscan.
 
@@ -38,7 +38,7 @@ class EtherScan:
         self.processed_data = None
 
     def process_raw_data(
-        self, data_yf: pd.DataFrame = None, date_range: pd.date_range = None):
+        self, data_yf: pd.DataFrame, date_range: pd.date_range)-> None:
         """
         Processes raw data files from Etherscan and merges them with Yahoo Finance data.
 
@@ -97,7 +97,7 @@ class EtherScan:
 
         logger.info("Data processed successfully for etherscan.")
 
-    def save_processed_data(self):
+    def save_processed_data(self)-> None:
         """
         Saves the processed data to a CSV file in the processed data directory.
 

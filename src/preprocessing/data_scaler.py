@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class DataScaler:
-    def __init__(self, scaling_methods: dict, columns: list):
+    def __init__(self, scaling_methods: dict[str,str], columns: list[str]):
         """
         Initialize the data scaler with target columns and scaling methods.
 
@@ -26,7 +26,7 @@ class DataScaler:
         self.scalers = {}
         self.minmax_scalers = {}
 
-    def fit(self, df: pd.DataFrame):
+    def fit(self, df: pd.DataFrame)-> None:
         """
         Fit the scalers to the target columns in the DataFrame.
 
@@ -118,7 +118,7 @@ class DataScaler:
         return df_original
 
     @staticmethod
-    def _apply_transformation(col_values: pd.DataFrame, scaler, method) -> pd.DataFrame:
+    def _apply_transformation(col_values: pd.DataFrame, scaler, method:str) -> pd.DataFrame:
         """
         Apply the transformation to the DataFrame column values.
 
@@ -143,7 +143,7 @@ class DataScaler:
 
     @staticmethod
     def _reverse_transformation(
-        transformed_values: pd.DataFrame, scaler, method
+        transformed_values: pd.DataFrame, scaler, method:str
     ) -> pd.DataFrame:
         """
         Reverse the transformation of the DataFrame column values.

@@ -20,7 +20,7 @@ class DataLoader:
         self.test = None
         self.val = None
 
-    def load_data(self):
+    def load_data(self)-> None:
         """
         Load data from CSV files.
 
@@ -38,7 +38,7 @@ class DataLoader:
         self.final_data = price_features.dropna()
         logger.info("Data loaded successfully.")
 
-    def merge_selected_data(self, selected_data:list=None):
+    def merge_selected_data(self, selected_data:list[str])-> None:
         """Handle missing values, encode categorical features, normalize data."""
         logger.info("Merging selected data...")
         if selected_data is None:
@@ -62,7 +62,7 @@ class DataLoader:
                 self.final_data = self.final_data.merge(sentiment_features.replace(np.nan,0), how="outer", on="Date")
         logger.info("Data merged successfully.")
 
-    def set_time_range(self, start_date:str, end_date:str):
+    def set_time_range(self, start_date:str, end_date:str)-> None:
         """
         Set time range for dataset.
         
@@ -90,7 +90,7 @@ class DataLoader:
         self.final_data = self.final_data.loc[start_date:end_date]
         logger.info(f"Time range set to {start_date} to {end_date}.")
 
-    def make_stationary(self, alpha=0.05, max_diffs=5):
+    def make_stationary(self, alpha=0.05, max_diffs=5)-> None:
         """
         Iterates through each column in a DataFrame and differences it until it 
         becomes stationary based on the Augmented Dickey-Fuller (ADF) test.
@@ -121,7 +121,7 @@ class DataLoader:
             diff_counts[col] = diff_count
             logger.info(f"{col} differenced {diff_count} times to achieve stationarity.")
 
-    def lag_features(self, exclude_cols:list, lag:int=1):
+    def lag_features(self, exclude_cols:list[str], lag:int=1)-> None:
         """
         Add lagged features to the dataset.
 
@@ -143,7 +143,7 @@ class DataLoader:
             logger.error("lag must be a positive integer.")
             raise ValueError("lag must be a positive integer.")
 
-    def select_features(self, features:list=None):
+    def select_features(self, features:list[str])-> None:
         """
         Select features to include in the model.
         

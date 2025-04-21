@@ -3,11 +3,9 @@ import logging
 import os
 import yaml
 from box import ConfigBox
-from ensure import ensure_annotations
 
 logger = logging.getLogger(__name__)
 
-@ensure_annotations
 def get_root_directory() -> Path:
     """
     Returns the root directory of the project by searching for the .git directory.
@@ -25,8 +23,7 @@ def get_root_directory() -> Path:
 
     return current_path
 
-@ensure_annotations
-def make_directory(directory: str):
+def make_directory(directory: str)-> None:
     """
     Creates a directory if it does not exist.
 
@@ -39,8 +36,7 @@ def make_directory(directory: str):
     if not os.path.exists(directory):
         os.makedirs(directory, exist_ok=True)
 
-@ensure_annotations
-def split_dates_by_year(date_tuples: list) -> list:
+def split_dates_by_year(date_tuples: list[tuple]) -> list[list]:
     """
     Splits a list of date tuples into a list of lists, each containing dates from the same year.
 
@@ -69,7 +65,6 @@ def split_dates_by_year(date_tuples: list) -> list:
 
     return list(year_dict.values())
 
-@ensure_annotations
 def read_yaml(path_to_yaml: str) -> ConfigBox:
     """
     Reads the content of a YAML file.

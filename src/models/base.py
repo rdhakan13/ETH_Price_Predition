@@ -3,12 +3,13 @@ import pandas as pd
 from sklearn.metrics import root_mean_squared_error, mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
 from tabulate import tabulate
 import logging
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
 class Model:
-    def __init__(self, params: dict):
+    def __init__(self, params: dict[str, Any]):
         """
         Initialize the model.
         """
@@ -43,7 +44,7 @@ class Model:
         """
         pass
     
-    def evaluate(self, y_true: pd.DataFrame)->dict:
+    def evaluate(self, y_true: pd.DataFrame)->dict[str, float]:
         """
         Calculate RMSE, MSE, MAPE, and MAE between actual and predicted values.
 

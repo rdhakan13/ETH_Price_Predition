@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class GoogleNews:
-    def __init__(self, root_dir: str = None):
+    def __init__(self, root_dir: str):
         """
         Initializes the GoogleNews class.
 
@@ -45,7 +45,7 @@ class GoogleNews:
         self.year = None
 
     def get_raw_data(
-        self, year, keywords: list = None, dates_list: list = None):
+        self, year:int, keywords: list[str], dates_list: list[tuple])-> None:
         """
         Extracts Google News headlines for the specified year and keywords.
 
@@ -55,10 +55,7 @@ class GoogleNews:
             dates_list (list): A list of date tuples (year, month, day) to search within.
 
         Returns:
-            list: A list of extracted news headlines.
-
-        Raises:
-            ValueError: If root_dir is not a non-empty string or keywords is not a list of strings.
+            None
         """
         data = []
 
@@ -94,7 +91,7 @@ class GoogleNews:
 
         logger.info("Data downloaded successfully for {self.year}.")
 
-    def save_raw_data(self):
+    def save_raw_data(self)-> None:
         """
         Saves the raw data to a CSV file in the raw data directory.
 
@@ -112,7 +109,7 @@ class GoogleNews:
 
         logger.info(f"Data saved to {self.raw_dir}.")
 
-    def process_raw_data(self):
+    def process_raw_data(self)-> None:
         """
         Processes raw Google News headline files and combines them into a single DataFrame.
 
@@ -165,7 +162,7 @@ class GoogleNews:
 
         logger.info("Data processed successfully.")
 
-    def save_processed_data(self):
+    def save_processed_data(self)-> None:
         """
         Saves the processed data to a CSV file in the processed data directory.
 

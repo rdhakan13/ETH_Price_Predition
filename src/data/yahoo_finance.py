@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class YahooFinance:
-    def __init__(self, ticker: str = None, root_dir: str = None):
+    def __init__(self, ticker: str, root_dir: str):
         """
         Initializes the YahooFinance class with the given ticker symbol.
 
@@ -37,7 +37,7 @@ class YahooFinance:
         self.raw_data = None
         self.processed_data = None
 
-    def get_raw_data(self, period: str = "max", interval: str = "1d"):
+    def get_raw_data(self, period: str = "max", interval: str = "1d")-> None:
         """
         Downloads historical data for the given ticker symbol from Yahoo Finance and saves it to the raw data directory.
 
@@ -58,7 +58,7 @@ class YahooFinance:
 
         logger.info(f"Data downloaded successfully for {self.ticker}.")
 
-    def save_raw_data(self):
+    def save_raw_data(self)-> None:
         """
         Saves the raw data to a CSV file in the raw data directory.
 
@@ -74,7 +74,7 @@ class YahooFinance:
 
         logger.info(f"Data saved to {self.raw_dir}")
 
-    def _process_raw_data(self, date_range: pd.date_range = None) -> pd.DataFrame:
+    def _process_raw_data(self, date_range: pd.date_range) -> pd.DataFrame:
         """
         Processes the raw data and reindexes it to match the provided date range.
 

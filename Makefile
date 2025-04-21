@@ -102,7 +102,7 @@ lint-fix: activate
 type-check: activate
 	@echo Type checking...
 ifeq ($(OS),Windows_NT)
-	mypy $(SRC)
+	mypy --config-file pyproject.toml $(SRC)
 else
 	.venv/bin/mypy $(SRC)
 endif
