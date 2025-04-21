@@ -25,11 +25,7 @@ class OkLink:
         if ticker is None or ticker == "" or not isinstance(ticker, str):
             raise ValueError("Ticker symbol must be a non-empty string")
         self.ticker = ticker
-        if (
-            root_dir is None
-            or root_dir == ""
-            or not isinstance(root_dir, str)
-        ):
+        if root_dir is None or root_dir == "" or not isinstance(root_dir, str):
             raise ValueError("Root directory must be a non-empty string")
         self.raw_dir = f"{root_dir}\\data\\raw\\{ticker}_data\\oklink"
         self.raw_data = None
@@ -37,7 +33,8 @@ class OkLink:
         self.processed_data = None
 
     def process_raw_data(
-        self, data_yf: pd.DataFrame, date_range: pd.date_range)-> None:
+        self, data_yf: pd.DataFrame, date_range: pd.date_range
+    ) -> None:
         """
         Processes raw data files from OkLink and merges them with Yahoo Finance data.
 
@@ -74,7 +71,7 @@ class OkLink:
         self.processed_data = data_oklink
         logger.info(f"Data processed successfully for {self.ticker} from OkLink")
 
-    def save_processed_data(self)-> None:
+    def save_processed_data(self) -> None:
         """
         Saves the processed data to a CSV file in the processed data directory.
 

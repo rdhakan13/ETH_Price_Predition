@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class Plotter:
-    def __init__(self, root_dir:str):
+    def __init__(self, root_dir: str):
         """
         Initialize the Plotter with the parent directory.
 
@@ -48,7 +48,7 @@ class Plotter:
         df: pd.DataFrame,
         x: str,
         y: str,
-        figsize: tuple[float,float] = (10, 6),
+        figsize: tuple[float, float] = (10, 6),
         **kwargs,
     ) -> None:
         """
@@ -97,7 +97,7 @@ class Plotter:
         self,
         df: pd.DataFrame,
         method: str = "spearmen",
-        figsize: tuple[float,float] = (10, 8),
+        figsize: tuple[float, float] = (10, 8),
         **kwargs,
     ) -> None:
         """
@@ -134,7 +134,7 @@ class Plotter:
         df: pd.DataFrame,
         x: str,
         y: str,
-        figsize: tuple[float,float] = (10, 8),
+        figsize: tuple[float, float] = (10, 8),
         stripplot: bool = False,
         jitter: float = 0.1,
         **kwargs,
@@ -181,7 +181,7 @@ class Plotter:
         df: pd.DataFrame,
         x: str,
         y: str,
-        figsize: tuple[float,float] = (10, 8),
+        figsize: tuple[float, float] = (10, 8),
         **kwargs,
     ) -> None:
         """
@@ -214,7 +214,7 @@ class Plotter:
         df: pd.DataFrame,
         x: str,
         y: str,
-        figsize: tuple[float,float] = (10, 8),
+        figsize: tuple[float, float] = (10, 8),
         **kwargs,
     ) -> None:
         """
@@ -245,7 +245,7 @@ class Plotter:
         df: pd.DataFrame,
         x: str,
         y: str,
-        figsize: tuple[float,float] = (10, 8),
+        figsize: tuple[float, float] = (10, 8),
         **kwargs,
     ) -> None:
         """
@@ -272,7 +272,10 @@ class Plotter:
         plt.show()
 
     def save_graph(
-        self, filepath: str, format: str = "jpg", dpi: int = 400, 
+        self,
+        filepath: str,
+        format: str = "jpg",
+        dpi: int = 400,
     ) -> None:
         """
         Save the current graph to a file.
@@ -293,7 +296,7 @@ class Plotter:
             f"{self.filepath}\\{self.title}.{format}", format=format, dpi=dpi
         )
 
-    def _handle_none_graph_kwargs(self, kwargs: dict[str,Any]) -> dict:
+    def _handle_none_graph_kwargs(self, kwargs: dict[str, Any]) -> dict:
         """
         Handle the None values in the graph kwargs.
 

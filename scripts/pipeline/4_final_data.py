@@ -128,11 +128,10 @@ if __name__ == "__main__":
     start_time = time.time()
 
     for ticker in list(input_data.keys()):
-
         dc = DataCleaner(root_dir, ticker, source=list(input_data[ticker].keys()))
 
         dc.read_data()
-        
+
         dc.identify_nan()
 
         for source in list(input_data[ticker].keys()):

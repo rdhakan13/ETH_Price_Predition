@@ -6,6 +6,7 @@ from box import ConfigBox
 
 logger = logging.getLogger(__name__)
 
+
 def get_root_directory() -> Path:
     """
     Returns the root directory of the project by searching for the .git directory.
@@ -23,7 +24,8 @@ def get_root_directory() -> Path:
 
     return current_path
 
-def make_directory(directory: str)-> None:
+
+def make_directory(directory: str) -> None:
     """
     Creates a directory if it does not exist.
 
@@ -35,6 +37,7 @@ def make_directory(directory: str)-> None:
     """
     if not os.path.exists(directory):
         os.makedirs(directory, exist_ok=True)
+
 
 def split_dates_by_year(date_tuples: list[tuple]) -> list[list]:
     """
@@ -54,7 +57,9 @@ def split_dates_by_year(date_tuples: list[tuple]) -> list[list]:
     try:
         for date_tuple in date_tuples:
             if not isinstance(date_tuple, tuple) or len(date_tuple) != 3:
-                raise TypeError("Date tuples must be tuples of the form (year, month, day).")
+                raise TypeError(
+                    "Date tuples must be tuples of the form (year, month, day)."
+                )
             year = date_tuple[0]
             if year not in year_dict:
                 year_dict[year] = []
@@ -64,6 +69,7 @@ def split_dates_by_year(date_tuples: list[tuple]) -> list[list]:
         raise e
 
     return list(year_dict.values())
+
 
 def read_yaml(path_to_yaml: str) -> ConfigBox:
     """

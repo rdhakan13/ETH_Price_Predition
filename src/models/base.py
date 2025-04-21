@@ -1,6 +1,11 @@
 from abc import abstractmethod
 import pandas as pd
-from sklearn.metrics import root_mean_squared_error, mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
+from sklearn.metrics import (
+    root_mean_squared_error,
+    mean_squared_error,
+    mean_absolute_percentage_error,
+    mean_absolute_error,
+)
 from tabulate import tabulate
 import logging
 from typing import Any
@@ -18,21 +23,21 @@ class Model:
         self.tbl_args = {"headers": "keys", "tablefmt": "simple", "floatfmt": ".2f"}
 
     @abstractmethod
-    def fit(self, x_train: pd.DataFrame, y_train:pd.DataFrame):
+    def fit(self, x_train: pd.DataFrame, y_train: pd.DataFrame):
         """
         Fit the model to the training data.
-        
+
         Parameters:
             x_train (pd.DataFrame): The features of the training data.
             y_train (pd.DataFrame): The target variable of the training data.
-        
+
         Returns:
             None
         """
         pass
 
     @abstractmethod
-    def predict(self, x_test:pd.DataFrame, x_val:pd.DataFrame):
+    def predict(self, x_test: pd.DataFrame, x_val: pd.DataFrame):
         """
         Make predictions on the test data.
 
@@ -43,8 +48,8 @@ class Model:
             None
         """
         pass
-    
-    def evaluate(self, y_true: pd.DataFrame)->dict[str, float]:
+
+    def evaluate(self, y_true: pd.DataFrame) -> dict[str, float]:
         """
         Calculate RMSE, MSE, MAPE, and MAE between actual and predicted values.
 

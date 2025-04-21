@@ -27,11 +27,7 @@ class GoogleNews:
             final_data (DataFrame): The final data.
             year (str): The year for which to extract data.
         """
-        if (
-            root_dir is None
-            or root_dir == ""
-            or not isinstance(root_dir, str)
-        ):
+        if root_dir is None or root_dir == "" or not isinstance(root_dir, str):
             raise ValueError("Root self.raw_dir must be a non-empty string")
         self.root_dir = str(root_dir)
         self.raw_dir = f"{self.root_dir}\\data\\raw\\Google_News_Headlines_data"
@@ -45,7 +41,8 @@ class GoogleNews:
         self.year = None
 
     def get_raw_data(
-        self, year:int, keywords: list[str], dates_list: list[tuple])-> None:
+        self, year: int, keywords: list[str], dates_list: list[tuple]
+    ) -> None:
         """
         Extracts Google News headlines for the specified year and keywords.
 
@@ -91,7 +88,7 @@ class GoogleNews:
 
         logger.info("Data downloaded successfully for {self.year}.")
 
-    def save_raw_data(self)-> None:
+    def save_raw_data(self) -> None:
         """
         Saves the raw data to a CSV file in the raw data directory.
 
@@ -109,7 +106,7 @@ class GoogleNews:
 
         logger.info(f"Data saved to {self.raw_dir}.")
 
-    def process_raw_data(self)-> None:
+    def process_raw_data(self) -> None:
         """
         Processes raw Google News headline files and combines them into a single DataFrame.
 
@@ -162,7 +159,7 @@ class GoogleNews:
 
         logger.info("Data processed successfully.")
 
-    def save_processed_data(self)-> None:
+    def save_processed_data(self) -> None:
         """
         Saves the processed data to a CSV file in the processed data directory.
 
