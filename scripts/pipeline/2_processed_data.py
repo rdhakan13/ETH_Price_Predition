@@ -15,7 +15,6 @@ sources = ["oklink", "bitinfocharts", "etherscan"]
 root_dir = str(get_root_directory())
 
 if __name__ == "__main__":
-
     start_time = time.time()
 
     ETH_data = pd.read_csv(f"{root_dir}\\data\\raw\\ETH_data\\ETH-USD_price_data.csv")
@@ -48,7 +47,7 @@ if __name__ == "__main__":
     gn = GoogleNews(root_dir=root_dir)
 
     gn.process_raw_data()
-    
+
     gn.save_processed_data()
 
     end_time = time.time()

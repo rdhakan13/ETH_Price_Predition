@@ -2,6 +2,7 @@ import logging
 import logging.config
 from datetime import datetime
 from src.common.utils import get_root_directory, make_directory
+from typing import Any
 
 format_file: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 format_console: str = (
@@ -23,7 +24,7 @@ error_color: str = "red"
 critical_color: str = "bold_red"
 
 
-def log_config_for_level(log_level: str) -> dict:
+def log_config_for_level(log_level: str) -> dict[str, Any]:
     """
     Get log configuration for the log level.
 

@@ -101,7 +101,6 @@ def test_load_data(mock_read_csv, data_loader):
     assert data_loader.sentiment_analysis is not None
     assert data_loader.final_data is not None
 
-# Test merging selected data
 def test_merge_selected_data(data_loader, mock_final_data):
     data_loader.BTC = pd.DataFrame({
         'Date': pd.date_range('2020-01-01', periods=5, freq='D'),
@@ -135,7 +134,7 @@ def test_merge_selected_data_invalid_type(data_loader):
 
 def test_merge_selected_data_none_type(data_loader, mock_final_data):
     before = data_loader.final_data.copy()  
-    data_loader.merge_selected_data()
+    data_loader.merge_selected_data(selected_data=None)
     pd.testing.assert_frame_equal(data_loader.final_data, before)
 
 # Test setting time range
@@ -204,7 +203,7 @@ def test_select_features(data_loader, mock_final_data):
     assert 'ETH_Close' not in data_loader.final_data.columns
 
 def test_select_features_none(data_loader, mock_final_data):
-    data_loader.select_features()
+    data_loader.select_features(features=None)
     assert 'ETH_Open' in data_loader.final_data.columns
     assert 'ETH_Close' in data_loader.final_data.columns
 

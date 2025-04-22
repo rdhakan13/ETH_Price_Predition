@@ -4,12 +4,13 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
 class Plotter:
-    def __init__(self, root_dir):
+    def __init__(self, root_dir: str):
         """
         Initialize the Plotter with the parent directory.
 
@@ -44,10 +45,10 @@ class Plotter:
 
     def plot_barchart(
         self,
-        df: pd.DataFrame = None,
-        x: str = None,
-        y: str = None,
-        figsize: tuple = (10, 6),
+        df: pd.DataFrame,
+        x: str,
+        y: str,
+        figsize: tuple[float, float] = (10, 6),
         **kwargs,
     ) -> None:
         """
@@ -94,9 +95,9 @@ class Plotter:
 
     def plot_correlation_matrix(
         self,
-        df: pd.DataFrame = None,
+        df: pd.DataFrame,
         method: str = "spearmen",
-        figsize: tuple = (10, 8),
+        figsize: tuple[float, float] = (10, 8),
         **kwargs,
     ) -> None:
         """
@@ -131,9 +132,9 @@ class Plotter:
     def plot_violin_plot(
         self,
         df: pd.DataFrame,
-        x: str = None,
-        y: str = None,
-        figsize: tuple = (10, 8),
+        x: str,
+        y: str,
+        figsize: tuple[float, float] = (10, 8),
         stripplot: bool = False,
         jitter: float = 0.1,
         **kwargs,
@@ -178,9 +179,9 @@ class Plotter:
     def plot_boxplot(
         self,
         df: pd.DataFrame,
-        x: str = None,
-        y: str = None,
-        figsize: tuple = (10, 8),
+        x: str,
+        y: str,
+        figsize: tuple[float, float] = (10, 8),
         **kwargs,
     ) -> None:
         """
@@ -211,9 +212,9 @@ class Plotter:
     def plot_scatterplot(
         self,
         df: pd.DataFrame,
-        x: str = None,
-        y: str = None,
-        figsize: tuple = (10, 8),
+        x: str,
+        y: str,
+        figsize: tuple[float, float] = (10, 8),
         **kwargs,
     ) -> None:
         """
@@ -242,9 +243,9 @@ class Plotter:
     def plot_lineplot(
         self,
         df: pd.DataFrame,
-        x: str = None,
-        y: str = None,
-        figsize: tuple = (10, 8),
+        x: str,
+        y: str,
+        figsize: tuple[float, float] = (10, 8),
         **kwargs,
     ) -> None:
         """
@@ -271,7 +272,10 @@ class Plotter:
         plt.show()
 
     def save_graph(
-        self, format: str = "jpg", dpi: int = 400, filepath: str = None
+        self,
+        filepath: str,
+        format: str = "jpg",
+        dpi: int = 400,
     ) -> None:
         """
         Save the current graph to a file.
@@ -292,7 +296,7 @@ class Plotter:
             f"{self.filepath}\\{self.title}.{format}", format=format, dpi=dpi
         )
 
-    def _handle_none_graph_kwargs(self, kwargs: dict) -> dict:
+    def _handle_none_graph_kwargs(self, kwargs: dict[str, Any]) -> dict:
         """
         Handle the None values in the graph kwargs.
 

@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class DataScaler:
-    def __init__(self, scaling_methods: dict, columns: list):
+    def __init__(self, scaling_methods: dict[str, str], columns: list[str]):
         """
         Initialize the data scaler with target columns and scaling methods.
 
@@ -26,7 +26,7 @@ class DataScaler:
         self.scalers = {}
         self.minmax_scalers = {}
 
-    def fit(self, df: pd.DataFrame):
+    def fit(self, df: pd.DataFrame) -> None:
         """
         Fit the scalers to the target columns in the DataFrame.
 
@@ -56,9 +56,7 @@ class DataScaler:
             self.scalers[col] = scaler
 
             minmax_scaler = MinMaxScaler()
-            transformed_col = self._apply_transformation(
-                df[[col]], scaler, method
-            )
+            transformed_col = self._apply_transformation(df[[col]], scaler, method)
             minmax_scaler.fit(transformed_col)
             self.minmax_scalers[col] = minmax_scaler
 
@@ -81,9 +79,7 @@ class DataScaler:
             if scaler is None or minmax_scaler is None:
                 continue
 
-            transformed = self._apply_transformation(
-                df[[col]], scaler, method
-            )
+            transformed = self._apply_transformation(df[[col]], scaler, method)
             df_scaled[col] = minmax_scaler.transform(transformed)
 
         return df_scaled
@@ -107,9 +103,7 @@ class DataScaler:
             if scaler is None or minmax_scaler is None:
                 continue
 
-            unscaled = minmax_scaler.inverse_transform(
-                df_scaled[[col]]
-            )
+            unscaled = minmax_scaler.inverse_transform(df_scaled[[col]])
 
             df_original[col] = self._reverse_transformation(
                 pd.DataFrame(unscaled, columns=[col]), scaler, method
@@ -118,7 +112,9 @@ class DataScaler:
         return df_original
 
     @staticmethod
-    def _apply_transformation(col_values: pd.DataFrame, scaler, method) -> pd.DataFrame:
+    def _apply_transformation(
+        col_values: pd.DataFrame, scaler, method: str
+    ) -> pd.DataFrame:
         """
         Apply the transformation to the DataFrame column values.
 
@@ -143,7 +139,7 @@ class DataScaler:
 
     @staticmethod
     def _reverse_transformation(
-        transformed_values: pd.DataFrame, scaler, method
+        transformed_values: pd.DataFrame, scaler, method: str
     ) -> pd.DataFrame:
         """
         Reverse the transformation of the DataFrame column values.

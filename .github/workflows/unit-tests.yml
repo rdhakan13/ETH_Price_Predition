@@ -3,7 +3,7 @@ name: Run Pytest Unit Tests
 on:
   push:
     branches:
-      - '*'
+      - main
     paths:
       - configs/**
       - src/**
@@ -14,8 +14,9 @@ on:
       - pyproject.toml
       - poetry.lock
   pull_request:
+    types: [opened, synchronize, reopened]
     branches:
-      - '*'
+      - main
     paths:
       - configs/**
       - src/**
