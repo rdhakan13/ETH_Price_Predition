@@ -12,7 +12,7 @@ class FeatureGenerator:
         self.input_data = input_data
         if not isinstance(self.input_data, pd.DataFrame):
             raise ValueError("input_data must be a pandas DataFrame.")
-        self.transformed_data = pd.DataFrame()
+        self.transformed_data: pd.DataFrame = pd.DataFrame()
         self.data_tag = data_tag
         if data_tag not in ["sentiment", "price"]:
             raise ValueError("data_tag must be either 'sentiment' or 'price'.")

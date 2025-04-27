@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class BitInfoCharts:
-    def __init__(self, ticker, root_dir: str):
+    def __init__(self, ticker: str, root_dir: str):
         """
         Initializes the BitInfoCharts class for downloading and processing data from Bitinfocharts.
 
@@ -36,9 +36,9 @@ class BitInfoCharts:
         self.raw_dir = (
             f"{self.root_dir}\\data\\raw\\{self.ticker[:3]}_data\\bitinfocharts"
         )
-        self.raw_data = None
+        self.raw_data: pd.DataFrame = None
         self.processed_dir = f"{self.root_dir}\\data\\processed\\{self.ticker[:3]}_data"
-        self.processed_data = None
+        self.processed_data: pd.DataFrame = None
         self.url = "https://bitinfocharts.com"
         self.chart_dict_list = [
             {
@@ -132,7 +132,7 @@ class BitInfoCharts:
         return df
 
     @staticmethod
-    def _merge_dfs(df_list: list) -> pd.DataFrame:
+    def _merge_dfs(df_list: list[pd.DataFrame]) -> pd.DataFrame:
         """
         Merges a list of DataFrames on the 'date' column.
 
@@ -142,7 +142,7 @@ class BitInfoCharts:
         Returns:
             DataFrame: A merged DataFrame.
         """
-        df_merged = None
+        df_merged: pd.DataFrame = None
         for i in range(len(df_list) - 1):
             if i == 0:
                 df_merged = df_list[i].merge(df_list[i + 1], on="date", how="outer")

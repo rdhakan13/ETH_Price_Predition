@@ -30,8 +30,8 @@ class YahooFinance:
             raise ValueError("Root directory must be a non-empty string")
         self.root_dir = str(root_dir)
         self.raw_dir = f"{self.root_dir}\\data\\raw\\{self.ticker[:3]}_data"
-        self.raw_data = None
-        self.processed_data = None
+        self.raw_data: pd.DataFrame = None
+        self.processed_data: pd.DataFrame = None
 
     def get_raw_data(self, period: str = "max", interval: str = "1d") -> None:
         """

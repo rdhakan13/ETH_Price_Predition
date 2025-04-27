@@ -28,10 +28,10 @@ class EtherScan:
         if root_dir is None or root_dir == "" or not isinstance(root_dir, str):
             raise ValueError("Root directory must be a non-empty string")
         self.ticker = ticker
-        self.root_dir = root_dir
+        self.root_dir: pd.DataFrame = root_dir
         self.raw_dir = f"{self.root_dir}\\data\\raw\\ETH_data\\etherscan\\"
         self.processsed_dir = f"{self.root_dir}\\data\\processed\\ETH_data"
-        self.processed_data = None
+        self.processed_data: pd.DataFrame = None
 
     def process_raw_data(
         self, data_yf: pd.DataFrame, date_range: pd.date_range

@@ -39,7 +39,9 @@ def make_directory(directory: str) -> None:
         os.makedirs(directory, exist_ok=True)
 
 
-def split_dates_by_year(date_tuples: list[tuple]) -> list[list]:
+def split_dates_by_year(
+    date_tuples: list[tuple[int, int, int]],
+) -> list[list[tuple[int, int, int]]]:
     """
     Splits a list of date tuples into a list of lists, each containing dates from the same year.
 
@@ -50,7 +52,7 @@ def split_dates_by_year(date_tuples: list[tuple]) -> list[list]:
         list: A list of lists, each containing date tuples from the same year.
     """
 
-    year_dict = {}
+    year_dict: dict[int, list[tuple[int, int, int]]] = {}
 
     logger.info("Splitting dates by year...")
 

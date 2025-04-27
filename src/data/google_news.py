@@ -5,6 +5,7 @@ from tqdm import tqdm
 from gnews import GNews
 from datetime import datetime, timedelta
 from src.common.utils import make_directory
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -31,17 +32,17 @@ class GoogleNews:
             raise ValueError("Root self.raw_dir must be a non-empty string")
         self.root_dir = str(root_dir)
         self.raw_dir = f"{self.root_dir}\\data\\raw\\Google_News_Headlines_data"
-        self.raw_data = None
+        self.raw_data: pd.DataFrame = None
         self.processed_dir = (
             f"{self.root_dir}\\data\\processed\\Google_News_Headlines_data"
         )
-        self.processed_data = None
+        self.processed_data: pd.DataFrame = None
         self.final_dir = f"{self.root_dir}\\data\\final\\Google_News_Headlines_data"
-        self.final_data = None
-        self.year = None
+        self.final_data: pd.DataFrame = None
+        self.year: Optional[str] = None
 
     def get_raw_data(
-        self, year: int, keywords: list[str], dates_list: list[tuple]
+        self, year: int, keywords: list[str], dates_list: list[tuple[int, int, int]]
     ) -> None:
         """
         Extracts Google News headlines for the specified year and keywords.

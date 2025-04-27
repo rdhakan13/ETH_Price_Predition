@@ -28,9 +28,9 @@ class OkLink:
         if root_dir is None or root_dir == "" or not isinstance(root_dir, str):
             raise ValueError("Root directory must be a non-empty string")
         self.raw_dir = f"{root_dir}\\data\\raw\\{ticker}_data\\oklink"
-        self.raw_data = None
+        self.raw_data: pd.DataFrame = None
         self.processed_dir = f"{root_dir}\\data\\processed\\{ticker}_data"
-        self.processed_data = None
+        self.processed_data: pd.DataFrame = None
 
     def process_raw_data(
         self, data_yf: pd.DataFrame, date_range: pd.date_range

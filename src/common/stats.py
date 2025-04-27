@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class StationarityTests:
     is_stationary: bool
-    result: dict
+    result: dict[str, Any]
 
 
 def adf_test(series: pd.DataFrame, alpha: float = 0.05) -> StationarityTests:
