@@ -15,15 +15,6 @@ class DataCleaner:
             root_dir (str): Root directory of the project.
             ticker (str): Ticker of the cryptocurrency.
             source (list): List of sources of the data.
-
-        Attributes:
-            root_dir (str): Root directory of the project.
-            ticker (str): Ticker of the cryptocurrency.
-            source (list): List of sources of the data.
-            etherscan (pd.DataFrame): Data from Etherscan.
-            oklink (pd.DataFrame): Data from OkLink.
-            bitinfocharts (pd.DataFrame): Data from BitInfoCharts.
-            cleaned_data (pd.DataFrame): Cleaned data.
         """
         self.root_dir = root_dir
         self.ticker = ticker

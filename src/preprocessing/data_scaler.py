@@ -15,12 +15,6 @@ class DataScaler:
         Parameters:
             scaling_methods(dict): Dictionary of target columns and scaling methods.
             columns(list): List of target columns to scale.
-
-        Attributes:
-            columns(list): List of target columns to scale.
-            scaling_methods(dict): Dictionary of target columns and scaling methods.
-            scalers(dict): Dictionary to hold scalers for each target column.
-            minmax_scalers(dict): Store Min-Max scalers for final step.
         """
         self.columns = columns
         self.scaling_methods = scaling_methods
