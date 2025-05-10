@@ -1,0 +1,43 @@
+pipeline:
+  - stage: get_raw_data
+    active: True
+    tickers:
+      - BTC-USD
+      - ETH-USD
+      - LTC-USD
+    sources:
+      - name: YahooFinance
+      - name: BitInfoCharts 
+      - name: GoogleNews
+        params:
+          keywords:
+            - cryptocurrency
+            - blockchain
+            - bitcoin
+            - ethereum
+            - litecoin
+  - stage: process_raw_data
+    active: True
+    tickers:
+      - BTC-USD
+      - ETH-USD
+      - LTC-USD
+    sources:
+      - name: OkLink
+      - name: BitInfoCharts
+      - name: EtherScan
+      - name: GoogleNews
+  - stage: conduct_sentiment_analysis
+    active: True
+    sources:
+      - name: GoogleNews
+    sentiment_analysis:
+      - name: VADER
+        params:
+          column_name: "News Headlines"
+      - name: FinBERT
+        params:
+          column_name: "News Headlines"
+      - name: CryptoBERT
+        params:
+          column_name: "News Headlines"
