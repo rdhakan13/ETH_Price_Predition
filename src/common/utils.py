@@ -2,7 +2,9 @@ from pathlib import Path
 import logging
 import os
 import yaml
+import time
 from box import ConfigBox
+from functools import wraps
 
 logger = logging.getLogger(__name__)
 
@@ -92,3 +94,16 @@ def read_yaml(path_to_yaml: str) -> ConfigBox:
     except FileNotFoundError as e:
         logging.error(f"File {path_to_yaml} not found")
         raise e
+
+def timeit(func):
+    """
+    A decorator that measures the execution time of a function.
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        logger.info(f"'{func.__name__}' took {end - start:.4f} seconds.")
+        return result
+    return wrapper
