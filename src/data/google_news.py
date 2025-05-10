@@ -17,16 +17,6 @@ class GoogleNews:
 
         Parameters:
             root_dir (str): The root directory of the project.
-
-        Attributes:
-            root_dir (str): The root directory of the project.
-            raw_dir (str): The directory containing raw Google News data.
-            raw_data (DataFrame): The raw data.
-            processed_dir (str): The directory to save processed data.
-            processed_data (DataFrame): The processed data.
-            final_dir (str): The directory to save final data.
-            final_data (DataFrame): The final data.
-            year (str): The year for which to extract data.
         """
         if root_dir is None or root_dir == "" or not isinstance(root_dir, str):
             raise ValueError("Root self.raw_dir must be a non-empty string")
@@ -64,30 +54,34 @@ class GoogleNews:
 
         if not dates_list or dates_list is None or not isinstance(dates_list, list):
             raise ValueError("Dates list must be a list of tuples")
-
+        
         logger.info(f"Downloading Google News headlines for {self.year}.")
 
-        for i in tqdm(range(len(dates_list))):
-            if i == (len(dates_list) - 1):
-                date_obj = datetime(
-                    year=dates_list[i][0], month=dates_list[i][1], day=dates_list[i][2]
-                )
-                next_day = date_obj + timedelta(days=1)
-                next_day_tuple = (next_day.year, next_day.month, next_day.day)
-                google_news = GNews(
-                    language="en", start_date=dates_list[i], end_date=next_day_tuple
-                )
-            else:
-                google_news = GNews(
-                    language="en", start_date=dates_list[i], end_date=dates_list[i + 1]
-                )
+        try:
+            for i in tqdm(range(len(dates_list))):
+                if i == (len(dates_list) - 1):
+                    date_obj = datetime(
+                        year=dates_list[i][0], month=dates_list[i][1], day=dates_list[i][2]
+                    )
+                    next_day = date_obj + timedelta(days=1)
+                    next_day_tuple = (next_day.year, next_day.month, next_day.day)
+                    google_news = GNews(
+                        language="en", start_date=dates_list[i], end_date=next_day_tuple
+                    )
+                else:
+                    google_news = GNews(
+                        language="en", start_date=dates_list[i], end_date=dates_list[i + 1]
+                    )
 
-            for keyword in keywords:
-                data.extend(google_news.get_news(keyword))
+                for keyword in keywords:
+                    data.extend(google_news.get_news(keyword))
 
-        self.raw_data = pd.json_normalize(data)
+            self.raw_data = pd.json_normalize(data)
 
-        logger.info("Data downloaded successfully for {self.year}.")
+            logger.info("Data downloaded successfully for {self.year}.")
+        except Exception as e:
+            logger.error(f"An error occurred while downloading the data: {e}")
+            raise e
 
     def save_raw_data(self) -> None:
         """
@@ -121,44 +115,48 @@ class GoogleNews:
 
         logger.info("Processing Google News Headlines raw data.")
 
-        self.processed_data = pd.DataFrame(
-            columns=["Date", "News Headline", "Publisher"]
-        )
+        try:
+            self.processed_data = pd.DataFrame(
+                columns=["Date", "News Headline", "Publisher"]
+            )
 
-        for file in os.listdir(self.raw_dir):
-            filepath = self.raw_dir + "\\" + file
-            data = pd.read_csv(filepath)
-            data_drop = data.drop(
-                columns=["Unnamed: 0", "description", "url", "publisher.href"]
-            )
-            data_renamed = data_drop.rename(
-                columns={
-                    "published date": "Date",
-                    "title": "News Headline",
-                    "publisher.title": "Publisher",
-                }
-            )
-            data_renamed["Date"] = pd.to_datetime(
-                data_renamed["Date"], format="%a, %d %b %Y %H:%M:%S %Z"
-            ).dt.strftime("%d/%m/%Y")
-            data_renamed["Date"] = pd.to_datetime(
-                data_renamed["Date"], format="%d/%m/%Y"
-            )
-            data_unique = data_renamed.drop_duplicates(
+            for file in os.listdir(self.raw_dir):
+                filepath = self.raw_dir + "\\" + file
+                data = pd.read_csv(filepath)
+                data_drop = data.drop(
+                    columns=["Unnamed: 0", "description", "url", "publisher.href"]
+                )
+                data_renamed = data_drop.rename(
+                    columns={
+                        "published date": "Date",
+                        "title": "News Headline",
+                        "publisher.title": "Publisher",
+                    }
+                )
+                data_renamed["Date"] = pd.to_datetime(
+                    data_renamed["Date"], format="%a, %d %b %Y %H:%M:%S %Z"
+                ).dt.strftime("%d/%m/%Y")
+                data_renamed["Date"] = pd.to_datetime(
+                    data_renamed["Date"], format="%d/%m/%Y"
+                )
+                data_unique = data_renamed.drop_duplicates(
+                    subset="News Headline", keep="first"
+                )
+                self.processed_data = pd.concat(
+                    [self.processed_data, data_unique], ignore_index=True
+                )
+                self.processed_data = self.processed_data.sort_values(
+                    by="Date", ascending=True
+                )
+
+            self.processed_data = self.processed_data.drop_duplicates(
                 subset="News Headline", keep="first"
             )
-            self.processed_data = pd.concat(
-                [self.processed_data, data_unique], ignore_index=True
-            )
-            self.processed_data = self.processed_data.sort_values(
-                by="Date", ascending=True
-            )
 
-        self.processed_data = self.processed_data.drop_duplicates(
-            subset="News Headline", keep="first"
-        )
-
-        logger.info("Data processed successfully.")
+            logger.info("Data processed successfully.")
+        except Exception as e:
+            logger.error(f"An error occurred while processing the data: {e}")
+            raise e
 
     def save_processed_data(self) -> None:
         """

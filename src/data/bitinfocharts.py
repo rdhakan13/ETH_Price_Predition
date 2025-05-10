@@ -20,16 +20,6 @@ class BitInfoCharts:
         Parameters:
             ticker (str): The ticker symbol for the cryptocurrency (e.g., 'BTC', 'ETH').
             root_dir (str): The root directory of the project.
-
-        Attributes:
-            ticker (str): The ticker symbol for the cryptocurrency.
-            root_dir (str): The root directory of the project.
-            raw_dir (str): The directory containing raw Bitinfocharts data.
-            raw_data (DataFrame): The raw data.
-            processed_dir (str): The directory to save processed data.
-            processed_data (DataFrame): The processed data.
-            url (str): The base URL for Bitinfocharts.
-            chart_dict_list (list): A list of dictionaries containing chart URLs and names.
         """
         self.ticker = ticker
         self.root_dir = str(root_dir)

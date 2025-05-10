@@ -14,13 +14,6 @@ class EtherScan:
         Parameters:
             ticker (str): The ticker symbol for the cryptocurrency (e.g., 'ETH').
             root_dir (str): The root directory of the project.
-
-        Attributes:
-            ticker (str): The ticker symbol for the cryptocurrency.
-            root_dir (str): The root directory of the project.
-            raw_dir (str): The directory containing raw Etherscan data.
-            processed_dir (str): The directory to save processed data.
-            processed_data (DataFrame): The processed data.
         """
         if ticker is None or ticker == "" or not isinstance(ticker, str):
             raise ValueError("Ticker symbol must be a non-empty string")
@@ -58,41 +51,45 @@ class EtherScan:
 
         logger.info("Processing raw data from etherscan.")
 
-        for file in os.listdir(self.raw_dir):
-            column_name = " ".join(file.split("-")[1:])[:-4]
-            filepath = self.raw_dir + file
-            data_etherscan = pd.read_csv(filepath)
-            print(data_etherscan.columns)
-            data_etherscan["Date(UTC)"] = pd.to_datetime(data_etherscan["Date(UTC)"])
-            data_etherscan = (
-                data_etherscan.set_index("Date(UTC)").reindex(date_range).reset_index()
-            )
-            data_etherscan.rename(columns={"index": "Date"}, inplace=True)
-
-            if file == "export-AverageDailyTransactionFee.csv":
-                current_column = data_etherscan.columns[3]
-                data_etherscan.rename(
-                    columns={current_column: column_name}, inplace=True
+        try:
+            for file in os.listdir(self.raw_dir):
+                column_name = " ".join(file.split("-")[1:])[:-4]
+                filepath = self.raw_dir + file
+                data_etherscan = pd.read_csv(filepath)
+                print(data_etherscan.columns)
+                data_etherscan["Date(UTC)"] = pd.to_datetime(data_etherscan["Date(UTC)"])
+                data_etherscan = (
+                    data_etherscan.set_index("Date(UTC)").reindex(date_range).reset_index()
                 )
-                data_etherscan = data_etherscan.iloc[:, [0, 3]]
+                data_etherscan.rename(columns={"index": "Date"}, inplace=True)
 
-            elif file == "export-DailyActiveEthAddress.csv":
-                current_column = data_etherscan.columns[1]
-                data_etherscan.rename(
-                    columns={current_column: column_name}, inplace=True
-                )
-                data_etherscan = data_etherscan.iloc[:, [0, 1]]
+                if file == "export-AverageDailyTransactionFee.csv":
+                    current_column = data_etherscan.columns[3]
+                    data_etherscan.rename(
+                        columns={current_column: column_name}, inplace=True
+                    )
+                    data_etherscan = data_etherscan.iloc[:, [0, 3]]
 
-            else:
-                current_column = data_etherscan.columns[2]
-                data_etherscan.rename(
-                    columns={current_column: column_name}, inplace=True
-                )
-                data_etherscan = data_etherscan.iloc[:, [0, 2]]
+                elif file == "export-DailyActiveEthAddress.csv":
+                    current_column = data_etherscan.columns[1]
+                    data_etherscan.rename(
+                        columns={current_column: column_name}, inplace=True
+                    )
+                    data_etherscan = data_etherscan.iloc[:, [0, 1]]
 
-            self.processed_data = data_yf.merge(data_etherscan, on="Date", how="outer")
+                else:
+                    current_column = data_etherscan.columns[2]
+                    data_etherscan.rename(
+                        columns={current_column: column_name}, inplace=True
+                    )
+                    data_etherscan = data_etherscan.iloc[:, [0, 2]]
 
-        logger.info("Data processed successfully for etherscan.")
+                self.processed_data = data_yf.merge(data_etherscan, on="Date", how="outer")
+
+            logger.info("Data processed successfully for etherscan.")
+        except Exception as e:
+            logger.error(f"An error occurred: {e}")
+            raise e
 
     def save_processed_data(self) -> None:
         """

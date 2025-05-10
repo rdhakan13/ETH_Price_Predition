@@ -15,13 +15,6 @@ class YahooFinance:
         Parameters:
             ticker (str): The ticker symbol for which to download data.
             root_dir (str): The root directory of the project.
-
-        Attributes:
-            ticker (str): The ticker symbol for the cryptocurrency.
-            root_dir (str): The root directory of the project.
-            raw_dir (str): The directory containing raw Yahoo Finance data.
-            raw_data (DataFrame): The raw data.
-            processed_data (DataFrame): The processed data.
         """
         if ticker is None or ticker == "" or not isinstance(ticker, str):
             raise ValueError("Ticker symbol must be a non-empty string")
@@ -48,11 +41,15 @@ class YahooFinance:
         """
         logger.info(f"Downloading Yahoo Finance data for {self.ticker}")
 
-        self.raw_data = yf.download(
-            tickers=self.ticker, period=period, interval=interval
-        )
+        try:
+            self.raw_data = yf.download(
+                tickers=self.ticker, period=period, interval=interval
+            )
 
-        logger.info(f"Data downloaded successfully for {self.ticker}.")
+            logger.info(f"Data downloaded successfully for {self.ticker}.")
+        except Exception as e:
+            logger.error(f"Error downloading data for {self.ticker}: {e}")
+            raise e
 
     def save_raw_data(self) -> None:
         """
@@ -83,15 +80,32 @@ class YahooFinance:
         Returns:
             pd.DataFrame: The processed data.
         """
-        self.processed_data = pd.read_csv(
-            f"{self.root_dir}\\data\\raw\\{self.ticker[:3]}_data\\{self.ticker[:3]}-USD_price_data.csv"
-        )
-        self.processed_data["Date"] = pd.to_datetime(self.processed_data["Date"])
-        self.processed_data = (
-            self.processed_data.set_index("Date").reindex(date_range).reset_index()
-        )
-        self.processed_data.rename(columns={"index": "Date"}, inplace=True)
-        return self.processed_data
+        try:
+            self.processed_data = pd.read_csv(
+                f"{self.root_dir}\\data\\raw\\{self.ticker[:3]}_data\\{self.ticker[:3]}-USD_price_data.csv"
+            )
+            self.processed_data["Date"] = pd.to_datetime(self.processed_data["Date"])
+            self.processed_data = (
+                self.processed_data.set_index("Date").reindex(date_range).reset_index()
+            )
+            self.processed_data.rename(columns={"index": "Date"}, inplace=True)
+            return self.processed_data
+        except KeyError:
+            logger.error("Column not found, switching to different reading mode...")
+            self.processed_data = pd.read_csv(
+                f"{self.root_dir}\\data\\raw\\{self.ticker[:3]}_data\\{self.ticker[:3]}-USD_price_data.csv"
+            )
+            self.processed_data.rename(columns={"Price": "Date"}, inplace=True)
+            self.processed_data = self.processed_data.iloc[2:]
+            self.processed_data["Date"] = pd.to_datetime(self.processed_data["Date"])
+            self.processed_data = (
+                self.processed_data.set_index("Date").reindex(date_range).reset_index()
+            )
+            self.processed_data.rename(columns={"index": "Date"}, inplace=True)
+            return self.processed_data
+        except Exception as e:
+            logger.error(f"An error occurred: {e}")
+            raise e
 
     def get_processed_data(self, date_range: pd.date_range = None) -> pd.DataFrame:
         """
@@ -114,5 +128,4 @@ class YahooFinance:
         logger.info(
             f"Data processed successfully for {self.ticker} from Yahoo Finance."
         )
-
         return self.processed_data
