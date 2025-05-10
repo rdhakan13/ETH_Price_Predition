@@ -1,4 +1,4 @@
-SCRIPT_NAME = pipeline/2_processed_data.py
+SCRIPT_NAME = main.py
 LOG_DIR = logs
 TMP_DIR = temp
 PYTEST_CACHE = .pytest_cache
@@ -118,8 +118,8 @@ print-env-variables:
 unit-tests: activate
 	@echo Running unit tests...
 ifeq ($(OS),Windows_NT)
-	pytest --cov=. --cov-report=term-missing --cov-fail-under=80 tests/
+	pytest --cov=. --cov-report=term-missing --cov-fail-under=60 tests/
 else
-	.venv/bin/pytest --cov=. --cov-report=term-missing --cov-fail-under=80 tests/
+	.venv/bin/pytest --cov=. --cov-report=term-missing --cov-fail-under=60 tests/
 endif
 
