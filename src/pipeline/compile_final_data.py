@@ -6,7 +6,7 @@ from src.common.logger import get_logger
 from src.preprocessing.data_cleaner import DataCleaner
 
 logger = get_logger(os.environ.get("LOG_LEVEL"), __name__)
-root_dir = str(get_root_directory())
+root_dir = str(get_root_directory()) +"\\temp"
 input_data = {
     "ETH-USD": {
         "etherscan": [
