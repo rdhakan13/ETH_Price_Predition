@@ -5,7 +5,12 @@ import pandas as pd
 
 class SentimentAnalyser:
     def __init__(self, df: pd.DataFrame):
-        """Initialise Sentiment Analyser."""
+        """
+        Initialise Sentiment Analyser.
+
+        Parameters:
+            df (pd.DataFrame): The DataFrame containing the text data to be analyzed.
+        """
         if not isinstance(df, pd.DataFrame):
             raise ValueError("Input must be a pandas DataFrame")
         self.df = df

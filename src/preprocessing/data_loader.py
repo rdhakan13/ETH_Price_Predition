@@ -12,14 +12,14 @@ class DataLoader:
     def __init__(self, root_dir: Path):
         """Initialize DataLoader object."""
         self.root_dir = root_dir
-        self.ETH = None
-        self.BTC = None
-        self.LTC = None
-        self.sentiment_analysis = None
-        self.final_data = None
-        self.train = None
-        self.test = None
-        self.val = None
+        self.ETH: pd.DataFrame = None
+        self.BTC: pd.DataFrame = None
+        self.LTC: pd.DataFrame = None
+        self.sentiment_analysis: pd.DataFrame = None
+        self.final_data: pd.DataFrame = None
+        self.train: pd.DataFrame = None
+        self.test: pd.DataFrame = None
+        self.val: pd.DataFrame = None
 
     def load_data(self) -> None:
         """
@@ -113,7 +113,7 @@ class DataLoader:
         self.final_data = self.final_data.loc[start_date:end_date]
         logger.info(f"Time range set to {start_date} to {end_date}.")
 
-    def make_stationary(self, alpha=0.05, max_diffs=5) -> None:
+    def make_stationary(self, alpha: float = 0.05, max_diffs: int = 5) -> None:
         """
         Iterates through each column in a DataFrame and differences it until it
         becomes stationary based on the Augmented Dickey-Fuller (ADF) test.

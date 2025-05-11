@@ -3,8 +3,9 @@ import logging
 import pandas as pd
 import numpy as np
 import seaborn as sns
+import matplotlib
 import matplotlib.pyplot as plt
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -25,10 +26,10 @@ class Plotter:
             ax (plt.Axes): The axes object for the plot.
         """
         self.root_dir = root_dir
-        self.title = None
-        self.filepath = None
-        self.fig = None
-        self.ax = None
+        self.title: Optional[str] = None
+        self.filepath: Optional[str] = None
+        self.fig: Optional[matplotlib.figure.Figure] = None
+        self.ax: Optional[matplotlib.axes.Axes] = None
 
     def configure_style(self, style: str = "whitegrid", palette: str = "deep") -> None:
         """
@@ -49,7 +50,7 @@ class Plotter:
         x: str,
         y: str,
         figsize: tuple[float, float] = (10, 6),
-        **kwargs,
+        **kwargs: dict[str, Any],
     ) -> None:
         """
         Generate a bar chart for the given DataFrame.
@@ -98,7 +99,7 @@ class Plotter:
         df: pd.DataFrame,
         method: str = "spearmen",
         figsize: tuple[float, float] = (10, 8),
-        **kwargs,
+        **kwargs: dict[str, Any],
     ) -> None:
         """
         Generate a correlation matrix heatmap for the given DataFrame.
@@ -137,7 +138,7 @@ class Plotter:
         figsize: tuple[float, float] = (10, 8),
         stripplot: bool = False,
         jitter: float = 0.1,
-        **kwargs,
+        **kwargs: dict[str, Any],
     ) -> None:
         """
         Generate a violin plot with optional scatter overlay.
@@ -182,7 +183,7 @@ class Plotter:
         x: str,
         y: str,
         figsize: tuple[float, float] = (10, 8),
-        **kwargs,
+        **kwargs: dict[str, Any],
     ) -> None:
         """
         Generate boxplots for the given DataFrame.
@@ -215,7 +216,7 @@ class Plotter:
         x: str,
         y: str,
         figsize: tuple[float, float] = (10, 8),
-        **kwargs,
+        **kwargs: dict[str, Any],
     ) -> None:
         """
         Generate a scatter plot for the given DataFrame.
@@ -246,7 +247,7 @@ class Plotter:
         x: str,
         y: str,
         figsize: tuple[float, float] = (10, 8),
-        **kwargs,
+        **kwargs: dict[str, Any],
     ) -> None:
         """
         Generate a line plot for the given DataFrame.
@@ -296,7 +297,7 @@ class Plotter:
             f"{self.filepath}\\{self.title}.{format}", format=format, dpi=dpi
         )
 
-    def _handle_none_graph_kwargs(self, kwargs: dict[str, Any]) -> dict:
+    def _handle_none_graph_kwargs(self, kwargs: dict[str, Any]) -> dict[str, Any]:
         """
         Handle the None values in the graph kwargs.
 

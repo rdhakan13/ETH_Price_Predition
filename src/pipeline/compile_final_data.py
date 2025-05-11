@@ -1,12 +1,12 @@
 import os
 import pandas as pd
 import time
-from src.common.utils import get_root_directory, make_directory
+from src.common.utils import get_root_directory, make_directory, timeit
 from src.common.logger import get_logger
 from src.preprocessing.data_cleaner import DataCleaner
 
 logger = get_logger(os.environ.get("LOG_LEVEL"), __name__)
-root_dir = str(get_root_directory())
+root_dir = str(get_root_directory()) + "\\temp"
 input_data = {
     "ETH-USD": {
         "etherscan": [

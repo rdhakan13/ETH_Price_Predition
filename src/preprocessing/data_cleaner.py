@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class DataCleaner:
-    def __init__(self, root_dir: str, ticker: str, source: list):
+    def __init__(self, root_dir: str, ticker: str, source: list[str]):
         """
         Initialize the data cleaner.
 
@@ -15,23 +15,14 @@ class DataCleaner:
             root_dir (str): Root directory of the project.
             ticker (str): Ticker of the cryptocurrency.
             source (list): List of sources of the data.
-
-        Attributes:
-            root_dir (str): Root directory of the project.
-            ticker (str): Ticker of the cryptocurrency.
-            source (list): List of sources of the data.
-            etherscan (pd.DataFrame): Data from Etherscan.
-            oklink (pd.DataFrame): Data from OkLink.
-            bitinfocharts (pd.DataFrame): Data from BitInfoCharts.
-            cleaned_data (pd.DataFrame): Cleaned data.
         """
         self.root_dir = root_dir
         self.ticker = ticker
         self.source = source
-        self.etherscan = None
-        self.oklink = None
-        self.bitinfocharts = None
-        self.cleaned_data = None
+        self.etherscan: pd.DataFrame = None
+        self.oklink: pd.DataFrame = None
+        self.bitinfocharts: pd.DataFrame = None
+        self.cleaned_data: pd.DataFrame = None
 
     def read_data(self) -> None:
         """

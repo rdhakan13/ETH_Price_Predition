@@ -2,6 +2,7 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler
 import numpy as np
 import pandas as pd
 import logging
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -14,17 +15,11 @@ class DataScaler:
         Parameters:
             scaling_methods(dict): Dictionary of target columns and scaling methods.
             columns(list): List of target columns to scale.
-
-        Attributes:
-            columns(list): List of target columns to scale.
-            scaling_methods(dict): Dictionary of target columns and scaling methods.
-            scalers(dict): Dictionary to hold scalers for each target column.
-            minmax_scalers(dict): Store Min-Max scalers for final step.
         """
         self.columns = columns
         self.scaling_methods = scaling_methods
-        self.scalers = {}
-        self.minmax_scalers = {}
+        self.scalers: dict[str, Any] = {}
+        self.minmax_scalers: dict[str, Any] = {}
 
     def fit(self, df: pd.DataFrame) -> None:
         """
@@ -113,7 +108,7 @@ class DataScaler:
 
     @staticmethod
     def _apply_transformation(
-        col_values: pd.DataFrame, scaler, method: str
+        col_values: pd.DataFrame, scaler: Any, method: str
     ) -> pd.DataFrame:
         """
         Apply the transformation to the DataFrame column values.
@@ -139,7 +134,7 @@ class DataScaler:
 
     @staticmethod
     def _reverse_transformation(
-        transformed_values: pd.DataFrame, scaler, method: str
+        transformed_values: pd.DataFrame, scaler: Any, method: str
     ) -> pd.DataFrame:
         """
         Reverse the transformation of the DataFrame column values.

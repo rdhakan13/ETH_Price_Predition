@@ -3,41 +3,74 @@ import logging
 from src.sentiment_analyser.vader_sentiment_analyser import VaderSentimentAnalyser
 import swifter
 import numpy as np
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
 
 class FeatureGenerator:
     def __init__(self, input_data: pd.DataFrame, data_tag: str):
+        """
+        Initialize the FeatureGenerator class.
+
+        Parameters:
+            input_data (pd.DataFrame): The input data to generate features from.
+            data_tag (str): The type of data, either "sentiment" or "price".
+        """
         self.input_data = input_data
         if not isinstance(self.input_data, pd.DataFrame):
             raise ValueError("input_data must be a pandas DataFrame.")
-        self.transformed_data = pd.DataFrame()
+        self.transformed_data: pd.DataFrame = pd.DataFrame()
         self.data_tag = data_tag
         if data_tag not in ["sentiment", "price"]:
             raise ValueError("data_tag must be either 'sentiment' or 'price'.")
 
-    def generate_features(self) -> pd.DataFrame:
+    def generate_features(
+        self, select_publishers: Optional[list[str]] = None
+    ) -> pd.DataFrame:
         """
         Generate features based on the input data.
+
+        Parameters:
+            select_publishers (list[str]): List of publishers to select for
+            generating sentiment features.
 
         Returns:
             pd.DataFrame: Transformed data.
         """
         if self.data_tag == "sentiment":
-            self._generate_sentinment_features()
+            self._generate_sentiment_features(select_publishers)
         elif self.data_tag == "price":
             self._generate_price_features()
         return self.transformed_data
 
-    def _generate_sentinment_features(self) -> None:
+    def _generate_sentiment_features(
+        self, select_publishers: Optional[list[str]] = None
+    ) -> None:
         """
         Generate sentiment features based on the input data
+
+        Parameters:
+            select_publishers (list[str]): List of publishers to select for
+            generating sentiment features.
 
         Returns:
             None
         """
         vsa = VaderSentimentAnalyser(self.input_data)
+
+        if select_publishers is not None:
+            try:
+                pattern = "|".join(select_publishers)
+                self.input_data = self.input_data[
+                    self.input_data["Publisher"].str.contains(
+                        pattern, case=True, na=False
+                    )
+                ]
+            except Exception as e:
+                logger.error(f"Error filtering publishers: {e}")
+                raise ValueError(f"Error filtering publishers: {e}") from e
+
         for col in self.input_data.columns:
             if "Score" in col:
                 col_prefix = "_".join(col.split("_")[:2])

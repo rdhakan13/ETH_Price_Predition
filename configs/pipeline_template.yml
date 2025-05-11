@@ -1,0 +1,70 @@
+pipeline:
+  - stage: get_raw_data
+    active: False
+    tickers:
+      - BTC-USD
+      - ETH-USD
+      - LTC-USD
+    sources:
+      - name: YahooFinance
+      - name: BitInfoCharts 
+      - name: GoogleNews
+        params:
+          keywords:
+            - cryptocurrency
+            - blockchain
+            - bitcoin
+            - ethereum
+            - litecoin
+  - stage: process_raw_data
+    active: False
+    tickers:
+      - BTC-USD
+      - ETH-USD
+      - LTC-USD
+    sources:
+      - name: OkLink
+      - name: BitInfoCharts
+      - name: EtherScan
+      - name: GoogleNews
+  - stage: conduct_sentiment_analysis
+    active: False
+    sources:
+      - name: GoogleNews
+        columns:
+          - News Headlines
+    sentiment_analysis:
+      - name: VADER
+        type: vader_sentiment_analyser
+      - name: ProsusAI/finbert
+        type: bert_sentiment_analyser
+      - name: ElKulako/cryptobert
+        type: bert_sentiment_analyser
+  - stage: compile_final_data
+    active: False
+    sources:
+      - name: YahooFinance
+      - name: BitInfoCharts
+      - name: GoogleNews
+      - name: OkLink
+      - name: EtherScan
+  - stage: run_model
+    active: False
+    model:
+      - name: ARIMA
+        type: arima_model
+        params:
+          p: 5
+          d: 1
+          q: 0
+      - name: Prophet
+        type: prophet_model
+        params:
+          changepoint_prior_scale: 0.05
+  - stage: get_results
+    active: False
+    model:
+      - name: ARIMA
+        type: arima_model
+      - name: Prophet
+        type: prophet_model

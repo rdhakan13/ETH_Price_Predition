@@ -14,13 +14,6 @@ class OkLink:
         Parameters:
             root_dir (str): The root directory of the project.
             ticker (str): The ticker symbol for the cryptocurrency (e.g., 'ETH').
-
-        Attributes:
-            ticker (str): The ticker symbol for the cryptocurrency.
-            raw_dir (str): The directory containing raw OkLink data.
-            raw_data (DataFrame): The raw data.
-            processed_dir (str): The directory to save processed data.
-            processed_data (DataFrame): The processed data.
         """
         if ticker is None or ticker == "" or not isinstance(ticker, str):
             raise ValueError("Ticker symbol must be a non-empty string")
@@ -28,9 +21,9 @@ class OkLink:
         if root_dir is None or root_dir == "" or not isinstance(root_dir, str):
             raise ValueError("Root directory must be a non-empty string")
         self.raw_dir = f"{root_dir}\\data\\raw\\{ticker}_data\\oklink"
-        self.raw_data = None
+        self.raw_data: pd.DataFrame = None
         self.processed_dir = f"{root_dir}\\data\\processed\\{ticker}_data"
-        self.processed_data = None
+        self.processed_data: pd.DataFrame = None
 
     def process_raw_data(
         self, data_yf: pd.DataFrame, date_range: pd.date_range
@@ -57,19 +50,23 @@ class OkLink:
 
         logger.info(f"Processing raw data from {self.ticker} for OkLink")
 
-        for file in os.listdir(self.raw_dir):
-            filepath = self.raw_dir + "\\" + file
-            data_oklink = pd.read_csv(filepath)
-            data_oklink["Time"] = pd.to_datetime(data_oklink["Time"])
-            data_oklink = (
-                data_oklink.set_index("Time").reindex(date_range).reset_index()
-            )
-            data_oklink.rename(columns={"index": "Date"}, inplace=True)
-            data_oklink = data_oklink.iloc[:, :2]
-            data_oklink = data_yf.merge(data_oklink, on="Date", how="outer")
+        try:
+            for file in os.listdir(self.raw_dir):
+                filepath = self.raw_dir + "\\" + file
+                data_oklink = pd.read_csv(filepath)
+                data_oklink["Time"] = pd.to_datetime(data_oklink["Time"])
+                data_oklink = (
+                    data_oklink.set_index("Time").reindex(date_range).reset_index()
+                )
+                data_oklink.rename(columns={"index": "Date"}, inplace=True)
+                data_oklink = data_oklink.iloc[:, :2]
+                data_oklink = data_yf.merge(data_oklink, on="Date", how="outer")
 
-        self.processed_data = data_oklink
-        logger.info(f"Data processed successfully for {self.ticker} from OkLink")
+            self.processed_data = data_oklink
+            logger.info(f"Data processed successfully for {self.ticker} from OkLink")
+        except Exception as e:
+            logger.error(f"An error occurred while processing the data: {e}")
+            raise e
 
     def save_processed_data(self) -> None:
         """
