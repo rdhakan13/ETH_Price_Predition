@@ -11,6 +11,7 @@ VENV = .venv
 POETRY = $(VENV)/bin/poetry
 
 export LOG_LEVEL = INFO
+export CONFIG_FILENAME=./configs/pipeline_template.yml
 
 .ONESHELL:
 .PHONY: activate init install export-env create-env list-packages update-env remove-env
