@@ -25,7 +25,9 @@ class FeatureGenerator:
         if data_tag not in ["sentiment", "price"]:
             raise ValueError("data_tag must be either 'sentiment' or 'price'.")
 
-    def generate_features(self, select_publishers:Optional[list[str]]=None) -> pd.DataFrame:
+    def generate_features(
+        self, select_publishers: Optional[list[str]] = None
+    ) -> pd.DataFrame:
         """
         Generate features based on the input data.
 
@@ -42,7 +44,9 @@ class FeatureGenerator:
             self._generate_price_features()
         return self.transformed_data
 
-    def _generate_sentiment_features(self, select_publishers:Optional[list[str]]=None) -> None:
+    def _generate_sentiment_features(
+        self, select_publishers: Optional[list[str]] = None
+    ) -> None:
         """
         Generate sentiment features based on the input data
 
@@ -59,7 +63,9 @@ class FeatureGenerator:
             try:
                 pattern = "|".join(select_publishers)
                 self.input_data = self.input_data[
-                    self.input_data["Publisher"].str.contains(pattern, case=True, na=False)
+                    self.input_data["Publisher"].str.contains(
+                        pattern, case=True, na=False
+                    )
                 ]
             except Exception as e:
                 logger.error(f"Error filtering publishers: {e}")

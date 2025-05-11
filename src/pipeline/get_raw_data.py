@@ -14,7 +14,8 @@ config_loader = ConfigLoader()
 config = config_loader.define_get_raw_data()
 active = config.get("active", False)
 tickers = config.get("tickers", False)
-sources = config.get("sources", [{'name': 'YahooFinance'}])
+sources = config.get("sources", [{"name": "YahooFinance"}])
+
 
 @timeit
 def get_raw_data() -> None:
@@ -26,8 +27,13 @@ def get_raw_data() -> None:
     for ticker in tickers:
         if "YahooFinance" in source_list:
             yf = YahooFinance(ticker, root_dir)
-            yf_params = next((source.get('params',{}) for source in sources if source.get('name') == 'YahooFinance'))
-            print(yf_params)
+            yf_params = next(
+                (
+                    source.get("params", {})
+                    for source in sources
+                    if source.get("name") == "YahooFinance"
+                )
+            )
             yf.get_raw_data(**yf_params)
             yf.save_raw_data()
         if "BitInfoCharts" in source_list:
@@ -36,11 +42,19 @@ def get_raw_data() -> None:
             bic.save_raw_data()
 
     if "GoogleNews" in source_list:
-        gn_params = next((source.get('params',{}) for source in sources if source.get('name') == 'GoogleNews'))
+        gn_params = next(
+            (
+                source.get("params", {})
+                for source in sources
+                if source.get("name") == "GoogleNews"
+            )
+        )
         print(gn_params)
 
         try:
-            data = pd.read_csv(f"{root_dir}\\data\\raw\\ETH_data\\ETH-USD_price_data.csv")
+            data = pd.read_csv(
+                f"{root_dir}\\data\\raw\\ETH_data\\ETH-USD_price_data.csv"
+            )
         except FileNotFoundError as e:
             logger.error("File not found")
             raise e
@@ -64,8 +78,9 @@ def get_raw_data() -> None:
 
         for index, year in enumerate(dates_list):
             gn = GoogleNews(root_dir)
-            gn.get_raw_data(year = year[0][0], dates_list=dates_list[index], **gn_params)
+            gn.get_raw_data(year=year[0][0], dates_list=dates_list[index], **gn_params)
             gn.save_raw_data()
+
 
 if __name__ == "__main__":
     if active:

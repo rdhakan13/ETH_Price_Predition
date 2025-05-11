@@ -12,6 +12,7 @@ config = config_loader.define_conduct_sentiment_analysis()
 active = config.get("active", False)
 sources = config.get("sources", [{}])
 
+
 @timeit
 def conduct_sentiment_analysis() -> None:
     """
@@ -40,8 +41,9 @@ def conduct_sentiment_analysis() -> None:
 
     logger.info(f"Sentiment analysis saved to {root_dir}\\data\\final\\")
 
+
 if __name__ == "__main__":
     if active:
         logger.info("Starting sentiment analysis...")
         conduct_sentiment_analysis()
-        logger.info(f"Sentiment analysis completed.")
+        logger.info("Sentiment analysis completed.")

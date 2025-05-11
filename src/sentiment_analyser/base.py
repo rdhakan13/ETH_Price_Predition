@@ -7,7 +7,7 @@ class SentimentAnalyser:
     def __init__(self, df: pd.DataFrame):
         """
         Initialise Sentiment Analyser.
-        
+
         Parameters:
             df (pd.DataFrame): The DataFrame containing the text data to be analyzed.
         """

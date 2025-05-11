@@ -26,7 +26,9 @@ def process_raw_data() -> None:
     """
     source_list = [source.get("name") for source in sources]
     try:
-        ETH_data = pd.read_csv(f"{root_dir}\\data\\raw\\ETH_data\\ETH-USD_price_data.csv")
+        ETH_data = pd.read_csv(
+            f"{root_dir}\\data\\raw\\ETH_data\\ETH-USD_price_data.csv"
+        )
 
         ETH_data["Date"] = pd.to_datetime(ETH_data["Date"])
 
@@ -35,7 +37,9 @@ def process_raw_data() -> None:
         )
     except KeyError:
         logger.error("Column not found, switching to different reading mode...")
-        ETH_data = pd.read_csv(f"{root_dir}\\data\\raw\\ETH_data\\ETH-USD_price_data.csv")
+        ETH_data = pd.read_csv(
+            f"{root_dir}\\data\\raw\\ETH_data\\ETH-USD_price_data.csv"
+        )
         ETH_data = ETH_data.rename(columns={"Price": "Date"})
         ETH_data = ETH_data.iloc[2:]
         ETH_data["Date"] = pd.to_datetime(ETH_data["Date"])
@@ -69,6 +73,7 @@ def process_raw_data() -> None:
         gn = GoogleNews(root_dir=root_dir)
         gn.process_raw_data()
         gn.save_processed_data()
+
 
 if __name__ == "__main__":
     if active:

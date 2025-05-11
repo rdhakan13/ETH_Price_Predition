@@ -57,9 +57,13 @@ class EtherScan:
                 filepath = self.raw_dir + file
                 data_etherscan = pd.read_csv(filepath)
                 print(data_etherscan.columns)
-                data_etherscan["Date(UTC)"] = pd.to_datetime(data_etherscan["Date(UTC)"])
+                data_etherscan["Date(UTC)"] = pd.to_datetime(
+                    data_etherscan["Date(UTC)"]
+                )
                 data_etherscan = (
-                    data_etherscan.set_index("Date(UTC)").reindex(date_range).reset_index()
+                    data_etherscan.set_index("Date(UTC)")
+                    .reindex(date_range)
+                    .reset_index()
                 )
                 data_etherscan.rename(columns={"index": "Date"}, inplace=True)
 
@@ -84,7 +88,9 @@ class EtherScan:
                     )
                     data_etherscan = data_etherscan.iloc[:, [0, 2]]
 
-                self.processed_data = data_yf.merge(data_etherscan, on="Date", how="outer")
+                self.processed_data = data_yf.merge(
+                    data_etherscan, on="Date", how="outer"
+                )
 
             logger.info("Data processed successfully for etherscan.")
         except Exception as e:

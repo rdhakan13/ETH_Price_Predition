@@ -54,14 +54,16 @@ class GoogleNews:
 
         if not dates_list or dates_list is None or not isinstance(dates_list, list):
             raise ValueError("Dates list must be a list of tuples")
-        
+
         logger.info(f"Downloading Google News headlines for {self.year}.")
 
         try:
             for i in tqdm(range(len(dates_list))):
                 if i == (len(dates_list) - 1):
                     date_obj = datetime(
-                        year=dates_list[i][0], month=dates_list[i][1], day=dates_list[i][2]
+                        year=dates_list[i][0],
+                        month=dates_list[i][1],
+                        day=dates_list[i][2],
                     )
                     next_day = date_obj + timedelta(days=1)
                     next_day_tuple = (next_day.year, next_day.month, next_day.day)
@@ -70,7 +72,9 @@ class GoogleNews:
                     )
                 else:
                     google_news = GNews(
-                        language="en", start_date=dates_list[i], end_date=dates_list[i + 1]
+                        language="en",
+                        start_date=dates_list[i],
+                        end_date=dates_list[i + 1],
                     )
 
                 for keyword in keywords:

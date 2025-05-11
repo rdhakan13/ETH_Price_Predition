@@ -97,18 +97,22 @@ def read_yaml(path_to_yaml: str) -> ConfigBox:
         logging.error(f"File {path_to_yaml} not found")
         raise e
 
-def timeit(func):
+
+def timeit(func: Any) -> Any:
     """
     A decorator that measures the execution time of a function.
     """
+
     @wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs) -> Any:
         start = time.time()
         result = func(*args, **kwargs)
         end = time.time()
         logger.info(f"'{func.__name__}' took {end - start:.4f} seconds.")
         return result
+
     return wrapper
+
 
 def snake_to_camel_case(snake_str: str) -> str:
     """
@@ -120,10 +124,11 @@ def snake_to_camel_case(snake_str: str) -> str:
     Returns:
         str: The converted camelCase string.
     """
-    components = snake_str.split('_')
-    return components[0].title() + ''.join(x.title() for x in components[1:])
+    components = snake_str.split("_")
+    return components[0].title() + "".join(x.title() for x in components[1:])
 
-def get_class(file_name: str)->Any:
+
+def get_class(file_name: str) -> Any:
     """
     Dynamically imports a class from a module.
 
@@ -135,7 +140,7 @@ def get_class(file_name: str)->Any:
         type: The imported class.
     """
     try:
-        class_name = snake_to_camel_case(file_name.split('.')[0])
+        class_name = snake_to_camel_case(file_name.split(".")[0])
         module_path = find_module_path(file_name)
         module = importlib.import_module(module_path)
         class_ = getattr(module, class_name)
@@ -143,8 +148,9 @@ def get_class(file_name: str)->Any:
     except (ModuleNotFoundError, AttributeError) as e:
         logger.error(f"Error importing {class_name} from {module_path}: {e}")
         raise e
-    
-def find_module_path(file_name:str, src_dir:str=str(get_root_directory()))-> Any:
+
+
+def find_module_path(file_name: str, src_dir: str = str(get_root_directory())) -> Any:
     """
     Finds the Python module path of a given file inside the src directory.
 
@@ -155,11 +161,11 @@ def find_module_path(file_name:str, src_dir:str=str(get_root_directory()))-> Any
     Returns:
         str or None: The module import path (e.g., "package.subpackage.my_module") or None if not found.
     """
-    file_name = file_name if file_name.endswith('.py') else file_name + '.py'
+    file_name = file_name if file_name.endswith(".py") else file_name + ".py"
     for root, _, files in os.walk(src_dir):
         if file_name in files:
             full_path = os.path.join(root, file_name)
             rel_path = os.path.relpath(full_path, src_dir)
-            module_path = rel_path.replace(os.path.sep, '.')
+            module_path = rel_path.replace(os.path.sep, ".")
             return os.path.splitext(module_path)[0]
     return None
