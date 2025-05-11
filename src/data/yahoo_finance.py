@@ -1,4 +1,3 @@
-import os
 import logging
 import pandas as pd
 import yfinance as yf
