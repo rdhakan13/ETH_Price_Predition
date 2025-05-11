@@ -36,7 +36,7 @@ class BertSentimentAnalyser(SentimentAnalyser):
             lambda x: self.determine_sentiment(x[0]["label"])
         )
         end_time = time.time()
-        logging.info("Sentiment analysis complete")
+        logger.info("Sentiment analysis complete")
         logger.info(f"Time taken: {end_time - start_time}")
         return self.df
 
