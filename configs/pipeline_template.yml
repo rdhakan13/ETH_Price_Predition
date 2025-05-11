@@ -1,6 +1,6 @@
 pipeline:
   - stage: get_raw_data
-    active: True
+    active: False
     tickers:
       - BTC-USD
       - ETH-USD
@@ -17,7 +17,7 @@ pipeline:
             - ethereum
             - litecoin
   - stage: process_raw_data
-    active: True
+    active: False
     tickers:
       - BTC-USD
       - ETH-USD
@@ -28,16 +28,43 @@ pipeline:
       - name: EtherScan
       - name: GoogleNews
   - stage: conduct_sentiment_analysis
-    active: True
+    active: False
     sources:
       - name: GoogleNews
+        columns:
+          - News Headlines
     sentiment_analysis:
       - name: VADER
+        type: vader_sentiment_analyser
+      - name: ProsusAI/finbert
+        type: bert_sentiment_analyser
+      - name: ElKulako/cryptobert
+        type: bert_sentiment_analyser
+  - stage: compile_final_data
+    active: False
+    sources:
+      - name: YahooFinance
+      - name: BitInfoCharts
+      - name: GoogleNews
+      - name: OkLink
+      - name: EtherScan
+  - stage: run_model
+    active: False
+    model:
+      - name: ARIMA
+        type: arima_model
         params:
-          column_name: "News Headlines"
-      - name: FinBERT
+          p: 5
+          d: 1
+          q: 0
+      - name: Prophet
+        type: prophet_model
         params:
-          column_name: "News Headlines"
-      - name: CryptoBERT
-        params:
-          column_name: "News Headlines"
+          changepoint_prior_scale: 0.05
+  - stage: get_results
+    active: False
+    model:
+      - name: ARIMA
+        type: arima_model
+      - name: Prophet
+        type: prophet_model
