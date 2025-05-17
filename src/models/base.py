@@ -8,7 +8,7 @@ from sklearn.metrics import (
 )
 from tabulate import tabulate
 import logging
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -17,13 +17,18 @@ class Model:
     def __init__(self, params: dict[str, Any]):
         """
         Initialize the model.
+
+        Parameters:
+            params (dict): Model parameters.
         """
         self.params = params
-        self.y_pred = None
+        self.y_pred: Optional[pd.DataFrame] = None
         self.tbl_args = {"headers": "keys", "tablefmt": "simple", "floatfmt": ".2f"}
 
     @abstractmethod
-    def fit(self, x_train: pd.DataFrame, y_train: pd.DataFrame):
+    def fit(
+        self, y_train: pd.DataFrame, x_train: Optional[pd.DataFrame] = None
+    ) -> None:
         """
         Fit the model to the training data.
 
@@ -37,7 +42,9 @@ class Model:
         pass
 
     @abstractmethod
-    def predict(self, x_test: pd.DataFrame, x_val: pd.DataFrame):
+    def predict(
+        self, x_test: Optional[pd.DataFrame], x_val: Optional[pd.DataFrame], **kwargs
+    ) -> Optional[Any]:
         """
         Make predictions on the test data.
 
@@ -45,7 +52,7 @@ class Model:
             x_test (pd.DataFrame): The features of the test data.
 
         Returns:
-            None
+            predictions (Any): The predicted value(s).
         """
         pass
 

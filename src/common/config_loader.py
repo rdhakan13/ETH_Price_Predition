@@ -9,6 +9,11 @@ logger = logging.getLogger(__name__)
 
 class ConfigLoader:
     def __init__(self) -> None:
+        """
+        Initializes the ConfigLoader class.
+        Sets the config_filename attribute based on the environment variable CONFIG_FILENAME.
+        If the environment variable is not set, it defaults to a template configuration file.
+        """
         if os.environ.get("CONFIG_FILENAME") is None:
             self.config_filename = f"{get_root_directory()}\\configs\\pipeline_template.yml"
         else:
