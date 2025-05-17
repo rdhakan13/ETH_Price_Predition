@@ -4,9 +4,6 @@ YML_FILE = environment.yml
 ENV_NAME = STD_DS_LIB
 EC2_SETUP_SCRIPT = ./scripts/setup.sh
 
-export LOG_LEVEL = INFO
-export CONFIG_FILENAME=./configs/pipeline_template.yml
-
 .ONESHELL:
 .PHONY: activate init install export-env create-env list-packages update-env remove-env
 
