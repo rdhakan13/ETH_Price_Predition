@@ -15,7 +15,7 @@ root_dir = str(get_root_directory()) + "\\temp"
 config_loader = ConfigLoader()
 config = config_loader.define_process_raw_data()
 active = config.get("active", False)
-tickers = config.get("tickers", False)
+tickers = config.get("tickers", [])
 sources = config.get("sources", [{}])
 
 

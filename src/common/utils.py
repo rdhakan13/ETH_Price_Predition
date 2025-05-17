@@ -2,6 +2,7 @@ from pathlib import Path
 import importlib
 import logging
 import os
+import sys
 import yaml
 import time
 from box import ConfigBox
@@ -168,4 +169,19 @@ def find_module_path(file_name: str, src_dir: str = str(get_root_directory())) -
             rel_path = os.path.relpath(full_path, src_dir)
             module_path = rel_path.replace(os.path.sep, ".")
             return os.path.splitext(module_path)[0]
+    return None
+
+def find_file(filename: str) -> str:
+    """
+    Finds the absolute path of a file in the current working directory.
+
+    Parameters:
+        filename (str): The name of the file to search for.
+
+    Returns:
+        str: The absolute path of the file if found, otherwise None.
+    """
+    for root, dirs, files in os.walk(os.getcwd()):
+        if filename in files:
+            return os.path.abspath(os.path.join(root, filename))
     return None

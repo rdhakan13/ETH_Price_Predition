@@ -1,17 +1,8 @@
 SCRIPT_NAME = main.py
-LOG_DIR = logs
-TMP_DIR = temp
-PYTEST_CACHE = .pytest_cache
 SRC = ./src/
-SCRIPTS = ./scripts/
 YML_FILE = environment.yml
 ENV_NAME = STD_DS_LIB
 EC2_SETUP_SCRIPT = ./scripts/setup.sh
-VENV = .venv
-POETRY = $(VENV)/bin/poetry
-
-export LOG_LEVEL = INFO
-export CONFIG_FILENAME=./configs/pipeline_template.yml
 
 .ONESHELL:
 .PHONY: activate init install export-env create-env list-packages update-env remove-env
@@ -66,8 +57,9 @@ clean: activate
 	@echo Cleaning up...
 	ruff clean
 	if exist .mypy_cache rmdir /s /q .mypy_cache
-	if exist $(LOG_DIR) rmdir /s /q $(LOG_DIR)
-	if exist $(TMP_DIR) rmdir /s /q $(TMP_DIR)
+	if exist logs rmdir /s /q logs
+	if exist temp rmdir /s /q temp
+	if exist tmp rmdir /s /q tmp
 	if exist .pytest_cache rmdir /s /q .pytest_cache
 	if exist htmlcov rmdir /s /q htmlcov
 	if exist .coverage del /q .coverage
@@ -77,27 +69,19 @@ lint-check: activate
 ifeq ($(OS),Windows_NT)
 	@echo Lint checking src...
 	ruff check $(SRC) --ignore F401
-	@echo Lint checking scripts...
-	ruff check $(SCRIPTS) --ignore F401
 else
 	@echo Lint checking src...
 	.venv/bin/ruff check $(SRC) --ignore F401
-	@echo Lint checking scripts...
-	.venv/bin/ruff check $(SCRIPTS) --ignore F401
 endif
 
 lint-format: activate
 	@echo Lint formatting src...
 	ruff format $(SRC)
-	@echo Lint formatting scripts...
-	ruff format $(SCRIPTS)
 	@echo Done!
 
 lint-fix: activate
 	@echo Lint formatting and fixing s...
 	ruff check $(SRC) --fix --ignore F401
-	@echo Lint formatting and fixing scripts...
-	ruff check $(SCRIPTS) --fix --ignore F401
 	@echo Done!
 
 type-check: activate
@@ -110,8 +94,23 @@ endif
 
 run-script:
 	@echo Running script...
-	python $(SCRIPTS)$(SCRIPT_NAME)
+	python $(SCRIPT_NAME)
 	@echo Done!
+
+run:
+ifeq ($(OS),Windows_NT)
+	@python -c "import os, sys; \
+	from pathlib import Path; \
+	matches = list(Path('.').rglob('$(FILE)')); \
+	f = os.path.abspath(matches[0]) if matches else sys.exit(f'File \"$(FILE)\" not found'); \
+	print('Running', f); \
+	os.system(f'python \"{f}\"')"
+else
+	@filename=$(FILE); \
+	fullpath=$$(readlink -f $$filename); \
+	echo "Running $$fullpath"; \
+	python3 $$fullpath
+endif
 
 print-env-variables:
 	@echo $(LOG_LEVEL)
@@ -123,4 +122,8 @@ ifeq ($(OS),Windows_NT)
 else
 	.venv/bin/pytest --cov=. --cov-report=term-missing --cov-fail-under=60 tests/
 endif
+
+lines-of-code-report:
+	@echo Counting lines of code...
+	cloc --include-lang=Python --by-file --report-file=cloc_report.txt $(SRC)
 

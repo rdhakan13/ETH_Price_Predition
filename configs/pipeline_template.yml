@@ -1,4 +1,5 @@
 pipeline:
+
   - stage: get_raw_data
     active: False
     tickers:
@@ -16,6 +17,7 @@ pipeline:
             - bitcoin
             - ethereum
             - litecoin
+
   - stage: process_raw_data
     active: False
     tickers:
@@ -27,6 +29,7 @@ pipeline:
       - name: BitInfoCharts
       - name: EtherScan
       - name: GoogleNews
+
   - stage: conduct_sentiment_analysis
     active: False
     sources:
@@ -40,31 +43,153 @@ pipeline:
         type: bert_sentiment_analyser
       - name: ElKulako/cryptobert
         type: bert_sentiment_analyser
+
   - stage: compile_final_data
+    active: True
+    tickers:
+      - name: ETH-USD
+        sources:
+          - name: EtherScan
+            columns_to_drop:
+              - Adj Close
+              - AddressCount
+              - BlockReward
+              - Ethersupply2
+              - BlockDifficulty
+              - NetworkHash
+              - TxGrowth
+              - Uncles
+              - TransactionFee
+          - name: OkLink
+            columns_to_drop:
+              - Open
+              - High
+              - Low
+              - Close
+              - Adj Close
+              - Volume
+              - ETH Gas price
+              - ETH total supply
+              - ETH daily transaction fee
+              - Gas utilization rate of ETH
+              - ETH daily new contracts
+              - ETH average daily block size
+              - ETH average computing power of the entire network
+              - ETH average daily transaction fee
+              - ETH mining difficulty
+              - ETH number of daily active addresses
+      - name: BTC-USD
+        sources:
+          - name: OkLink
+            columns_to_drop:
+              - Adj Close
+              - BTC total supply
+              - BTC total addresses
+              - BTC full node data size
+          - name: BitInfoCharts
+            columns_to_drop:
+              - Open
+              - High
+              - Low
+              - Close
+              - Adj Close
+              - Volume
+              - Transactions
+              - Block Size
+              - Difficulty
+              - Active Addressses
+      - name: LTC-USD
+        sources:
+          - name: OkLink
+            columns_to_drop:
+              - Adj Close
+              - LTC total supply
+              - LTC total addresses
+              - LTC full node data size
+          - name: BitInfoCharts
+            columns_to_drop:
+              - Open
+              - High
+              - Low
+              - Close
+              - Adj Close
+              - Volume
+              - Transactions
+              - Block Size
+              - Difficulty
+              - Active Addressses
+
+  - stage: train_test_model
     active: False
-    sources:
-      - name: YahooFinance
-      - name: BitInfoCharts
-      - name: GoogleNews
-      - name: OkLink
-      - name: EtherScan
-  - stage: run_model
-    active: False
+    data:
+      DataLoader:
+        start_date: 2018-01-01
+        end_date: 2023-10-01
+        tickers:
+          - BTC-USD
+          - ETH-USD
+          - LTC-USD
     model:
       - name: ARIMA
         type: arima_model
-        params:
-          p: 5
-          d: 1
-          q: 0
-      - name: Prophet
-        type: prophet_model
-        params:
-          changepoint_prior_scale: 0.05
-  - stage: get_results
-    active: False
-    model:
-      - name: ARIMA
-        type: arima_model
-      - name: Prophet
-        type: prophet_model
+        train_val:
+          params:
+            log_transform: True
+            maxiter: 500
+            n_periods: 10
+            p: []
+            d: 1
+            q: 0
+        train_test:
+          params:
+            log_transform: True
+            maxiter: 500
+            n_periods: 10
+            p: []
+            d: 1
+            q: 0
+    metrics:
+      - MSE
+      - RMSE
+      - MAE
+      - MAPE
+      
+column_mapping:
+  Open: YF_Op
+  High: YF_Hi
+  Low: YF_Lo
+  Close: YF_Cl
+  Volume: YF_Vo
+  AverageDailyTransactionFee: ES_AvgTransFee
+  AvgGasPrice: ES_AvgGasPrc
+  BlockCountRewards: ES_BlkCnt
+  BlockSize: ES_BlkSz
+  BlockTime: ES_BlkTm
+  DailyActiveEthAddress: ES_ActAdd
+  deployed contracts: ES_DepCon
+  GasLimit: ES_GasLmt
+  GasUsed: ES_GasUsd
+  verified contracts: ES_VerCon
+  ETH market cap: OL_MktCap
+  Number of new addresses added per day on ETH": OL_NewAdd
+  ETH number of daily transactions on the chain: OL_ChnTrans
+  ETH daily transaction volume on the chain": OL_ChnVol
+  BTC average daily transaction fee: OL_AvgTransFee
+  BTC mining difficulty: OL_MinDif
+  BTC average daily block size: OL_BlkSz
+  BTC number of daily active addresses: OL_ActAdd
+  BTC market cap: OL_MktCap
+  Number of new addresses added per day on BTC: OL_NewAdd
+  BTC number of daily transactions on the chain: OL_ChnTrans
+  BTC daily transaction volume on the chain: OL_ChnVol
+  BTC average computing power of the entire network: OL_AvgComPwr
+  Hashrate: BIC_HshRt
+  LTC average daily transaction fee: OL_AvgTransFee
+  LTC mining difficulty: OL_MinDif
+  LTC average daily block size: OL_BlkSz
+  LTC number of daily active addresses: OL_ActAdd
+  LTC market cap: OL_MktCap
+  Number of new addresses added per day on LTC: OL_NewAdd
+  LTC number of daily transactions on the chain: OL_ChnTrans
+  LTC daily transaction volume on the chain: OL_ChnVol
+  LTC average computing power of the entire network: OL_AvgComPwr

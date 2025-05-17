@@ -36,7 +36,7 @@ The `Makefile` includes several targets:
     ```
 3. **Activate .venv**
 
-#### Local testing & Linting:
+#### Local testing & linting:
 
 - **Linting**:
 
@@ -58,7 +58,7 @@ The `Makefile` includes several targets:
     ```
     make type-check
     ```
-- **Unit Tests**
+- **Unit tests**
 
     To conduct local unit tests:
     ```
@@ -70,4 +70,14 @@ The `Makefile` includes several targets:
     ```
     make clean
     ```
+
+#### Training and testing models:
+
+To run train and test model:
+```
+make run FILE=main.py LOG_LEVEL=ERROR CONFIG_FILENAME=pipeline_template.yml
+```
+
+Where all three variables can be configured as needed.
+
 ## :books: References

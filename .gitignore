@@ -12,3 +12,5 @@ temp/
 .coverage
 .venv/
 htmlcov/
+cloc_report.txt
+.vscode/
