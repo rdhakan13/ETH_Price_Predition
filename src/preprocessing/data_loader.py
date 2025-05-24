@@ -4,6 +4,7 @@ import numpy as np
 import logging
 from src.common.stats import adf_test, StationarityTests
 from src.preprocessing.feature_generator import FeatureGenerator
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +50,7 @@ class DataLoader:
         self.final_data = price_features.dropna()
         logger.info("Data loaded successfully.")
 
-    def merge_selected_data(self, selected_data: list[str]) -> None:
+    def merge_selected_data(self, selected_data: list[str], select_publishers: Optional[list[str]] = None) -> None:
         """Handle missing values, encode categorical features, normalize data."""
         logger.info("Merging selected data...")
         if selected_data is None:
@@ -75,7 +76,7 @@ class DataLoader:
                 fg = FeatureGenerator(
                     input_data=self.sentiment_analysis, data_tag="sentiment"
                 )
-                sentiment_features = fg.generate_features()
+                sentiment_features = fg.generate_features(select_publishers=select_publishers)
                 self.final_data = self.final_data.merge(
                     sentiment_features.replace(np.nan, 0), how="outer", on="Date"
                 )
