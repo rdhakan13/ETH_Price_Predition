@@ -127,5 +127,5 @@ lines-of-code-report:
 	@echo Counting lines of code...
 	cloc --include-lang=Python --by-file --report-file=cloc_report.txt $(SRC)
 
-print-mlflow-cmd:
-	@echo mlflow ui --backend-store-uri sqlite:///mlruns/mlruns.db --host localhost --port 5000 
+start-mlflow:
+	mlflow ui --backend-store-uri sqlite:///mlruns/mlruns.db --host localhost --port 5000 
