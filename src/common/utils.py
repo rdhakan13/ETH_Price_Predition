@@ -2,12 +2,12 @@ from pathlib import Path
 import importlib
 import logging
 import os
-import sys
 import yaml
 import time
 from box import ConfigBox
 from functools import wraps
 from typing import Any
+import itertools
 
 logger = logging.getLogger(__name__)
 
@@ -103,7 +103,6 @@ def timeit(func: Any) -> Any:
     """
     A decorator that measures the execution time of a function.
     """
-
     @wraps(func)
     def wrapper(*args, **kwargs) -> Any:
         start = time.time()
@@ -111,7 +110,6 @@ def timeit(func: Any) -> Any:
         end = time.time()
         logger.info(f"'{func.__name__}' took {end - start:.4f} seconds.")
         return result
-
     return wrapper
 
 
@@ -185,3 +183,43 @@ def find_file(filename: str) -> str:
         if filename in files:
             return os.path.abspath(os.path.join(root, filename))
     return None
+
+def collate_array_elements(arrays: list[list[Any]]) -> list[list[Any]]:
+    """
+    Collates elements from multiple arrays into a list of lists, where each inner list contains
+    elements from the same index across all input arrays.
+
+    Parameters:
+        arrays (list[list[Any]]): A list of lists containing elements to be collated.
+
+    Returns:
+        list[list[Any]]: A list of lists, where each inner list contains elements from the same index
+                         across all input arrays.
+    """
+    cleaned = [row for row in arrays if row]
+    if not cleaned or not all(cleaned):
+        return []
+    return [list(group) for group in zip(*cleaned)]
+
+def gridsearch(param_grid):
+    """
+    A decorator that takes a dictionary of parameters and runs the decorated
+    function for every combination of the parameters.
+
+    Parameters:
+        param_grid (dict): A dictionary where keys are parameter names and values are lists of parameter values.
+    
+    Returns:
+        function: A decorator that wraps the function to run it with all combinations of parameters.
+    """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            keys = list(param_grid.keys())
+            values = list(param_grid.values())
+            for combination in itertools.product(*values):
+                param_kwargs = dict(zip(keys, combination))
+                print(f"Running with params: {param_kwargs}")
+                func(*args, **{**kwargs, **param_kwargs})
+        return wrapper
+    return decorator
