@@ -4,7 +4,87 @@
 
 ## :floppy_disk: Dataset
 
+### Yahoo Finance
+To acquire cryptocurrency price data (Open, High, Low, Close, Adj Close & Volume), [yfinance](https://github.com/ranaroussi/yfinance), built by Ran Aroussi, was used to pull all the available price data at a daily interval for Ethereum, Bitcoin and Litecoin from [Yahoo Finance](https://finance.yahoo.com/). 
+
+### Google News
+To acquire Google News Headlines for the time period fetched for Ethereum price data, [gnews](https://github.com/ranahaani/GNews), built by Muhammad Abdullah (ranahanni), was used to pull any news that contained the keywords: Cryptocurrency, Blockchain, Bitcoin, Ethereum and Litecoin. The data acquired from the API call pulls the news headline, description, Google news URL, news publisher name and website.
+
+<div style="color: red;">
+<strong>Warning:</strong> google_news_api.py may produce duplicate headlines for keywords of the same topic.
+</div>
+
+### Blockchain Data
+Blockchain data is acquired from 3 separate source to be able to choose the most complete data source and patch any incomplete data points.
+
+1. [BitInfoCharts](bitinfocharts.com) - data was scraped from  by adapting the code from [bitinfochartscraper](https://github.com/logic-language/bitinfochartscraper) produced by the user logic-language. 
+2. [OKLINK Chainhub](oklink.com) - The data was downloaded as a CSV file from the graphs displayed on the website (note: the functionality of using the download button has been disabled now). 
+3. [Etherscan](https://etherscan.io/) - Only Ethereum data was provided on and as such the blockchain data that was acquired was: No. of Total Addresses, Mean Transaction Fees, Mean Gas Price, Block Count Rewards, Mean Difficulty, Block Reward, Mean Block Size, Mean Block Time, No. of Active Addresses, No. of Issued Contracts, No. of Verified Contracts, Total Supply, Mean Gas Limit, Gas Used, Mean Hash Rate, Total Uncle Count.The data was for each of the above listed features was downloaded as a CSV from the graphs provided.
+
+The blockchain data acquired for the three coins through is summarised in the below table. 
+
+**Blockchain Data Summary**
+
+| Blockchain data            | ETH | BTC | LTC |
+|----------------------------|-----|-----|-----|
+| Market Capitalisation      | ✔   | ✔   | ✔   |
+| Total Supply               | ✔   | ✔   | ✔   |
+| Mean Block Size            | ✔   | ✔   | ✔   |
+| Mean Hash Rate             | ✔   | ✔   | ✔   |
+| Mean Transaction Fees      | ✔   | ✔   | ✔   |
+| Mining Difficulty          | ✔   | ✔   | ✔   |
+| No. of Active Addresses    | ✔   | ✔   | ✔   |
+| No. of New Addresses       | ✔   | ✔   | ✔   |
+| No. of Total Addresses     | ✔   | ✔   | ✔   |
+| No. of Transactions        | ✔   | ✔   | ✔   |
+| Total Size of Transactions | ✔   | ✔   | ✔   |
+| Total Transfer Volume      | ✔   | ✔   | ✖   |
+| Mean Gas Price             | ✔   | ✖   | ✖   |
+| Gas Used                   | ✔   | ✖   | ✖   |
+| No. of Issued Contracts    | ✔   | ✖   | ✖   |
+
 ## :open_file_folder: Project Structure
+```
+ETH_Price_Prediction/
+│
+├── github
+│   └── workflows/             # Directory contains unit-test CI pipeline
+│
+├── configs                    # Folder to hold configs used by main.py
+│
+├── data/                      # Directory containing all data files
+│   ├── final/                 # Data used for experiments
+│   ├── processed/             # Cleaned and preprocessed data ready for modeling
+│   └── raw/                   # Raw collected data
+│
+├── mlruns/                    # MLFlow directory to log experiments and models
+│
+├── notebooks/                 # Jupyter notebooks for exploration and experimenting different models
+│
+├── scripts/                   # Folder containing additional scripts
+|   └── ec2/                   # Contains scripts for GPU training in AWS EC2
+│
+├── reports/                   # Folder containing data for final report
+│   ├── docs/                  # Contains final report documenting results of the study
+|   └── figures/               # Contains figures for report and general analysis
+│
+├── src/                       # Source code for fetching, cleaning and using data from the pipeline
+│   ├── common/                 # Utility functions
+│   ├── data/                   # APIs for data collection
+│   ├── pipeline/               # Pipeline scripts for different stages
+│   ├── preprocessing/          # Preprocessing tasks before training
+│   └── sentiment_analyser/     # Different sentiment analysers (VADER, FinBERT, CryptoBERT)
+│
+├── tests/                      # Unit-tests for src
+│
+├── .gitignore
+├── LICENSE  
+├── Makefile  
+├── README.md  
+├── main.py
+├── poetry.lock
+└── pyproject.toml
+```
 
 ## :gear: How to Run
 
@@ -71,9 +151,9 @@ The `Makefile` includes several targets:
     make clean
     ```
 
-#### Training and testing models:
+#### Running pipeline:
 
-To run train and test model:
+To run the data pipeline to fetch and process data:
 ```
 make run FILE=main.py LOG_LEVEL=ERROR CONFIG_FILENAME=pipeline_template.yml
 ```
