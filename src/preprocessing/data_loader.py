@@ -4,7 +4,10 @@ import numpy as np
 import logging
 from src.common.stats import adf_test, StationarityTests
 from src.preprocessing.feature_generator import FeatureGenerator
-from typing import Optional
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.utils.validation import check_is_fitted
+from typing import Optional, Any
+import xarray as xr
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +24,8 @@ class DataLoader:
         self.train: pd.DataFrame = None
         self.test: pd.DataFrame = None
         self.val: pd.DataFrame = None
+        self.x_scaler = MinMaxScaler()
+        self.y_scaler = MinMaxScaler()
 
     def load_data(self) -> None:
         """
@@ -147,7 +152,7 @@ class DataLoader:
                 f"{col} differenced {diff_count} times to achieve stationarity."
             )
 
-    def lag_features(self, lag_config:dict[str,int], target_col:str='ETH_D_AvgPrc') -> None:
+    def lag_features(self, lag_config:dict[str,Any], target_col:str='ETH_D_AvgPrc') -> None:
         """
         Add lagged features to the dataset.
 
@@ -166,16 +171,27 @@ class DataLoader:
             if col not in self.final_data.columns:
                 logger.warning(f"Column {col} not found in the dataset, skipping.")
                 continue
-            if n_lags is None or n_lags <= 0:
-                logger.warning(f"No lags specified for {col}, skipping.")
-                continue
-            for lag in range(1, n_lags + 1):
-                self.final_data[f"{col}_lag_{lag}"] = self.final_data[col].shift(lag)
-            logger.info(f"Added {n_lags} lag(s) for column {col}.")
+            if isinstance(n_lags, int):
+                if n_lags is None or n_lags <= 0:
+                    logger.warning(f"No lags specified for {col}, skipping.")
+                    continue
+                for lag in range(1, n_lags + 1):
+                    self.final_data[f"{col}_lag_{lag}"] = self.final_data[col].shift(lag)
+                logger.info(f"Added {n_lags} lag(s) for column {col}.")
+            elif isinstance(n_lags, list):
+                if not all(isinstance(lag, int) and lag > 0 for lag in n_lags):
+                    logger.warning(f"Invalid lags specified for {col}, skipping.")
+                    continue
+                for lag in n_lags:
+                    self.final_data[f"{col}_lag_{lag}"] = self.final_data[col].shift(lag)
+                logger.info(f"Added lags {n_lags} for column {col}.")
+            else:
+                logger.error(f"Invalid lag configuration for {col}: {n_lags}.")
+                raise ValueError(f"Invalid lag configuration for {col}: {n_lags}.")
             if col != target_col:
                 self.final_data.drop(columns=[col], inplace=True)
 
-    def generate_forecast_horizon(self, target_col:str='ETH_D_AvgPrc', horizon:int=10) -> None:
+    def generate_forecast_horizon(self, target_col:str='ETH_D_AvgPrc', horizon:int=7) -> None:
         """
         Add forecast horizon features to the dataset.
 
@@ -219,7 +235,7 @@ class DataLoader:
             raise e
 
     def split_data(
-        self, split_type: str = "train_test", split_size: float = 0.2
+        self, split_type: str = "train_test", split_size: float = 0.2, overlap: bool = False, overlap_size: int = 0
     ) -> tuple[pd.DataFrame, pd.DataFrame]:
         """
         Split dataset into training and test sets or training and validation sets.
@@ -239,14 +255,105 @@ class DataLoader:
             raise ValueError("split_type must be 'test_train' or 'train_val'.")
         elif split_type == "train_test":
             count = int(len(self.final_data) * split_size)
-            self.train = self.final_data[:-count]
-            self.test = self.final_data[-count:]
+            if overlap:
+                self.train = self.final_data[:-count]
+                self.test = self.final_data[-count-overlap_size:]
+            else:
+                self.train = self.final_data[:-count]
+                self.test = self.final_data[-count:]
             return self.train, self.test
         elif split_type == "train_val" and self.train is not None:
             count = int(len(self.train) * split_size)
-            self.val = self.train[-count:]
-            self.train = self.train[:-count]
+            if overlap:
+                self.val = self.train[-count-overlap_size:]
+                self.train = self.train[:-count]
+            else:
+                self.val = self.train[-count:]
+                self.train = self.train[:-count]
             return self.train, self.val
         else:
             logger.error("Please set the train data first.")
             raise ValueError("Please set the train data first.")
+        
+    def generate_X_y_tensors(self, df:pd.DataFrame, target_col:str="ETH_D_AvgPrc", lags:int=5, horizon:int=7, data_split:Optional[str]=None, format:str="xarray") -> tuple[np.ndarray, np.ndarray]:
+        """
+        Generate X and y tensors for time series forecasting.
+
+        Parameters:
+            target_col (str): The target variable.
+            lags (int): Number of lagged observations to include.
+            horizon (int): Number of periods to forecast.
+            tensor_format (bool): Whether to return tensors or numpy arrays.
+            scale (bool): Whether to scale the data.
+            data_split (str): Data split to use ("train", "val", "test", or None for all).
+
+        Returns:
+            tuple: X and y tensors or numpy arrays.
+        """
+        values = df.values
+        feature_names = df.columns.tolist()
+        target_idx = df.columns.get_loc(target_col)
+        n_samples = len(df) - lags - horizon + 1
+
+        X, y = [], []
+
+        for i in range(n_samples):
+            X.append(values[i:i + lags])
+            y.append(values[i + lags : i + lags + horizon, target_idx])
+
+        if data_split == "train" or None:
+            full_x = np.array(X)
+            full_x_2d = full_x.reshape(-1,full_x.shape[2])
+            full_x_scaled = self.x_scaler.fit_transform(full_x_2d)
+            X = full_x_scaled.reshape(n_samples, lags, len(feature_names))
+            y = self.y_scaler.fit_transform(np.array(y))
+        else:
+            try:
+                check_is_fitted(self.x_scaler)
+                check_is_fitted(self.y_scaler)
+            except Exception as e:
+                logger.error(f"Scalers are not fitted: {e}. Please fit the scalers first.")
+                raise e
+            full_x = np.array(X)
+            full_x_2d = full_x.reshape(-1,full_x.shape[2])
+            full_x_scaled = self.x_scaler.transform(full_x_2d)
+            X = full_x_scaled.reshape(n_samples, lags, len(feature_names))
+            y = self.y_scaler.transform(np.array(y))
+        
+        y_xr = xr.DataArray(
+            y,
+            dims=["Date", "Forecast"],
+            coords={
+                "Date": df.iloc[lags:-horizon+1].index,
+                "Forecast": np.arange(1, horizon + 1)
+            },
+            name="y"
+        )
+        
+        X_xr = xr.DataArray(
+            X,
+            dims=["Date", "Lag", "Feature"],
+            coords={
+                "Date": df.iloc[lags:-horizon+1].index,
+                "Lag": np.arange(lags,0,-1),
+                "Feature": feature_names
+            },
+            name="X"
+        )
+
+        if format == "xarray":
+            return y_xr, X_xr
+        elif format == "numpy":
+            return np.array(y), np.array(X)
+        else:
+            logger.error("Invalid format specified. Use 'xarray' or 'numpy'.")
+            raise ValueError("Invalid format specified. Use 'xarray' or 'numpy'.")
+    
+    def get_scalers(self) -> tuple[Optional[Any], Optional[Any]]:
+        """
+        Get the scalers for X and y.
+
+        Returns:
+            tuple: X scaler and y scaler.
+        """
+        return self.x_scaler, self.y_scaler
