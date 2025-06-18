@@ -16,3 +16,4 @@ cloc_report.txt
 .vscode/
 LSTM.ipynb
 GRU.ipynb
+new_env/
