@@ -47,10 +47,9 @@ The blockchain data acquired for the three coins through is summarised in the be
 ```
 ETH_Price_Prediction/
 │
-├── github
-│   └── workflows/             # Directory contains unit-test CI pipeline
+├── github/                    # Directory contains unit-test CI pipeline
 │
-├── configs                    # Folder to hold configs used by main.py
+├── configs/                   # Folder to hold configs used by main.py
 │
 ├── data/                      # Directory containing all data files
 │   ├── final/                 # Data used for experiments
@@ -62,7 +61,7 @@ ETH_Price_Prediction/
 ├── notebooks/                 # Jupyter notebooks for exploration and experimenting different models
 │
 ├── scripts/                   # Folder containing additional scripts
-|   └── ec2/                   # Contains scripts for GPU training in AWS EC2
+|   └── ec2/                   # Contains scripts for training models using GPUs in AWS EC2
 │
 ├── reports/                   # Folder containing data for final report
 │   ├── docs/                  # Contains final report documenting results of the study
