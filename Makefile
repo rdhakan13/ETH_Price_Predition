@@ -5,7 +5,7 @@ ENV_NAME = STD_DS_LIB
 EC2_SETUP_SCRIPT = ./scripts/setup.sh
 
 .ONESHELL:
-.PHONY: activate init install export-env create-env list-packages update-env remove-env
+.PHONY:
 
 activate:
 	@echo Activating virtual environment...
@@ -28,25 +28,9 @@ endif
 install: activate
 	poetry install --no-root --only main 
 
-exp-env:
-	@echo Exporting conda environment...
-	conda env export --no-builds > $(YML_FILE)
-
-create-env:
-	@echo Creating conda environment
-	conda env create -f $(YML_FILE)
-
 list-packages:
-	@echo Listing conda packages...
+	@echo Listing python packages...
 	pip list
-
-update-env:
-	@echo Updating conda environment...
-	conda env update -f $(YML_FILE) --prune
-
-remove-env:
-	@echo Removing conda environment...
-	conda env remove -n $(ENV_NAME) 
 
 onetime-setup-ec2:
 	@echo Setting up EC2 instance...
@@ -112,18 +96,22 @@ else
 	python3 $$fullpath
 endif
 
-print-env-variables:
-	@echo $(LOG_LEVEL)
-
 unit-tests: activate
 	@echo Running unit tests...
 ifeq ($(OS),Windows_NT)
-	pytest --cov=. --cov-report=term-missing --cov-fail-under=60 tests/
+	pytest --cov=. --cov-report=term-missing --cov-fail-under=70 tests/
 else
-	.venv/bin/pytest --cov=. --cov-report=term-missing --cov-fail-under=60 tests/
+	.venv/bin/pytest --cov=. --cov-report=term-missing --cov-fail-under=70 tests/
 endif
 
 lines-of-code-report:
 	@echo Counting lines of code...
 	cloc --include-lang=Python --by-file --report-file=cloc_report.txt $(SRC)
 
+start-mlflow:activate
+	@echo Starting MLflow UI...
+	mlflow ui --backend-store-uri sqlite:///mlruns/mlruns.db --host localhost --port 5000
+
+start-jupyter:activate
+	@echo Starting Jupyter Notebook...
+	jupyter notebook
