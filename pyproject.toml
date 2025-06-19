@@ -48,6 +48,7 @@ dependencies = [
     "timeshap (>=1.0.4,<2.0.0)",
     "ipython (>=9.3.0,<10.0.0)",
     "xarray (>=2025.6.1,<2026.0.0)",
+    "tensorflow-intel (==2.18.0); sys_platform == 'win32'",
 ]
 
 
