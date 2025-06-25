@@ -275,7 +275,7 @@ class DataLoader:
             logger.error("Please set the train data first.")
             raise ValueError("Please set the train data first.")
         
-    def generate_X_y_tensors(self, df:pd.DataFrame, target_col:str="ETH_D_AvgPrc", lags:int=5, horizon:int=7, data_split:Optional[str]=None, format:str="xarray") -> tuple[np.ndarray, np.ndarray]:
+    def generate_X_y_tensors(self, df:pd.DataFrame, target_col:str="ETH_D_AvgPrc", lags:int=5, horizon:int=7, data_split:Optional[str]=None, tensor_format:str="xarray") -> tuple[np.ndarray, np.ndarray]:
         """
         Generate X and y tensors for time series forecasting.
 
@@ -341,9 +341,9 @@ class DataLoader:
             name="X"
         )
 
-        if format == "xarray":
+        if tensor_format == "xarray":
             return y_xr, X_xr
-        elif format == "numpy":
+        elif tensor_format == "numpy":
             return np.array(y), np.array(X)
         else:
             logger.error("Invalid format specified. Use 'xarray' or 'numpy'.")
@@ -356,4 +356,4 @@ class DataLoader:
         Returns:
             tuple: X scaler and y scaler.
         """
-        return self.x_scaler, self.y_scaler
+        return self.y_scaler, self.x_scaler
