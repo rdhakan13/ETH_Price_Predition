@@ -1,5 +1,6 @@
 import logging
 import pandas as pd
+import numpy as np
 from statsmodels.tsa.stattools import adfuller, grangercausalitytests
 from arch.unitroot import PhillipsPerron
 from typing import Any
@@ -109,3 +110,34 @@ def grangers_causality_test(
         }
 
     return results
+
+def root_mean_squared_percentage_error(y_true:Any, y_pred: Any) -> float:
+    """
+    Calculate the Root Mean Squared Percentage Error (RMSPE) between actual and predicted values.
+
+    Parameters:
+        y_true (pd.Series, np.ndarray, pd.DataFrame): Actual values.
+        y_pred (pd.Series, np.ndarray, pd.DataFrame): Predicted values.
+    
+    Returns:
+        float: The RMSPE value.
+    """
+    if not isinstance(y_true, (pd.Series, np.ndarray, pd.DataFrame)):
+        raise TypeError("Actual values must be a pandas Series, numpy array, or DataFrame.")
+    if not isinstance(y_pred, (pd.Series, np.ndarray, pd.DataFrame)):
+        raise TypeError("Predicted values must be a pandas Series, numpy array, or DataFrame.")
+    if len(y_true) != len(y_pred):
+        raise ValueError("Actual and predicted series must have the same length.")
+    
+    y_true = np.asarray(y_true)
+    y_pred = np.asarray(y_pred)
+
+    if np.any(y_true == 0):
+        raise ValueError("Actual values must not contain zero to avoid division by zero in percentage error calculation.")
+    if np.any(np.isnan(y_true)) or np.any(np.isnan(y_pred)):
+        raise ValueError("Actual and predicted values must not contain NaN values.")
+
+    percentage_error = (y_true - y_pred) / y_true
+
+    rmspe = np.sqrt(np.mean(percentage_error ** 2)) * 100
+    return rmspe
