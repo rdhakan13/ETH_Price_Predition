@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - ec2-experiments
     paths:
       - configs/**
       - src/**
@@ -28,7 +29,25 @@ on:
       - poetry.lock
 
 jobs:
+  reject-ec2:
+    if: github.event_name == 'push' && github.ref != 'refs/heads/ec2-experiments'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if pushed by EC2 Deploy Key
+        run: |
+          AUTHOR_NAME=$(jq -r .pusher.name "$GITHUB_EVENT_PATH")
+          AUTHOR_EMAIL=$(jq -r .pusher.email "$GITHUB_EVENT_PATH")
+
+          echo "Commit by $AUTHOR_NAME <$AUTHOR_EMAIL>"
+
+          if [[ "$AUTHOR_NAME" == "ec2-deploy-bot" ]] || [[ "$AUTHOR_EMAIL" == "ec2@myinfra.local" ]]; then
+            echo "Blocked deploy key push to main."
+            exit 1
+          fi
+
+          echo "Push allowed."
   unit-tests:
+    # if: (github.event_name == 'push' || github.event_name == 'pull_request') && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: ${{ github.workspace }}/src
