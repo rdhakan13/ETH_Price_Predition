@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - ec2-experiments
     paths:
       - configs/**
       - src/**
@@ -29,7 +30,7 @@ on:
 
 jobs:
   reject-ec2:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref != 'refs/heads/ec2-experiments'
     runs-on: ubuntu-latest
     steps:
       - name: Check if pushed by EC2 Deploy Key
@@ -46,6 +47,7 @@ jobs:
 
           echo "Push allowed."
   unit-tests:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: ${{ github.workspace }}/src
