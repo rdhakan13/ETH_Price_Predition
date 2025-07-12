@@ -10,7 +10,7 @@ from src.data.etherscan import EtherScan
 from src.data.google_news import GoogleNews
 
 logger = get_logger(os.environ.get("LOG_LEVEL"), __name__)
-root_dir = str(get_root_directory()) + "\\temp"
+root_dir = str(os.path.join(get_root_directory(), "tmp"))
 
 config_loader = ConfigLoader()
 config = config_loader.define_process_raw_data()
@@ -27,7 +27,7 @@ def process_raw_data() -> None:
     source_list = [source.get("name") for source in sources]
     try:
         ETH_data = pd.read_csv(
-            f"{root_dir}\\data\\raw\\ETH_data\\ETH-USD_price_data.csv"
+            str(os.path.join(root_dir,'data','raw','ETH_data','ETH-USD_price_data.csv'))
         )
 
         ETH_data["Date"] = pd.to_datetime(ETH_data["Date"])
@@ -38,7 +38,7 @@ def process_raw_data() -> None:
     except KeyError:
         logger.error("Column not found, switching to different reading mode...")
         ETH_data = pd.read_csv(
-            f"{root_dir}\\data\\raw\\ETH_data\\ETH-USD_price_data.csv"
+            str(os.path.join(root_dir,'data','raw','ETH_data','ETH-USD_price_data.csv'))
         )
         ETH_data = ETH_data.rename(columns={"Price": "Date"})
         ETH_data = ETH_data.iloc[2:]

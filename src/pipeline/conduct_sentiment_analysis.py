@@ -5,7 +5,7 @@ from src.common.logger import get_logger
 from src.common.config_loader import ConfigLoader
 
 logger = get_logger(os.environ.get("LOG_LEVEL"), __name__)
-root_dir = str(get_root_directory()) + "\\temp"
+root_dir = str(os.path.join(str(get_root_directory()),'tmp'))
 
 config_loader = ConfigLoader()
 config = config_loader.define_conduct_sentiment_analysis()
@@ -20,7 +20,7 @@ def conduct_sentiment_analysis() -> None:
     """
     try:
         processed_gn = pd.read_csv(
-            f"{root_dir}\\data\\processed\\Google_News_Headlines_data\\google_news_headlines_data.csv"
+            str(os.path.join(root_dir,'data','processed','Google_News_Headlines_data','google_news_headlines_data.csv'))
         )
         processed_gn = processed_gn.astype("string")
 
@@ -37,9 +37,9 @@ def conduct_sentiment_analysis() -> None:
             instance = analyser_class(processed_gn, model_name=analyser.get("name"))
         processed_gn = instance.analyse_sentiment("News Headline")
 
-    processed_gn.to_csv(f"{root_dir}\\data\\final\\sentiment_analysis.csv", index=False)
+    processed_gn.to_csv(str(os.path.join(root_dir,'data','final','sentiment_analysis.csv')), index=False)
 
-    logger.info(f"Sentiment analysis saved to {root_dir}\\data\\final\\")
+    logger.info(f"Sentiment analysis saved to {str(os.path.join(root_dir,'data','final'))}")
 
 
 if __name__ == "__main__":

@@ -24,10 +24,10 @@ class BitInfoCharts:
         self.ticker = ticker
         self.root_dir = str(root_dir)
         self.raw_dir = (
-            f"{self.root_dir}\\data\\raw\\{self.ticker[:3]}_data\\bitinfocharts"
+            str(os.path.join(self.root_dir,'data','raw',f"{self.ticker[:3]}_data",'bitinfocharts'))
         )
         self.raw_data: pd.DataFrame = None
-        self.processed_dir = f"{self.root_dir}\\data\\processed\\{self.ticker[:3]}_data"
+        self.processed_dir = str(os.path.join(self.root_dir,'data','processed',f"{self.ticker[:3]}_data"))
         self.processed_data: pd.DataFrame = None
         self.url = "https://bitinfocharts.com"
         self.chart_dict_list = [
@@ -216,7 +216,7 @@ class BitInfoCharts:
         """
         make_directory(self.raw_dir)
 
-        self.raw_data.to_csv(f"{self.raw_dir}\\{self.ticker[:3]}.csv")
+        self.raw_data.to_csv(str(os.path.join(self.raw_dir,f"{self.ticker[:3]}.csv")))
 
         logger.info(f"Data saved to {self.raw_dir}.")
 
@@ -239,7 +239,7 @@ class BitInfoCharts:
         """
         logger.info(f"Processing raw data from {self.ticker[:3]} for Bitinfocharts.")
 
-        data_bic = pd.read_csv(f"{self.raw_dir}\\{self.ticker[:3]}.csv")
+        data_bic = pd.read_csv(str(os.path.join(self.raw_dir},f"{self.ticker[:3]}.csv")))
         data_bic["date"] = pd.to_datetime(data_bic["date"])
         data_bic = data_bic.set_index("date").reindex(date_range).reset_index()
         data_bic.rename(
@@ -282,7 +282,7 @@ class BitInfoCharts:
         make_directory(self.processed_dir)
 
         self.processed_data.to_csv(
-            f"{self.processed_dir}\\{self.ticker[:3]}_bitinfocharts.csv", index=False
+            str(os.path.join(self.processed_dir,f"{self.ticker[:3]}_bitinfocharts.csv")), index=False
         )
 
         logger.info(f"Data saved successfully to {self.processed_dir}.")

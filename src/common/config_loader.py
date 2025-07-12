@@ -15,7 +15,7 @@ class ConfigLoader:
         If the environment variable is not set, it defaults to a template configuration file.
         """
         if os.environ.get("CONFIG_FILENAME") is None:
-            self.config_filename = f"{get_root_directory()}\\configs\\pipeline_template.yml"
+            self.config_filename = str(os.path.join(get_root_directory(), "configs", "pipeline_template.yml"))
         else:
             self.config_filename = find_file(os.environ.get("CONFIG_FILENAME"))
         self.config = self.load_config()

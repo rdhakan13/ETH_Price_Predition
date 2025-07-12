@@ -20,9 +20,9 @@ class OkLink:
         self.ticker = ticker
         if root_dir is None or root_dir == "" or not isinstance(root_dir, str):
             raise ValueError("Root directory must be a non-empty string")
-        self.raw_dir = f"{root_dir}\\data\\raw\\{ticker}_data\\oklink"
+        self.raw_dir = str(os.path.join(root_dir,'data','raw',f"{ticker}_data\\oklink"))
         self.raw_data: pd.DataFrame = None
-        self.processed_dir = f"{root_dir}\\data\\processed\\{ticker}_data"
+        self.processed_dir = str(os.path.join(root_dir,'data','processed',f"{ticker}_data"))
         self.processed_data: pd.DataFrame = None
 
     def process_raw_data(
@@ -52,7 +52,7 @@ class OkLink:
 
         try:
             for file in os.listdir(self.raw_dir):
-                filepath = self.raw_dir + "\\" + file
+                filepath = str(os.path.join(self.raw_dir,file))
                 data_oklink = pd.read_csv(filepath)
                 data_oklink["Time"] = pd.to_datetime(data_oklink["Time"])
                 data_oklink = (
@@ -81,7 +81,7 @@ class OkLink:
         make_directory(self.processed_dir)
 
         self.processed_data.to_csv(
-            f"{self.processed_dir}\\{self.ticker}_oklink.csv", index=False
+            str(os.path.join(self.processed_dir,f"{self.ticker}_oklink.csv")), index=False
         )
 
         logger.info(f"Data saved successfully to {self.processed_dir}")

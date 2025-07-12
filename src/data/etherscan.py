@@ -22,8 +22,8 @@ class EtherScan:
             raise ValueError("Root directory must be a non-empty string")
         self.ticker = ticker
         self.root_dir: pd.DataFrame = root_dir
-        self.raw_dir = f"{self.root_dir}\\data\\raw\\ETH_data\\etherscan\\"
-        self.processsed_dir = f"{self.root_dir}\\data\\processed\\ETH_data"
+        self.raw_dir = str(os.path.join(self.root_dir,'data','raw','ETH_data','etherscan'))
+        self.processsed_dir = str(os.path.join(self.root_dir,'data','processed','ETH_data'))
         self.processed_data: pd.DataFrame = None
 
     def process_raw_data(
@@ -54,7 +54,7 @@ class EtherScan:
         try:
             for file in os.listdir(self.raw_dir):
                 column_name = " ".join(file.split("-")[1:])[:-4]
-                filepath = self.raw_dir + file
+                filepath = str(os.path.join(self.raw_dir,file))
                 data_etherscan = pd.read_csv(filepath)
                 print(data_etherscan.columns)
                 data_etherscan["Date(UTC)"] = pd.to_datetime(
@@ -110,7 +110,7 @@ class EtherScan:
         make_directory(self.processsed_dir)
 
         self.processed_data.to_csv(
-            f"{self.processsed_dir}\\{self.ticker[:3]}_etherscan.csv"
+            str(os.path.join(self.processsed_dir,f"{self.ticker[:3]}_etherscan.csv"))
         )
 
         logger.info(f"Data saved to {self.processsed_dir}.")

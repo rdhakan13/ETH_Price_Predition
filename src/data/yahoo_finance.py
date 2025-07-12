@@ -1,3 +1,4 @@
+import os
 import logging
 import pandas as pd
 import yfinance as yf
@@ -21,7 +22,7 @@ class YahooFinance:
         if root_dir is None or root_dir == "" or not isinstance(root_dir, str):
             raise ValueError("Root directory must be a non-empty string")
         self.root_dir = str(root_dir)
-        self.raw_dir = f"{self.root_dir}\\data\\raw\\{self.ticker[:3]}_data"
+        self.raw_dir = str(os.path.join(self.root_dir,'data','raw',f"{self.ticker[:3]}_data"))
         self.raw_data: pd.DataFrame = None
         self.processed_data: pd.DataFrame = None
 
@@ -62,7 +63,7 @@ class YahooFinance:
         """
         make_directory(self.raw_dir)
 
-        self.raw_data.to_csv(f"{self.raw_dir}\\{self.ticker}_price_data.csv")
+        self.raw_data.to_csv(str(os.path.join(self.raw_dir,f"{self.ticker}_price_data.csv")))
 
         logger.info(f"Data saved to {self.raw_dir}")
 
@@ -81,7 +82,7 @@ class YahooFinance:
         """
         try:
             self.processed_data = pd.read_csv(
-                f"{self.root_dir}\\data\\raw\\{self.ticker[:3]}_data\\{self.ticker[:3]}-USD_price_data.csv"
+                str(os.path.join(self.root_dir,'data','raw',f"{self.ticker[:3]}_data",f"{self.ticker[:3]}-USD_price_data.csv"))
             )
             self.processed_data["Date"] = pd.to_datetime(self.processed_data["Date"])
             self.processed_data = (
@@ -92,7 +93,7 @@ class YahooFinance:
         except KeyError:
             logger.error("Column not found, switching to different reading mode...")
             self.processed_data = pd.read_csv(
-                f"{self.root_dir}\\data\\raw\\{self.ticker[:3]}_data\\{self.ticker[:3]}-USD_price_data.csv"
+                str(os.path.join(self.root_dir,'data','raw'f"{self.ticker[:3]}_data",f"{self.ticker[:3]}-USD_price_data.csv"))
             )
             self.processed_data.rename(columns={"Price": "Date"}, inplace=True)
             self.processed_data = self.processed_data.iloc[2:]

@@ -1,3 +1,4 @@
+import os
 import logging
 import logging.config
 from datetime import datetime
@@ -13,9 +14,7 @@ date_format: str = "%Y-%m-%d %H:%M:%S"
 
 make_directory(f"{get_root_directory()}\\logs")
 
-filename = (
-    f"{get_root_directory()}\\logs\\log_{datetime.now().strftime('%Y-%m-%d')}.log"
-)
+filename = str(os.path.join(get_root_directory(), "logs", f"log_{datetime.now().strftime('%Y-%m-%d')}.log"))
 
 debug_color: str = "cyan"
 info_color: str = "green"
