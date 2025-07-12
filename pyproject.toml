@@ -1,10 +1,11 @@
 [project]
-name = "eth-price-predition"
+name = "src"
 version = "0.1.0"
 description = "Ethereum price prediction using hybrid deep learning algorithms"
 authors = [
     {name = "rdhakan13",email = "rdhakaan@gmail.com"}
 ]
+packages = [{ include = "src" }]
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 dependencies = [
