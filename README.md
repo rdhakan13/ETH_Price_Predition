@@ -154,7 +154,7 @@ The `Makefile` includes several targets:
 
 To run the data pipeline to fetch and process data:
 ```
-make run FILE=main.py LOG_LEVEL=ERROR CONFIG_FILENAME=pipeline_template.yml
+make run FILE=main.py LOG_LEVEL=ERROR CONFIG_FILENAME=pipeline.yml
 ```
 
 Where all three variables can be configured as needed.
