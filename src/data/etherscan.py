@@ -23,7 +23,7 @@ class EtherScan:
         self.ticker = ticker
         self.root_dir: pd.DataFrame = root_dir
         self.raw_dir = str(os.path.join(self.root_dir,'data','raw','ETH_data','etherscan'))
-        self.processsed_dir = str(os.path.join(self.root_dir,'data','processed','ETH_data'))
+        self.processed_dir = str(os.path.join(self.root_dir,'data','processed','ETH_data'))
         self.processed_data: pd.DataFrame = None
 
     def process_raw_data(
@@ -107,10 +107,10 @@ class EtherScan:
         Returns:
             None
         """
-        make_directory(self.processsed_dir)
+        make_directory(self.processed_dir)
 
         self.processed_data.to_csv(
-            str(os.path.join(self.processsed_dir,f"{self.ticker[:3]}_etherscan.csv"))
+            str(os.path.join(self.processed_dir,f"{self.ticker[:3]}_etherscan.csv"))
         )
 
-        logger.info(f"Data saved to {self.processsed_dir}.")
+        logger.info(f"Data saved to {self.processed_dir}.")
