@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import logging
 import numpy as np
@@ -35,7 +36,7 @@ class DataCleaner:
         if "oklink" in self.source:
             try:
                 self.oklink = pd.read_csv(
-                    f"{self.root_dir}\\data\\processed\\{self.ticker[:3]}_data\\{self.ticker[:3]}_oklink.csv"
+                    os.path.join(self.root_dir, "data", "processed", f"{self.ticker[:3]}_data", f"{self.ticker[:3]}_oklink.csv")
                 )
             except FileNotFoundError as e:
                 logger.error("File not found")
@@ -43,7 +44,7 @@ class DataCleaner:
         if "bitinfocharts" in self.source:
             try:
                 self.bitinfocharts = pd.read_csv(
-                    f"{self.root_dir}\\data\\processed\\{self.ticker[:3]}_data\\{self.ticker[:3]}_bitinfocharts.csv"
+                    os.path.join(self.root_dir, "data", "processed", f"{self.ticker[:3]}_data", f"{self.ticker[:3]}_bitinfocharts.csv")
                 )
             except FileNotFoundError as e:
                 logger.error("File not found")
@@ -51,7 +52,7 @@ class DataCleaner:
         if self.ticker[:3] == "ETH" and "etherscan" in self.source:
             try:
                 self.etherscan = pd.read_csv(
-                    f"{self.root_dir}\\data\\processed\\{self.ticker[:3]}_data\\{self.ticker[:3]}_etherscan.csv"
+                    os.path.join(self.root_dir, "data", "processed", f"{self.ticker[:3]}_data", f"{self.ticker[:3]}_etherscan.csv")
                 )
             except FileNotFoundError as e:
                 logger.error("File not found")
@@ -208,6 +209,6 @@ class DataCleaner:
             None
         """
         if directory is None:
-            directory = f"{self.root_dir}\\data\\final"
+            directory = str(os.path.join(self.root_dir, "data", "final"))
         make_directory(directory)
-        self.cleaned_data.to_csv(f"{directory}\\{self.ticker[:3]}.csv")
+        self.cleaned_data.to_csv(str(os.path.join(directory, f"{self.ticker[:3]}.csv")))

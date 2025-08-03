@@ -1,4 +1,5 @@
 import pytest
+import os
 import pandas as pd
 import requests
 from pathlib import Path
@@ -9,7 +10,7 @@ from bs4 import BeautifulSoup
 
 @pytest.fixture
 def mock_root_dir():
-    return "C:\\test\\root"
+    return str(os.path.join("C:", "test", "root"))
 
 
 @pytest.fixture
@@ -41,8 +42,8 @@ def test_init(mock_root_dir):
     bic = BitInfoCharts(ticker="BTC", root_dir=mock_root_dir)
     assert bic.ticker == "BTC"
     assert bic.root_dir == mock_root_dir
-    assert bic.raw_dir == f"{mock_root_dir}\\data\\raw\\BTC_data\\bitinfocharts"
-    assert bic.processed_dir == f"{mock_root_dir}\\data\\processed\\BTC_data"
+    assert bic.raw_dir == str(os.path.join(mock_root_dir, "data", "raw", "BTC_data", "bitinfocharts"))
+    assert bic.processed_dir == str(os.path.join(mock_root_dir, "data", "processed", "BTC_data"))
     assert bic.raw_data is None
     assert bic.processed_data is None
     assert bic.url == "https://bitinfocharts.com"
@@ -192,7 +193,7 @@ def test_save_raw_data(mock_make_directory, bitinfocharts_instance, merged_df):
             # Check that to_csv was called with correct path
             mock_to_csv.assert_called_once()
             args, _ = mock_to_csv.call_args
-            assert args[0] == f"{bitinfocharts_instance.raw_dir}\\BTC.csv"
+            assert args[0] == str(os.path.join(bitinfocharts_instance.raw_dir, "BTC.csv"))
 
 
 # @patch('pandas.read_csv')
@@ -239,7 +240,7 @@ def test_save_processed_data(mock_make_directory, bitinfocharts_instance):
         # Check that to_csv was called with correct path
         mock_to_csv.assert_called_once()
         args, kwargs = mock_to_csv.call_args
-        assert args[0] == f"{bitinfocharts_instance.processed_dir}\\BTC_bitinfocharts.csv"
+        assert args[0] == str(os.path.join(bitinfocharts_instance.processed_dir, "BTC_bitinfocharts.csv"))
         assert kwargs['index'] == False
 
 

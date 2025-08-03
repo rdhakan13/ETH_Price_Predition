@@ -21,13 +21,13 @@ class GoogleNews:
         if root_dir is None or root_dir == "" or not isinstance(root_dir, str):
             raise ValueError("Root self.raw_dir must be a non-empty string")
         self.root_dir = str(root_dir)
-        self.raw_dir = f"{self.root_dir}\\data\\raw\\Google_News_Headlines_data"
+        self.raw_dir = str(os.path.join(self.root_dir,'data','raw','Google_News_Headlines_data'))
         self.raw_data: pd.DataFrame = None
         self.processed_dir = (
-            f"{self.root_dir}\\data\\processed\\Google_News_Headlines_data"
+            str(os.path.join(self.root_dir,'data','processed','Google_News_Headlines_data'))
         )
         self.processed_data: pd.DataFrame = None
-        self.final_dir = f"{self.root_dir}\\data\\final\\Google_News_Headlines_data"
+        self.final_dir = str(os.path.join(self.root_dir,'data','final','Google_News_Headlines_data'))
         self.final_data: pd.DataFrame = None
         self.year: Optional[str] = None
 
@@ -82,7 +82,7 @@ class GoogleNews:
 
             self.raw_data = pd.json_normalize(data)
 
-            logger.info("Data downloaded successfully for {self.year}.")
+            logger.info(f"Data downloaded successfully for {self.year}.")
         except Exception as e:
             logger.error(f"An error occurred while downloading the data: {e}")
             raise e
@@ -100,7 +100,7 @@ class GoogleNews:
         make_directory(self.raw_dir)
 
         self.raw_data.to_csv(
-            f"{self.raw_dir}\\google_news_headlines_data_{self.year}.csv"
+            str(os.path.join(self.raw_dir,f"google_news_headlines_data_{self.year}.csv"))
         )
 
         logger.info(f"Data saved to {self.raw_dir}.")
@@ -125,7 +125,7 @@ class GoogleNews:
             )
 
             for file in os.listdir(self.raw_dir):
-                filepath = self.raw_dir + "\\" + file
+                filepath = str(os.path.join(self.raw_dir,file))
                 data = pd.read_csv(filepath)
                 data_drop = data.drop(
                     columns=["Unnamed: 0", "description", "url", "publisher.href"]
@@ -175,7 +175,7 @@ class GoogleNews:
         make_directory(self.processed_dir)
 
         self.processed_data.to_csv(
-            f"{self.processed_dir}\\google_news_headlines_data.csv", index=False
+            str(os.path.join(self.processed_dir,'google_news_headlines_data.csv')), index=False
         )
 
         logger.info(f"Data saved to {self.processed_dir}.")

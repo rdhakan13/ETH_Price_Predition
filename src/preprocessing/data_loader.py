@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import pandas as pd
 import numpy as np
@@ -36,16 +37,22 @@ class DataLoader:
         """
         logger.info("Loading data...")
         self.ETH = pd.read_csv(
-            f"{self.root_dir}\\data\\final\\ETH.csv", index_col="Date", parse_dates=True
+            str(os.path.join(self.root_dir, 'data', 'final', 'ETH.csv')), 
+            index_col="Date",
+            parse_dates=True
         )
         self.BTC = pd.read_csv(
-            f"{self.root_dir}\\data\\final\\BTC.csv", index_col="Date", parse_dates=True
+            str(os.path.join(self.root_dir, 'data', 'final', 'BTC.csv')),
+            index_col="Date",
+            parse_dates=True
         )
         self.LTC = pd.read_csv(
-            f"{self.root_dir}\\data\\final\\LTC.csv", index_col="Date", parse_dates=True
+            str(os.path.join(self.root_dir, 'data', 'final', 'LTC.csv')),
+            index_col="Date",
+            parse_dates=True
         )
         self.sentiment_analysis = pd.read_csv(
-            f"{self.root_dir}\\data\\final\\sentiment_analysis.csv",
+            str(os.path.join(self.root_dir, 'data', 'final', 'sentiment_analysis.csv')),
             index_col="Date",
             parse_dates=True,
         )

@@ -18,8 +18,8 @@ def etherscan_instance(valid_root_dir):
 
 def test_init_valid(etherscan_instance):
     assert etherscan_instance.ticker == "ETH"
-    assert "raw\\ETH_data\\etherscan" in etherscan_instance.raw_dir
-    assert "processed\\ETH_data" in etherscan_instance.processsed_dir
+    assert str(os.path.join("raw", "ETH_data", "etherscan")) in etherscan_instance.raw_dir
+    assert str(os.path.join("processed", "ETH_data")) in etherscan_instance.processed_dir
 
 
 def test_init_invalid_ticker(valid_root_dir):
@@ -93,5 +93,5 @@ def test_save_processed_data(mock_to_csv, mock_make_dir, etherscan_instance):
         "Close": [1, 2, 3]
     })
     etherscan_instance.save_processed_data()
-    mock_make_dir.assert_called_once_with(etherscan_instance.processsed_dir)
+    mock_make_dir.assert_called_once_with(etherscan_instance.processed_dir)
     mock_to_csv.assert_called_once()

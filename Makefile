@@ -32,11 +32,6 @@ list-packages:
 	@echo Listing python packages...
 	pip list
 
-onetime-setup-ec2:
-	@echo Setting up EC2 instance...
-	bash $(EC2_SETUP_SCRIPT)
-	@echo Done!
-
 clean: activate
 	@echo Cleaning up...
 	ruff clean
@@ -108,10 +103,18 @@ lines-of-code-report:
 	@echo Counting lines of code...
 	cloc --include-lang=Python --by-file --report-file=cloc_report.txt $(SRC)
 
-start-mlflow:activate
+start-mlflow-local:activate
 	@echo Starting MLflow UI...
 	mlflow ui --backend-store-uri sqlite:///mlruns/mlruns.db --host localhost --port 5000
 
-start-jupyter:activate
+start-jupyter-local:activate
 	@echo Starting Jupyter Notebook...
 	jupyter notebook
+
+start-mlflow-ec2:activate
+	@echo Starting MLflow UI on EC2...
+	tmux new -s mlflow -d "mlflow ui --backend-store-uri sqlite:///mlruns/mlruns.db --host=0.0.0.0 --port=5000"
+
+start-jupyter-ec2:activate
+	@echo Starting Jupyter Notebook on EC2...
+	tmux new -s jupyter -d "jupyter-notebook --no-browser --port=8888 --ip=0.0.0.0"

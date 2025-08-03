@@ -1,3 +1,4 @@
+import os
 import pytest
 import pandas as pd
 from unittest.mock import patch, MagicMock
@@ -24,7 +25,7 @@ def test_constructor_valid_inputs():
     yf = YahooFinance(ticker=VALID_TICKER, root_dir=VALID_ROOT_DIR)
     assert yf.ticker == VALID_TICKER
     assert yf.root_dir == VALID_ROOT_DIR
-    assert yf.raw_dir == f"{VALID_ROOT_DIR}\\data\\raw\\{VALID_TICKER[:3]}_data"
+    assert yf.raw_dir == str(os.path.join(VALID_ROOT_DIR, "data", "raw", f"{VALID_TICKER[:3]}_data"))
     assert yf.raw_data is None
     assert yf.processed_data is None
 
@@ -44,7 +45,7 @@ def test_save_raw_data_calls_to_csv(mock_to_csv, mock_mkdir, instance):
     instance.raw_data = df
     instance.save_raw_data()
     mock_mkdir.assert_called_once_with(instance.raw_dir)
-    mock_to_csv.assert_called_once_with(f"{instance.raw_dir}\\{VALID_TICKER}_price_data.csv")
+    mock_to_csv.assert_called_once_with(str(os.path.join(instance.raw_dir, f"{VALID_TICKER}_price_data.csv")))
 
 
 @patch("pandas.read_csv")

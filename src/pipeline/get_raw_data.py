@@ -8,7 +8,7 @@ from src.data.bitinfocharts import BitInfoCharts
 from src.data.google_news import GoogleNews
 
 logger = get_logger(os.environ.get("LOG_LEVEL"), __name__)
-root_dir = str(get_root_directory()) + "\\temp"
+root_dir = str(os.path.join(str(get_root_directory()),'tmp'))
 
 config_loader = ConfigLoader()
 config = config_loader.define_get_raw_data()
@@ -53,7 +53,7 @@ def get_raw_data() -> None:
 
         try:
             data = pd.read_csv(
-                f"{root_dir}\\data\\raw\\ETH_data\\ETH-USD_price_data.csv"
+                str(os.path.join(root_dir,'data','raw','ETH_data','ETH-USD_price_data.csv'))
             )
         except FileNotFoundError as e:
             logger.error("File not found")

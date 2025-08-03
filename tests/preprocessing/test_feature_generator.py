@@ -74,12 +74,8 @@ def test_generate_price_features_column_order(sample_price_data):
 
 #     assert isinstance(result, pd.DataFrame)
 
-@patch("src.preprocessing.feature_generator.VaderSentimentAnalyser")
-def test_sentiment_empty_result_if_no_scores(mock_vsa_class):
-    mock_vsa = MagicMock()
-    mock_vsa.determine_sentiment.return_value = 0
-    mock_vsa_class.return_value = mock_vsa
-
+# @patch("src.preprocessing.feature_generator.VaderSentimentAnalyser")
+def test_sentiment_empty_result_if_no_scores():
     df = pd.DataFrame({'Date': ['2024-01-01'], 'Other_Col': [0.5]}).set_index('Date')
     fg = FeatureGenerator(df, "sentiment")
     result = fg.generate_features()

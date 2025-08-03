@@ -25,23 +25,23 @@ The blockchain data acquired for the three coins through is summarised in the be
 
 **Blockchain Data Summary**
 
-| Blockchain data            | ETH | BTC | LTC |
-|----------------------------|-----|-----|-----|
-| Market Capitalisation      | ✔   | ✔   | ✔   |
-| Total Supply               | ✔   | ✔   | ✔   |
-| Mean Block Size            | ✔   | ✔   | ✔   |
-| Mean Hash Rate             | ✔   | ✔   | ✔   |
-| Mean Transaction Fees      | ✔   | ✔   | ✔   |
-| Mining Difficulty          | ✔   | ✔   | ✔   |
-| No. of Active Addresses    | ✔   | ✔   | ✔   |
-| No. of New Addresses       | ✔   | ✔   | ✔   |
-| No. of Total Addresses     | ✔   | ✔   | ✔   |
-| No. of Transactions        | ✔   | ✔   | ✔   |
-| Total Size of Transactions | ✔   | ✔   | ✔   |
-| Total Transfer Volume      | ✔   | ✔   | ✖   |
-| Mean Gas Price             | ✔   | ✖   | ✖   |
-| Gas Used                   | ✔   | ✖   | ✖   |
-| No. of Issued Contracts    | ✔   | ✖   | ✖   |
+| Blockchain data             | ETH | BTC | LTC |
+|-----------------------------|-----|-----|-----|
+| Mean Block Size             | ✔   | ✔   | ✔   |
+| Mean Hash Rate              | ✔   | ✔   | ✔   |
+| Mean Transaction Fees       | ✔   | ✔   | ✔   |
+| Mining Difficulty           | ✔   | ✔   | ✔   |
+| No. of Active Addresses     | ✔   | ✔   | ✔   |
+| No. of New Addresses        | ✔   | ✔   | ✔   |
+| No. of Total Addresses      | ✔   | ✔   | ✔   |
+| No. of Transactions         | ✔   | ✔   | ✔   |
+| On-chain Transaction Count  | ✔   | ✔   | ✔   |
+| On-chain Transaction Volume | ✔   | ✔   | ✖   |
+| Mean Gas Price              | ✔   | ✖   | ✖   |
+| Gas Used                    | ✔   | ✖   | ✖   |
+| Gas Limit                   | ✔   | ✖   | ✖   |
+| No. of Deployed Contracts   | ✔   | ✖   | ✖   |
+| No. of Verified Contracts   | ✔   | ✖   | ✖   |
 
 ## :open_file_folder: Project Structure
 ```
@@ -154,7 +154,7 @@ The `Makefile` includes several targets:
 
 To run the data pipeline to fetch and process data:
 ```
-make run FILE=main.py LOG_LEVEL=ERROR CONFIG_FILENAME=pipeline_template.yml
+make run FILE=main.py LOG_LEVEL=ERROR CONFIG_FILENAME=pipeline.yml
 ```
 
 Where all three variables can be configured as needed.

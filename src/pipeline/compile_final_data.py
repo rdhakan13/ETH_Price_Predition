@@ -5,8 +5,8 @@ from src.common.config_loader import ConfigLoader
 from src.preprocessing.data_cleaner import DataCleaner
 
 logger = get_logger(os.environ.get("LOG_LEVEL"), __name__)
-root_dir = str(get_root_directory()) + "\\temp"
-directory = f"{root_dir}\\temp\\data\\final"
+root_dir = str(os.path.join(str(get_root_directory()),'tmp'))
+directory = str(os.path.join(root_dir,'data','final'))
 
 config_loader = ConfigLoader()
 config = config_loader.define_compile_final_data()

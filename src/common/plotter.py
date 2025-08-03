@@ -66,7 +66,7 @@ class Plotter:
             None
         """
         self.fig, self.ax = plt.subplots(figsize=figsize)
-        self.filepath = f"{self.root_dir}\\reports\\figures\\bar_charts"
+        self.filepath = str(os.path.join(self.root_dir,'reports','figures','bar_charts'))
         kwargs = self._handle_none_graph_kwargs(kwargs)
         if kwargs.get("stacked") is True:
             df.plot(kind="bar", ax=self.ax, **kwargs)
@@ -115,7 +115,7 @@ class Plotter:
         """
         corr_df = df.apply(pd.to_numeric, errors="coerce").corr(method=method)
         self.fig, self.ax = plt.subplots(figsize=figsize)
-        self.filepath = f"{self.root_dir}\\reports\\figures\\correlation_matrix"
+        self.filepath = str(os.path.join(self.root_dir,'reports','figures','correlation_matrix'))
         self.title = f"{method.title()} Correlation Matrix Heatmap"
         kwargs = self._handle_none_graph_kwargs(kwargs)
         if kwargs.get("mask") is True:
@@ -156,7 +156,7 @@ class Plotter:
             None
         """
         self.fig, self.ax = plt.subplots(figsize=figsize)
-        self.filepath = f"{self.root_dir}\\reports\\figures\\violin_plots"
+        self.filepath = str(os.path.join(self.root_dir,'reports','figures','violin_plots'))
         kwargs = self._handle_none_graph_kwargs(kwargs)
         sns.violinplot(data=df, inner="quartile", x=x, y=y, ax=self.ax, **kwargs)
         if stripplot is True:
@@ -199,7 +199,7 @@ class Plotter:
             None
         """
         self.fig, self.ax = plt.subplots(figsize=figsize)
-        self.filepath = f"{self.root_dir}\\reports\\figures\\boxplots"
+        self.filepath = str(os.path.join(self.root_dir,'reports','figures','boxplots'))
         kwargs = self._handle_none_graph_kwargs(kwargs)
         sns.boxplot(data=df, x=x, y=y, ax=self.ax, **kwargs)
         if self.title is not None:
@@ -232,7 +232,7 @@ class Plotter:
             None
         """
         self.fig, self.ax = plt.subplots(figsize=figsize)
-        self.filepath = f"{self.root_dir}\\reports\\figures\\scatter_plots"
+        self.filepath = str(os.path.join(self.root_dir,'reports','figures','scatter_plots'))
         kwargs = self._handle_none_graph_kwargs(kwargs)
         sns.scatterplot(data=df, x=x, y=y, ax=self.ax, **kwargs)
         if self.title is not None:
@@ -263,7 +263,7 @@ class Plotter:
             None
         """
         self.fig, self.ax = plt.subplots(figsize=figsize)
-        self.filepath = f"{self.root_dir}\\reports\\figures\\line_plots"
+        self.filepath = str(os.path.join(self.root_dir,'reports','figures','line_plots'))
         kwargs = self._handle_none_graph_kwargs(kwargs)
         sns.lineplot(data=df, x=x, y=y, ax=self.ax, **kwargs)
         if self.title is not None:
@@ -294,7 +294,7 @@ class Plotter:
         if not os.path.exists(self.filepath):
             os.makedirs(self.filepath)
         self.fig.savefig(
-            f"{self.filepath}\\{self.title}.{format}", format=format, dpi=dpi
+            str(os.path.join(self.filepath,f"{self.title}.{format}")), format=format, dpi=dpi
         )
 
     def _handle_none_graph_kwargs(self, kwargs: dict[str, Any]) -> dict[str, Any]:

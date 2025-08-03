@@ -28,8 +28,8 @@ def test_invalid_root_dir_raises(bad_root):
 def test_valid_constructor():
     obj = OkLink(root_dir="test", ticker="ETH")
     assert obj.ticker == "ETH"
-    assert obj.raw_dir == "test\\data\\raw\\ETH_data\\oklink"
-    assert obj.processed_dir == "test\\data\\processed\\ETH_data"
+    assert obj.raw_dir == str(os.path.join("test", "data", "raw", "ETH_data", "oklink"))
+    assert obj.processed_dir == str(os.path.join("test", "data", "processed", "ETH_data"))
     assert obj.raw_data is None
     assert obj.processed_data is None
 
@@ -63,5 +63,5 @@ def test_save_processed_data(mock_to_csv, mock_mkdir, instance):
     instance.save_processed_data()
     mock_mkdir.assert_called_once_with(instance.processed_dir)
     mock_to_csv.assert_called_once_with(
-        f"{instance.processed_dir}\\ETH_oklink.csv", index=False
+        str(os.path.join(instance.processed_dir, "ETH_oklink.csv")), index=False
     )

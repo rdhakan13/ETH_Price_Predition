@@ -1,3 +1,4 @@
+import os
 import pytest
 import logging
 from datetime import datetime
@@ -36,4 +37,4 @@ def test_log_file_creation(mock_get_root_directory, mock_make_directory):
     with patch("src.common.logger.datetime") as mock_datetime:
         mock_datetime.now.return_value.strftime.return_value = datetime.today().strftime('%Y-%m-%d')
         from src.common.logger import filename
-        assert filename == str(root_directory)+f"\\logs\\log_{datetime.today().strftime('%Y-%m-%d')}.log"
+        assert filename == str(os.path.join(str(root_directory), "logs", f"log_{datetime.today().strftime('%Y-%m-%d')}.log"))
