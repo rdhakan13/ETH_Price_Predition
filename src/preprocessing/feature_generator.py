@@ -1,6 +1,5 @@
 import pandas as pd
 import logging
-from src.sentiment_analyser.vader_sentiment_analyser import VaderSentimentAnalyser
 import swifter
 import numpy as np
 from typing import Optional
@@ -57,8 +56,6 @@ class FeatureGenerator:
         Returns:
             None
         """
-        vsa = VaderSentimentAnalyser(self.input_data)
-
         if select_publishers is not None:
             try:
                 pattern = "|".join(select_publishers)
@@ -111,11 +108,11 @@ class FeatureGenerator:
                 self.transformed_data[col_score_In] = AvgScr_In[col_score_In]
                 self.transformed_data[col_sent_In] = self.transformed_data[
                     col_score_In
-                ].swifter.apply(vsa.determine_sentiment)
+                ].swifter.apply(self.determine_sentiment)
                 self.transformed_data[col_score_Ex] = AvgScr_Ex[col_score_Ex]
                 self.transformed_data[col_sent_Ex] = self.transformed_data[
                     col_score_Ex
-                ].swifter.apply(vsa.determine_sentiment)
+                ].swifter.apply(self.determine_sentiment)
 
     def _generate_price_features(self) -> None:
         """
@@ -158,3 +155,14 @@ class FeatureGenerator:
             ]
         ]
         return self.transformed_data
+    
+    @staticmethod
+    def determine_sentiment(input_var: float) -> int:
+        if not isinstance(input_var, float):
+            raise ValueError("Input must be a float")
+        if input_var > 0:
+            return 1
+        elif input_var < 0:
+            return -1
+        else:
+            return 0

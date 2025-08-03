@@ -239,7 +239,7 @@ class BitInfoCharts:
         """
         logger.info(f"Processing raw data from {self.ticker[:3]} for Bitinfocharts.")
 
-        data_bic = pd.read_csv(str(os.path.join(self.raw_dir},f"{self.ticker[:3]}.csv")))
+        data_bic = pd.read_csv(str(os.path.join(self.raw_dir,f"{self.ticker[:3]}.csv")))
         data_bic["date"] = pd.to_datetime(data_bic["date"])
         data_bic = data_bic.set_index("date").reindex(date_range).reset_index()
         data_bic.rename(
