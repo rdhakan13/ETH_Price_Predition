@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 
 @pytest.fixture
 def mock_root_dir():
-    return str(os.path.join("C:\\", "test", "root"))
+    return str(os.path.join("C:", "test", "root"))
 
 
 @pytest.fixture
@@ -42,8 +42,8 @@ def test_init(mock_root_dir):
     bic = BitInfoCharts(ticker="BTC", root_dir=mock_root_dir)
     assert bic.ticker == "BTC"
     assert bic.root_dir == mock_root_dir
-    assert bic.raw_dir == str(os.path.join(f"{mock_root_dir}\\data\\raw\\BTC_data\\bitinfocharts"))
-    assert bic.processed_dir == str(os.path.join(f"{mock_root_dir}\\data\\processed\\BTC_data"))
+    assert bic.raw_dir == str(os.path.join(mock_root_dir, "data", "raw", "BTC_data", "bitinfocharts"))
+    assert bic.processed_dir == str(os.path.join(mock_root_dir, "data", "processed", "BTC_data"))
     assert bic.raw_data is None
     assert bic.processed_data is None
     assert bic.url == "https://bitinfocharts.com"

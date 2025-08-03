@@ -20,7 +20,7 @@ class OkLink:
         self.ticker = ticker
         if root_dir is None or root_dir == "" or not isinstance(root_dir, str):
             raise ValueError("Root directory must be a non-empty string")
-        self.raw_dir = str(os.path.join(root_dir,'data','raw',f"{ticker}_data\\oklink"))
+        self.raw_dir = str(os.path.join(root_dir,'data','raw',f"{ticker}_data","oklink"))
         self.raw_data: pd.DataFrame = None
         self.processed_dir = str(os.path.join(root_dir,'data','processed',f"{ticker}_data"))
         self.processed_data: pd.DataFrame = None
