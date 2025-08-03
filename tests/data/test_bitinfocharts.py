@@ -240,7 +240,7 @@ def test_save_processed_data(mock_make_directory, bitinfocharts_instance):
         # Check that to_csv was called with correct path
         mock_to_csv.assert_called_once()
         args, kwargs = mock_to_csv.call_args
-        assert args[0] == f"{bitinfocharts_instance.processed_dir}\\BTC_bitinfocharts.csv"
+        assert args[0] == str(os.path.join(bitinfocharts_instance.processed_dir, "BTC_bitinfocharts.csv"))
         assert kwargs['index'] == False
 
 
