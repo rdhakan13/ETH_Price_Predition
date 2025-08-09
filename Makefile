@@ -105,7 +105,7 @@ lines-of-code-report:
 
 start-mlflow-local:activate
 	@echo Starting MLflow UI...
-	mlflow ui --backend-store-uri sqlite:///mlruns/mlruns.db --host localhost --port 5000
+	mlflow ui --backend-store-uri sqlite:///mlruns/$(MODEL)/mlruns.db --host localhost --port 5000
 
 start-jupyter-local:activate
 	@echo Starting Jupyter Notebook...
