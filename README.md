@@ -2,7 +2,7 @@
 
 ## :page_facing_up: Overview
 
-## :floppy_disk: Dataset
+## :floppy_disk: Data
 
 ### Yahoo Finance
 To acquire cryptocurrency price data (Open, High, Low, Close, Adj Close & Volume), [yfinance](https://github.com/ranaroussi/yfinance), built by Ran Aroussi, was used to pull all the available price data at a daily interval for Ethereum, Bitcoin and Litecoin from [Yahoo Finance](https://finance.yahoo.com/). 

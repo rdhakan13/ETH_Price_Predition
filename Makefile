@@ -4,6 +4,7 @@ YML_FILE = environment.yml
 ENV_NAME = STD_DS_LIB
 EC2_SETUP_SCRIPT = ./scripts/setup.sh
 MLFLOW_PORT = 5000
+MLFLOW_DB = mlruns_1
 JUPYTER_PORT = 8888
 
 .ONESHELL:
@@ -102,7 +103,7 @@ lines-of-code-report:
 
 start-mlflow-local:activate
 	@echo Starting MLflow UI...
-	mlflow ui --backend-store-uri sqlite:///mlruns/$(MODEL)/mlruns.db --host ${HOST} --port $(MLFLOW_PORT)
+	mlflow ui --backend-store-uri sqlite:///mlruns/$(MODEL)/$(MLFLOW_DB).db --host ${HOST} --port $(MLFLOW_PORT)
 
 start-jupyter-local:activate
 	@echo Starting Jupyter Notebook...
