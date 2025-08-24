@@ -3,6 +3,9 @@ SRC = ./src/
 YML_FILE = environment.yml
 ENV_NAME = STD_DS_LIB
 EC2_SETUP_SCRIPT = ./scripts/setup.sh
+MLFLOW_PORT = 5000
+MLFLOW_DB = mlruns_1
+JUPYTER_PORT = 8888
 
 .ONESHELL:
 .PHONY:
@@ -71,11 +74,6 @@ else
 	.venv/bin/mypy $(SRC)
 endif
 
-run-script:
-	@echo Running script...
-	python $(SCRIPT_NAME)
-	@echo Done!
-
 run:
 ifeq ($(OS),Windows_NT)
 	@python -c "import os, sys; \
@@ -105,16 +103,8 @@ lines-of-code-report:
 
 start-mlflow-local:activate
 	@echo Starting MLflow UI...
-	mlflow ui --backend-store-uri sqlite:///mlruns/mlruns.db --host localhost --port 5000
+	mlflow ui --backend-store-uri sqlite:///mlruns/$(MODEL)/$(MLFLOW_DB).db --host ${HOST} --port $(MLFLOW_PORT)
 
 start-jupyter-local:activate
 	@echo Starting Jupyter Notebook...
-	jupyter notebook
-
-start-mlflow-ec2:activate
-	@echo Starting MLflow UI on EC2...
-	tmux new -s mlflow -d "mlflow ui --backend-store-uri sqlite:///mlruns/mlruns.db --host=0.0.0.0 --port=5000"
-
-start-jupyter-ec2:activate
-	@echo Starting Jupyter Notebook on EC2...
-	tmux new -s jupyter -d "jupyter-notebook --no-browser --port=8888 --ip=0.0.0.0"
+	jupyter-notebook --no-browser --port=$(JUPYTER_PORT) --ip=${HOST}

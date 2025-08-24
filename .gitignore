@@ -12,7 +12,6 @@ temp/
 .coverage
 .venv/
 htmlcov/
-cloc_report.txt
 .vscode/
 LSTM.ipynb
 GRU.ipynb
