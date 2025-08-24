@@ -1,4 +1,4 @@
-# :rocket: Ethereum price prediction using hybrid deep learning algorithms
+# :rocket: Ethereum price prediction using Internal & External Factors
 
 ## :page_facing_up: Overview
 
@@ -77,6 +77,7 @@ ETH_Price_Prediction/
 ├── tests/                      # Unit-tests for src
 │
 ├── .gitignore
+├── cloc_report.txt
 ├── LICENSE  
 ├── Makefile  
 ├── README.md  

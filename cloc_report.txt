@@ -1,0 +1,28 @@
+github.com/AlDanial/cloc v 2.04  T=0.79 s (26.7 files/s, 3891.5 lines/s)
+-------------------------------------------------------------------------------------------------------
+File                                                                blank        comment           code
+-------------------------------------------------------------------------------------------------------
+.\src\preprocessing\data_loader.py                                     40             72            254
+.\src\common\plotter.py                                                34            102            184
+.\src\data\bitinfocharts.py                                            51             63            174
+.\src\preprocessing\data_cleaner.py                                    22             52            140
+.\src\preprocessing\feature_generator.py                               16             27            125
+.\src\data\google_news.py                                              33             36            112
+.\src\common\utils.py                                                  47             76            102
+.\src\common\config_loader.py                                          24             49             89
+.\src\preprocessing\data_scaler.py                                     31             45             82
+.\src\common\stats.py                                                  28             34             81
+.\src\pipeline\get_raw_data.py                                         14              3             72
+.\src\data\etherscan.py                                                21             24             71
+.\src\pipeline\process_raw_data.py                                     11              3             68
+.\src\data\yahoo_finance.py                                            25             41             65
+.\src\common\logger.py                                                 13             15             60
+.\src\sentiment_analyser\bert_sentiment_analyser.py                     6              3             50
+.\src\data\oklink.py                                                   17             24             46
+.\src\sentiment_analyser\vader_sentiment_analyser.py                    5              0             37
+.\src\pipeline\conduct_sentiment_analysis.py                           10              3             36
+.\src\pipeline\compile_final_data.py                                   12              4             33
+.\src\sentiment_analyser\base.py                                        9             19             14
+-------------------------------------------------------------------------------------------------------
+SUM:                                                                  469            695           1895
+-------------------------------------------------------------------------------------------------------
