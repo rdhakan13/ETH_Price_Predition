@@ -76,6 +76,7 @@ ETH_Price_Prediction/
 │
 ├── tests/                      # Unit-tests for src
 │
+├── .gitattributes
 ├── .gitignore
 ├── cloc_report.txt
 ├── LICENSE  
