@@ -1,6 +1,4 @@
-# :rocket: Ethereum price prediction using Internal & External Factors
-
-## :page_facing_up: Overview
+# :rocket: Ethereum price prediction using Internal and External Factors
 
 ## :floppy_disk: Data
 
