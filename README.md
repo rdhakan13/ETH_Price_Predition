@@ -158,5 +158,5 @@ make run FILE=main.py LOG_LEVEL=ERROR CONFIG_FILENAME=pipeline.yml
 ```
 
 Where all three variables can be configured as needed.
-
-## :books: References
+<!-- 
+## :books: References -->
