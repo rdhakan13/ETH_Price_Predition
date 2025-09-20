@@ -36,7 +36,7 @@
 
 % load base class, then general-purpose packages
 
-\LoadClass[10pt,a4paper,twoside]{book}
+\LoadClass[10pt,a4paper,oneside]{book}
 
 % http://www.ctan.org/tex-archive/macros/latex/required/graphics
 \RequirePackage{graphicx}
@@ -82,12 +82,10 @@
 \definecolor{darkblue}{rgb}{0.0, 0.0, 0.55}
 \hypersetup{
     colorlinks=true,
-    bookmarks=false,
     linkcolor=darkblue,
     filecolor=darkblue,      
     urlcolor=darkblue,
-    citecolor=darkblue
-    }
+    citecolor=darkblue}
 
 % configure algorithm2e
 
@@ -106,7 +104,7 @@
 
 % configure style of bibliography
 
-\bibliographystyle{plain}
+\bibliographystyle{ieeetr}
 
 % configure style of pages
 
@@ -201,8 +199,12 @@
   of Engineering.  It has not been submitted for any other degree or diploma 
   of any examining body.  Except where specifically acknowledged, it is all 
   the work of the Author. 
+  
+  \vspace{0.5cm}
+  
+  \noindent \textbf{Ethics statement}: This project fits within the scope of the ethics application 15208, as reviewed by my supervisor Dr. Ayush Joshi.
 
-  \vspace{6cm}
+  \vspace{1cm}
 
   \noindent {\dissertation@author}, \today
 }
