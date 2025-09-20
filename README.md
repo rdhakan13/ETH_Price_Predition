@@ -1,4 +1,4 @@
-# :rocket: Ethereum price prediction using Internal and External Factors
+# :rocket: Ethereum Price Prediction using Internal and External Factors
 
 Author: Raj Dhakan
 
